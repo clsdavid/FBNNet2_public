@@ -1,0 +1,119 @@
+context("getgeneprobabilitiestemporal")
+setupdata <- function() {
+    genesInput <- c("CycD", "p27", "CycE", "E2F")
+    testseries <- list()
+    testseries[[1]] <- matrix(c(1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1), nrow = 4, ncol = 4, byrow = FALSE, dimnames = list(genesInput, c("1", "2", "3", 
+        "4")))
+    testseries[[2]] <- matrix(c(1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1), nrow = 4, ncol = 4, byrow = FALSE, dimnames = list(genesInput, c("1", "2", "3", 
+        "4")))
+    testseries[[3]] <- matrix(c(1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1), nrow = 4, ncol = 4, byrow = FALSE, dimnames = list(genesInput, c("1", "2", "3", 
+        "4")))
+    
+    
+    # Test 1
+    getCurrentStates <- list()
+    getpreviousStates <- list()
+    getCurrentStates_c <- list()
+    getpreviousStates_c <- list()
+    index <- 2
+    while (index > 0) {
+        
+        getCurrentStates[[index]] <- extractGeneStateFromTimeSeriesCube(testseries, index)
+        getpreviousStates[[index]] <- getCurrentStates[[index]]
+        getCurrentStates_c[[index]] <- getCurrentStates[[index]]
+        getpreviousStates_c[[index]] <- getCurrentStates[[index]]
+        index <- index - 1
+    }
+    
+    mainParameters <- new.env(parent = globalenv())
+    mainParameters$currentStates <- getCurrentStates
+    mainParameters$previousStates <- getpreviousStates
+    mainParameters$currentStates_c <- getCurrentStates_c
+    mainParameters$previousStates_c <- getpreviousStates_c
+    mainParameters$timeseries <- testseries
+    return(mainParameters)
+}
+
+
+describe("get gene probabilities temporal should succeed", {
+    mainParameters <- setup(setupdata())
+    it("getGenePrababilities(mainParameters,NULL,\"CycD\",\"p27\",2)", {
+        probability <- getGenePrababilities(mainParameters, NULL, "CycD", "p27", 2, NULL)$getBestFitP
+        expect_equal(round(probability$TT, 3), 0.5)
+        expect_equal(round(probability$FT, 3), 0.5)
+        expect_equal(round(probability$TF, 3), 1)
+        expect_equal(round(probability$FF, 3), 0)
+        
+        expect_equal(probability$basic_measures$target_T_count, 5)
+        expect_equal(probability$basic_measures$target_F_count, 4)
+        expect_equal(probability$basic_measures$lenTT, 4)
+        expect_equal(probability$basic_measures$lenTF, 1)
+        expect_equal(probability$basic_measures$lenFT, 4)
+        expect_equal(probability$basic_measures$lenFF, 0)
+        expect_equal(probability$basic_measures$cond_T_count, 8)
+        expect_equal(probability$basic_measures$cond_F_count, 1)
+        
+        # test counter
+        expect_equal(round(probability$TT_c, 3), 0.833)
+        expect_equal(round(probability$FT_c, 3), 0.167)
+        expect_equal(round(probability$TF_c, 3), 0.667)
+        expect_equal(round(probability$FF_c, 3), 0.333)
+    })
+    
+    it("getGenePrababilities(mainParameters,NULL,\"p27\",\"CycD\",2)", {
+        # print(probability)
+        
+        probability <- getGenePrababilities(mainParameters, NULL, "p27", "CycD", 2, NULL)$getBestFitP
+        
+        expect_equal(round(probability$TT, 3), 1)
+        expect_equal(round(probability$FT, 3), 0)
+        expect_equal(round(probability$TF, 3), 0)
+        expect_equal(round(probability$FF, 3), 1)
+        
+        expect_equal(probability$basic_measures$target_T_count, 4)
+        expect_equal(probability$basic_measures$target_F_count, 2)
+        expect_equal(probability$basic_measures$lenTT, 4)
+        expect_equal(probability$basic_measures$lenTF, 0)
+        expect_equal(probability$basic_measures$lenFT, 0)
+        expect_equal(probability$basic_measures$lenFF, 2)
+        expect_equal(probability$basic_measures$cond_T_count, 4)
+        expect_equal(probability$basic_measures$cond_F_count, 2)
+        
+    })
+    it("getGenePrababilities(mainParameters,NULL,\"p27\",\"CycE\",2)", {
+        # print(probability)
+        
+        probability <- getGenePrababilities(mainParameters, NULL, "p27", "CycE", 2, NULL)$getBestFitN  #timestep =2
+        expect_equal(round(probability$TT, 3), 0.5)
+        expect_equal(round(probability$FT, 3), 0.5)
+        expect_equal(round(probability$TF, 3), 0.857)
+        expect_equal(round(probability$FF, 3), 0.143)
+        
+        expect_equal(probability$basic_measures$target_T_count, 7)
+        expect_equal(probability$basic_measures$target_F_count, 2)
+        expect_equal(probability$basic_measures$lenTT, 1)
+        expect_equal(probability$basic_measures$lenTF, 6)
+        expect_equal(probability$basic_measures$lenFT, 1)
+        expect_equal(probability$basic_measures$lenFF, 1)
+        expect_equal(probability$basic_measures$cond_T_count, 2)
+        expect_equal(probability$basic_measures$cond_F_count, 7)
+    })
+    it("getGenePrababilities(mainParameters,list(\"p27\"=1,\"CycD\"=0),\"CycE\",\"E2F\",2)", {
+        # print(probability)
+        probability <- getGenePrababilities(mainParameters, list(p27 = 1, CycD = 0), "CycE", "E2F", 2, NULL)$getBestFitP
+        
+        expect_equal(round(probability$TT, 3), 0)
+        expect_equal(round(probability$FT, 3), 1)
+        expect_equal(round(probability$TF, 3), 0)
+        expect_equal(round(probability$FF, 3), 0)
+        
+        expect_equal(probability$basic_measures$target_T_count, 1)
+        expect_equal(probability$basic_measures$target_F_count, 5)
+        expect_equal(probability$basic_measures$lenTT, 0)
+        expect_equal(probability$basic_measures$lenTF, 0)
+        expect_equal(probability$basic_measures$lenFT, 2)
+        expect_equal(probability$basic_measures$lenFF, 0)
+        expect_equal(probability$basic_measures$cond_T_count, 2)
+        expect_equal(probability$basic_measures$cond_F_count, 0)
+    })
+})

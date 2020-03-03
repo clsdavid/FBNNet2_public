@@ -1,1 +1,2 @@
-# FBNNet2_public
+# FBNNet2
+New version of FBNNet using Rcpp
