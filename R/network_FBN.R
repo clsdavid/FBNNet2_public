@@ -20,18 +20,12 @@
 #' listtest<-list(mat1,mat2)
 #' cube<-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtest,4,1,FALSE)
 #' network<-mineFBNNetwork(cube,c('gene1','gene2'))
-#' @rdname "FBNNetwork"
+#' @rdname 'FBNNetwork'
 #' @export
-mineFBNNetwork <- function(fbnGeneCube, 
-                           genes = NULL, 
-                           useParallel = FALSE,
-                           threshold_confidence = 1, 
-                           threshold_error = 0, 
-                           threshold_support = 0.00001, 
-                           maxFBNRules = 5) {
-    futile.logger::flog.info(sprintf("Enter mineFBNNetwork zone: genes=%s, useParallel=%s",
-                                     paste(genes, sep = ", ", collapse = ", "),
-                                     useParallel))
+mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, threshold_confidence = 1, threshold_error = 0, threshold_support = 1e-05, 
+    maxFBNRules = 5) {
+    futile.logger::flog.info(sprintf("Enter mineFBNNetwork zone: genes=%s, useParallel=%s", paste(genes, sep = ", ", collapse = ", "), 
+        useParallel))
     checkProbabilityTypeData(threshold_confidence)
     checkProbabilityTypeData(threshold_error)
     checkProbabilityTypeData(threshold_support)
@@ -47,17 +41,9 @@ mineFBNNetwork <- function(fbnGeneCube,
     
     genes <- genes[genes %in% names(fbnGeneCube)]
     
-    midle_result <- searchFBNNetworkCore(fbnGeneCube, 
-                                        genes, 
-                                        useParallel,
-                                        threshold_confidence, 
-                                        threshold_error, 
-                                        threshold_support, 
-                                        maxFBNRules)
-    finalresult <- mineFBNNetworkWithCores(midle_result,
-                                           genes,
-                                           threshold_error,
-                                           maxFBNRules)
+    midle_result <- searchFBNNetworkCore(fbnGeneCube, genes, useParallel, threshold_confidence, threshold_error, threshold_support, 
+        maxFBNRules)
+    finalresult <- mineFBNNetworkWithCores(midle_result, genes, threshold_error, maxFBNRules)
     time2 <- as.numeric(Sys.time())
     print(paste("Total cost ", time2 - time1, " seconds to mine Fundamental Boolean Functions ", sep = "", collapse = ""))
     futile.logger::flog.info(sprintf("Leave mineFBNNetwork zone"))
@@ -66,7 +52,7 @@ mineFBNNetwork <- function(fbnGeneCube,
 
 #' @noRd
 mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshold_error, maxFBNRules) {
-    if(is.null(genes)) {
+    if (is.null(genes)) {
         genes <- names(searchFBNNetworkCore)
     }
     
@@ -77,7 +63,7 @@ mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshol
     if (length(finalresult) > 0) {
         cond1 <- sapply(finalresult, function(entry) !is.null(entry))
         if (length(cond1) > 0) {
-            finalresult <- (finalresult[cond1][unlist(lapply(finalresult[cond1], length) != 0)]) 
+            finalresult <- (finalresult[cond1][unlist(lapply(finalresult[cond1], length) != 0)])
         } else {
             stop("No Network generated")
         }
@@ -102,15 +88,10 @@ removeDuplicates <- function(factors) {
 
 #' Internal method
 #' @noRd
-searchFBNNetworkCore <- function(fbnGeneCube, 
-                                 genes, 
-                                 useParallel = FALSE,
-                                 threshold_confidence = 1, 
-                                 threshold_error = 0, 
-                                 threshold_support = 1e-04, 
-                                 maxFBNRules = 5) {
+searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, threshold_confidence = 1, threshold_error = 0, threshold_support = 1e-04, 
+    maxFBNRules = 5) {
     
-    if(useParallel) {
+    if (useParallel) {
         useParallel = FALSE
         futile.logger::flog.info(sprintf("The parallel for network is not support"))
     }
@@ -119,15 +100,16 @@ searchFBNNetworkCore <- function(fbnGeneCube,
     
     network_configs <- new.env(hash = TRUE)
     network_configs$threshold_confidence <- threshold_confidence
-    network_configs$threshold_error <-  threshold_error
+    network_configs$threshold_error <- threshold_error
     network_configs$threshold_support <- threshold_support
     network_configs$maxFBNRules <- maxFBNRules
     ## main recursive function to search for rults (fruits)
     internalloop <- function(i, genes, env) {
         
-        recursiveMiningFBNFunction <- function(fbnGeneCubeStem, targetgene, currentsubgene, groupbyGene, network_configs, findTrue, findFalse) {
+        recursiveMiningFBNFunction <- function(fbnGeneCubeStem, targetgene, currentsubgene, groupbyGene, network_configs, findTrue, 
+            findFalse) {
             threshold_confidence <- network_configs$threshold_confidence
-            threshold_error <-  network_configs$threshold_error
+            threshold_error <- network_configs$threshold_error
             threshold_support <- network_configs$threshold_support
             
             if (is.null(fbnGeneCubeStem[[currentsubgene]])) {
@@ -154,7 +136,7 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             timestepF <- 1
             bestFitP <- 0
             bestFitN <- 0
-
+            
             # get measures at the current level
             input <- sort(fbnGeneCubeStem[[currentsubgene]][["Input"]])
             pickT <- fbnGeneCubeStem[[currentsubgene]][["ActivatorAndInhibitor"]][["Activator"]]
@@ -166,7 +148,7 @@ searchFBNNetworkCore <- function(fbnGeneCube,
                 pickTvalue <- as.numeric(pickT["Confidence"])  #avgSignal_T + sdSignal_T#
                 pickTallconfidence <- as.numeric(pickT["all_confidence"])
                 pickTmaxconfidence <- as.numeric(pickT["max_confidence"])
-                ##pickTMutualInfo <- abs(as.numeric(pickT["MutualInfo"]))
+                ## pickTMutualInfo <- abs(as.numeric(pickT['MutualInfo']))
                 pickTsupport <- as.numeric(pickT["support"])
                 pickT_causality_test <- as.numeric(pickT["causality_test"])  #*******
                 errorActivator <- as.numeric(pickT["Noise"])
@@ -181,7 +163,7 @@ searchFBNNetworkCore <- function(fbnGeneCube,
                 pickFvalue <- as.numeric(pickF["Confidence"])  #avgSignal_F + sdSignal_F#
                 pickFallconfidence <- as.numeric(pickF["all_confidence"])
                 pickFmaxconfidence <- as.numeric(pickF["max_confidence"])
-                ##pickFMutualInfo <- abs(as.numeric(pickF["MutualInfo"]))
+                ## pickFMutualInfo <- abs(as.numeric(pickF['MutualInfo']))
                 pickFsupport <- as.numeric(pickF["support"])
                 pickF_causality_test <- as.numeric(pickF["causality_test"])  #******
                 errorInhibitor <- as.numeric(pickF["Noise"])
@@ -209,9 +191,10 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             newindex <- length(res) + 1
             if (!is.null(getT)) {
                 
-                res[[newindex]] <- c(targets = targetgene, factor = getT[1], type = 1, identity = identityT, error = round(errorActivator, 5), P = round(pickTvalue, 
-                  4), support = pickTsupport, timestep = timestepT, input = paste(input, collapse = ","), numOfInput = length(input), causality_test = round(pickT_causality_test, 
-                  5), GroupBy = groupbyGene, all_confidence = pickTallconfidence, dimensionType = pickTType, bestFitP = bestFitP)
+                res[[newindex]] <- c(targets = targetgene, factor = getT[1], type = 1, identity = identityT, error = round(errorActivator, 
+                  5), P = round(pickTvalue, 4), support = pickTsupport, timestep = timestepT, input = paste(input, collapse = ","), 
+                  numOfInput = length(input), causality_test = round(pickT_causality_test, 5), GroupBy = groupbyGene, all_confidence = pickTallconfidence, 
+                  dimensionType = pickTType, bestFitP = bestFitP)
                 
                 newindex <- length(res) + 1
                 
@@ -219,13 +202,14 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             
             if (!is.null(getF)) {
                 # identityF<-paste(identity,0,sep='',collapse = '')
-                res[[newindex]] <- c(targets = targetgene, factor = getF[1], type = 0, identity = identityF, error = round(errorInhibitor, 5), P = round(pickFvalue, 
-                  4), support = pickFsupport, timestep = timestepF, input = paste(input, collapse = ","), numOfInput = length(input), causality_test = round(pickF_causality_test, 
-                  5), GroupBy = groupbyGene, all_confidence = pickFallconfidence,  dimensionType = pickFType, bestFitN = bestFitN)
+                res[[newindex]] <- c(targets = targetgene, factor = getF[1], type = 0, identity = identityF, error = round(errorInhibitor, 
+                  5), P = round(pickFvalue, 4), support = pickFsupport, timestep = timestepF, input = paste(input, collapse = ","), 
+                  numOfInput = length(input), causality_test = round(pickF_causality_test, 5), GroupBy = groupbyGene, all_confidence = pickFallconfidence, 
+                  dimensionType = pickFType, bestFitN = bestFitN)
                 
                 newindex <- length(res) + 1
             }
-        
+            
             
             # go through sub levels
             findTrue <- findTrue || !is.null(getT)
@@ -233,62 +217,52 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             
             if (!(findTrue && findFalse)) {
                 if (!is.null(fbnGeneCubeStem[[currentsubgene]]$SubGenesT)) {
-                    fbnGeneCubeStemT <- fbnGeneCubeStem[[currentsubgene]]$SubGenesT
-                    nextgenesT <- names(fbnGeneCubeStemT)
-                    indexT <- 1
-                    temp_resTU <- lapply(seq_along(nextgenesT), function(j) {
-                        nextgene <- nextgenesT[[j]]
-                        dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = fbnGeneCubeStemT, 
-                                                                     targetgene = targetgene, 
-                                                                     currentsubgene = nextgene, 
-                                                                     groupbyGene = groupbyGene, 
-                                                                     network_configs = network_configs,
-                                                                     findTrue = findTrue,
-                                                                     findFalse = findFalse))
-                    })
-                    
-                    for (j in seq_along(temp_resTU)) {
-                        nextgene <- nextgenesT[[j]]
-                        resTU <- temp_resTU[[j]]
-                        if (length(resTU) > 0) {
-                            condT <- sapply(resTU, function(entry) !is.null(entry))
-                            resT[[indexT]] <- resTU[unlist(lapply(resTU[condT], length) != 0)]
-                            indexT <- indexT + 1
-                        }
+                  fbnGeneCubeStemT <- fbnGeneCubeStem[[currentsubgene]]$SubGenesT
+                  nextgenesT <- names(fbnGeneCubeStemT)
+                  indexT <- 1
+                  temp_resTU <- lapply(seq_along(nextgenesT), function(j) {
+                    nextgene <- nextgenesT[[j]]
+                    dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = fbnGeneCubeStemT, targetgene = targetgene, currentsubgene = nextgene, 
+                      groupbyGene = groupbyGene, network_configs = network_configs, findTrue = findTrue, findFalse = findFalse))
+                  })
+                  
+                  for (j in seq_along(temp_resTU)) {
+                    nextgene <- nextgenesT[[j]]
+                    resTU <- temp_resTU[[j]]
+                    if (length(resTU) > 0) {
+                      condT <- sapply(resTU, function(entry) !is.null(entry))
+                      resT[[indexT]] <- resTU[unlist(lapply(resTU[condT], length) != 0)]
+                      indexT <- indexT + 1
                     }
-                    if (length(resT) > 0) {
-                        resT <- dissolve(resT)
-                    }
+                  }
+                  if (length(resT) > 0) {
+                    resT <- dissolve(resT)
+                  }
                 }
                 if (!is.null(fbnGeneCubeStem[[currentsubgene]]$SubGenesF)) {
-                    fbnGeneCubeStemF <- fbnGeneCubeStem[[currentsubgene]]$SubGenesF
-                    nextgenesF <- names(fbnGeneCubeStemF)
-                    indexF <- 1
-                    temp_resFU <- lapply(seq_along(nextgenesF), function(j) {
-                        nextgene <- nextgenesF[[j]]
-                        dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = fbnGeneCubeStemF, 
-                                                                     targetgene = targetgene, 
-                                                                     currentsubgene = nextgene, 
-                                                                     groupbyGene = groupbyGene, 
-                                                                     network_configs = network_configs,
-                                                                     findTrue = findTrue,
-                                                                     findFalse = findFalse))
-                    })
-                    for (j in seq_along(nextgenesF)) {
-                        nextgene <- nextgenesF[[j]]
-                        resFU <- temp_resFU[[j]]
-                        if (length(resFU) > 0) {
-                            condF <- sapply(resFU, function(entry) !is.null(entry))
-                            resF[[indexF]] <- resFU[unlist(lapply(resFU[condF], length) != 0)]
-                            indexF <- indexF + 1
-                        }
+                  fbnGeneCubeStemF <- fbnGeneCubeStem[[currentsubgene]]$SubGenesF
+                  nextgenesF <- names(fbnGeneCubeStemF)
+                  indexF <- 1
+                  temp_resFU <- lapply(seq_along(nextgenesF), function(j) {
+                    nextgene <- nextgenesF[[j]]
+                    dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = fbnGeneCubeStemF, targetgene = targetgene, currentsubgene = nextgene, 
+                      groupbyGene = groupbyGene, network_configs = network_configs, findTrue = findTrue, findFalse = findFalse))
+                  })
+                  for (j in seq_along(nextgenesF)) {
+                    nextgene <- nextgenesF[[j]]
+                    resFU <- temp_resFU[[j]]
+                    if (length(resFU) > 0) {
+                      condF <- sapply(resFU, function(entry) !is.null(entry))
+                      resF[[indexF]] <- resFU[unlist(lapply(resFU[condF], length) != 0)]
+                      indexF <- indexF + 1
                     }
-                    if (length(resF) > 0) {
-                        resF <- dissolve(resF)
-                    }
+                  }
+                  if (length(resF) > 0) {
+                    resF <- dissolve(resF)
+                  }
                 }
             }
-
+            
             if (length(resT) > 0) {
                 res <- list(res, resT)
             }
@@ -308,7 +282,7 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             res
         }
         
-        ##entry part
+        ## entry part
         network_configs <- env$configs
         
         targetGene <- genes[[i]]
@@ -330,13 +304,8 @@ searchFBNNetworkCore <- function(fbnGeneCube,
         
         temp_res <- lapply(seq_along(nextgenes), function(k) {
             currentGene <- nextgenes[[k]]
-            dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = currentStem, 
-                                                          targetgene = targetGene, 
-                                                          currentsubgene = currentGene, 
-                                                          groupbyGene = NULL, 
-                                                          network_configs = network_configs,
-                                                          findTrue = FALSE,
-                                                          findFalse = FALSE))
+            dissolve(recursiveMiningFBNFunction(fbnGeneCubeStem = currentStem, targetgene = targetGene, currentsubgene = currentGene, 
+                groupbyGene = NULL, network_configs = network_configs, findTrue = FALSE, findFalse = FALSE))
         })
         rm(list = "currentStem")
         
@@ -344,26 +313,26 @@ searchFBNNetworkCore <- function(fbnGeneCube,
             currentGene <- nextgenes[[k]]
             subres <- temp_res[[k]]
             if (length(subres) > 0) {
-              cond1 <- sapply(subres, function(entry) !is.null(entry))
-              subres <- (subres[cond1][unlist(lapply(subres[cond1], length) != 0)])
-              if (!is.null(subres)) {
-                if (length(subres) > 0) {
-                  index <- length(res[[i]]) + 1
-                  # get result and remove duplicates
-                  resultsub <- dissolve(subres)
-                  res[[i]][[index]] <- resultsub
-                  names(res[[i]])[[index]] <- currentGene
+                cond1 <- sapply(subres, function(entry) !is.null(entry))
+                subres <- (subres[cond1][unlist(lapply(subres[cond1], length) != 0)])
+                if (!is.null(subres)) {
+                  if (length(subres) > 0) {
+                    index <- length(res[[i]]) + 1
+                    # get result and remove duplicates
+                    resultsub <- dissolve(subres)
+                    res[[i]][[index]] <- resultsub
+                    names(res[[i]])[[index]] <- currentGene
+                  }
                 }
-              }
             }
         }
-
+        
         preresponse <- removeDuplicates(dissolve(res[[i]]))
         
         if (length(preresponse) == 0) {
             return(list())
         }
-
+        
         res[[i]] <- preresponse
         rm(list = "temp_res")
         rm(list = "preresponse")
@@ -410,11 +379,9 @@ searchFBNNetworkCore <- function(fbnGeneCube,
 
 #' Internal method
 #' @noRd
-mineFBNNetworkStage2 <- function(res,                            
-                                 threshold_error = 0,
-                                 maxFBNRules = 5) {
+mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
     futile.logger::flog.info(sprintf("Enter mineFBNNetworkStage2 zone"))
-
+    
     if (is.null(res) | length(res) == 0) {
         return(list())
     }
@@ -428,18 +395,17 @@ mineFBNNetworkStage2 <- function(res,
         names(finalFilteredlist)[[i]] <- target
         processed <- c()
         ruleset <- res[[target]]
- 
+        
         for (j in seq_along(ruleset)) {
             rule <- ruleset[[j]]
             processed <- c(j)
             ruleset2 <- ruleset[-processed]
             for (k in seq_along(ruleset2)) {
                 rule2 <- ruleset2[[k]]
-                if (as.numeric(rule[["numOfInput"]]) < as.numeric(rule2[["numOfInput"]])
-                    && as.numeric(rule[["type"]]) == as.numeric(rule2[["type"]])
-                    && as.numeric(rule[["timestep"]]) == as.numeric(rule2[["timestep"]])
-                    && all(splitExpression(rule[["input"]], 2, FALSE) %in% splitExpression(rule2[["input"]], 2, FALSE) == TRUE)) {
-                    finalFilteredlist[[i]][[length(finalFilteredlist[[i]]) + 1]] <- rule2
+                if (as.numeric(rule[["numOfInput"]]) < as.numeric(rule2[["numOfInput"]]) && as.numeric(rule[["type"]]) == as.numeric(rule2[["type"]]) && 
+                  as.numeric(rule[["timestep"]]) == as.numeric(rule2[["timestep"]]) && all(splitExpression(rule[["input"]], 
+                  2, FALSE) %in% splitExpression(rule2[["input"]], 2, FALSE) == TRUE)) {
+                  finalFilteredlist[[i]][[length(finalFilteredlist[[i]]) + 1]] <- rule2
                 }
             }
         }
@@ -478,15 +444,15 @@ mineFBNNetworkStage2 <- function(res,
             inhibitors <- (inhibitors[cond1][unlist(filteredInhibits != 0)])
         }
         
-        activators <- activators[order(as.numeric(sapply(activators,"[[","timestep")), as.numeric(sapply(activators,"[[","error")), as.numeric(sapply(activators,"[[","numOfInput")), -as.numeric(sapply(activators,"[[","support")))]
-        if (length(activators) > maxFBNRules)
-        {
+        activators <- activators[order(as.numeric(sapply(activators, "[[", "timestep")), as.numeric(sapply(activators, "[[", 
+            "error")), as.numeric(sapply(activators, "[[", "numOfInput")), -as.numeric(sapply(activators, "[[", "support")))]
+        if (length(activators) > maxFBNRules) {
             activators <- activators[1:maxFBNRules]
         }
         
-        inhibitors <- inhibitors[order(as.numeric(sapply(inhibitors,"[[","timestep")), as.numeric(sapply(inhibitors,"[[","error")), as.numeric(sapply(inhibitors,"[[","numOfInput")), -as.numeric(sapply(inhibitors,"[[","support")))]
-        if (length(inhibitors) > maxFBNRules)
-        {
+        inhibitors <- inhibitors[order(as.numeric(sapply(inhibitors, "[[", "timestep")), as.numeric(sapply(inhibitors, "[[", 
+            "error")), as.numeric(sapply(inhibitors, "[[", "numOfInput")), -as.numeric(sapply(inhibitors, "[[", "support")))]
+        if (length(inhibitors) > maxFBNRules) {
             inhibitors <- inhibitors[1:maxFBNRules]
         }
         
@@ -499,7 +465,7 @@ mineFBNNetworkStage2 <- function(res,
     })
     cond1 <- sapply(filteredres, function(entry) !is.null(entry))
     filteredres <- (filteredres[cond1][unlist(lapply(filteredres[cond1], length) != 0)])
-
+    
     class(filteredres) <- c("FBNTrueCubeMiner")
     futile.logger::flog.info(sprintf("Leave mineFBNNetworkStage2 zone"))
     filteredres

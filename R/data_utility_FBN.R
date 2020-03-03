@@ -22,8 +22,8 @@ getStatisticMeasures <- function(featurenames, timeseriesdata) {
         min_sampledata <- min(sampledata)
         median_sampledata <- median(sampledata)
         
-        result <- c(id = feature, std = std_sampledata, mean = mean_sampledata, length = length_sampledata, sem = sem_sampledata, max = max_sampledata, min = min_sampledata, 
-            median = median_sampledata)
+        result <- c(id = feature, std = std_sampledata, mean = mean_sampledata, length = length_sampledata, sem = sem_sampledata, 
+            max = max_sampledata, min = min_sampledata, median = median_sampledata)
         return(result)
     })
     
@@ -77,7 +77,7 @@ reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[le
 #' @param  discretedTimeSeriesdata discreted timeseries data
 #' @param maxElements the max elements to divide the discreted timeseries data into
 #' @noRd
-dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements=20, maxK=4){
+dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
     futile.logger::flog.info(sprintf("Enter dividedDataIntoSubgroups zone: maxElements=%s", maxElements))
     genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
     
@@ -86,13 +86,12 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements=20, ma
     
     sub_genes <- split(genes, rep(1:n_subgroup, each = maxElements)[1:len_genes])
     sub_matrix <- lapply(sub_genes, function(sub, matx_data) {
-        lapply(matx_data, function(matx, sub){
-            matx[rownames(matx) %in% sub, ] 
+        lapply(matx_data, function(matx, sub) {
+            matx[rownames(matx) %in% sub, ]
         }, sub)
     }, discretedTimeSeriesdata)
     
-    if(maxK > length(sub_genes))
-    {
+    if (maxK > length(sub_genes)) {
         maxK <- length(sub_genes)
     }
     
@@ -103,7 +102,7 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements=20, ma
         sub_genes2 <- sub_genes[-processed]
         for (j in seq_along(sub_genes2)) {
             if (identical(sub_genes[[i]], sub_genes2[[j]])) 
-                next()
+                (next)()
             
             newset <- unique(c(sub_genes[[i]], sub_genes2[[j]]))
             newset <- genes[which(genes %in% newset)]
@@ -115,32 +114,29 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements=20, ma
         for (m in seq_len(maxK - 1)) {
             for (i in seq_along(combined_groups)) {
                 group <- combined_groups[[i]]
-                conds <- sapply(sub_genes, function(sub)!all(sub %in% group))
+                conds <- sapply(sub_genes, function(sub) !all(sub %in% group))
                 filered <- sub_genes[conds]
                 for (j in seq_along(filered)) {
-                    newset <- unique(c(group, filered[[j]]))
-                    newset <- genes[genes %in% newset]
-                    conds2 <- sapply(res_combined_groups, function(sub, check) {
-                        all(check %in% sub)
-                    }, newset)
-                    if (!any(conds2)) {
-                        res_combined_groups[[length(res_combined_groups) + 1]] <- newset
-                        futile.logger::flog.info(sprintf("dividedDataIntoSubgroups zone: group=%s", paste(newset, sep=",", collapse = ",")))
-                    }
+                  newset <- unique(c(group, filered[[j]]))
+                  newset <- genes[genes %in% newset]
+                  conds2 <- sapply(res_combined_groups, function(sub, check) {
+                    all(check %in% sub)
+                  }, newset)
+                  if (!any(conds2)) {
+                    res_combined_groups[[length(res_combined_groups) + 1]] <- newset
+                    futile.logger::flog.info(sprintf("dividedDataIntoSubgroups zone: group=%s", paste(newset, sep = ",", collapse = ",")))
+                  }
                 }
             }
         }
-    }else{
+    } else {
         res_combined_groups <- combined_groups
     }
-
+    
     futile.logger::flog.info(sprintf("(dividedDataIntoSubgroups) generates: %s combined groups", length(res_combined_groups)))
     
-    res <- list(clusters = sub_genes,
-                clusters_timeseries = sub_matrix,
-                combined_clusters = res_combined_groups, 
-                discretedTimeSeriesdata = discretedTimeSeriesdata,
-                target_genes = genes)
+    res <- list(clusters = sub_genes, clusters_timeseries = sub_matrix, combined_clusters = res_combined_groups, discretedTimeSeriesdata = discretedTimeSeriesdata, 
+        target_genes = genes)
     class(res) <- "ClusteredTimeseriesData"
     res
 }
@@ -148,7 +144,7 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements=20, ma
 #' @param  discretedTimeSeriesdata discreted timeseries data
 #' @param maxElements the max elements to divide the discreted timeseries data into
 #' @noRd
-dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements=20, maxK=4){
+dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
     futile.logger::flog.info(sprintf("Enter dividedDataIntoSmallgroups zone: maxElements=%s", maxElements))
     genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
     
@@ -156,12 +152,10 @@ dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements=20, 
     n_subgroup <- ceiling(len_genes/maxElements)
     
     sub_genes <- split(genes, rep(1:n_subgroup, each = maxElements)[1:len_genes])
-
+    
     futile.logger::flog.info(sprintf("(dividedDataIntoSmallgroups) generates: %sgroups", length(sub_genes)))
     
-    res <- list(clusters = sub_genes,
-                discretedTimeSeriesdata = discretedTimeSeriesdata,
-                conditional_genes = genes)
+    res <- list(clusters = sub_genes, discretedTimeSeriesdata = discretedTimeSeriesdata, conditional_genes = genes)
     class(res) <- "ClusteredTimeseriesData"
     res
 }
@@ -239,11 +233,8 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
 #' @param type the type of the network in traditional Boolean modelling
 #' @param geneProbabilities optional if type is probabilistic, and then it is a need to specify the probabilities for each gene
 #' @export
-genereateBoolNetTimeseries <- function(network, 
-                                       initialStates, 
-                                       numMeasurements, 
-                                       type = c("synchronous", "asynchronous", "probabilistic"), 
-                                       geneProbabilities = NULL) {
+genereateBoolNetTimeseries <- function(network, initialStates, numMeasurements, type = c("synchronous", "asynchronous", "probabilistic"), 
+    geneProbabilities = NULL) {
     # initialStates<-initialStates[match(network$genes,rownames(initialStates)),]
     lapply(initialStates, function(state) {
         res <- state

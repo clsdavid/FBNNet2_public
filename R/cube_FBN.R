@@ -23,21 +23,10 @@ NULL
 
 #' @rdname constructFBNCube
 #' @export
-constructFBNCube <- function(target_genes, 
-                             conditional_genes, 
-                             timeseriesCube, 
-                             maxK = 5, 
-                             temporal = 1, 
-                             useParallel = FALSE) {
-    futile.logger::flog.info(sprintf("Enter constructFBNCube zone: target_genes=%s genes and they are %s, conditional_genes=%s genes and they are %s, data_length=%s, maxK=%s, temporal=%s, useParallel=%s",
-                                     length(target_genes),
-                                     paste(target_genes, sep = ", ", collapse = ", "),
-                                     length(conditional_genes),
-                                     paste(conditional_genes, sep = ", ", collapse = ", "),
-                                     length(timeseriesCube),
-                                     maxK,
-                                     temporal,
-                                     useParallel))
+constructFBNCube <- function(target_genes, conditional_genes, timeseriesCube, maxK = 5, temporal = 1, useParallel = FALSE) {
+    futile.logger::flog.info(sprintf("Enter constructFBNCube zone: target_genes=%s genes and they are %s, conditional_genes=%s genes and they are %s, data_length=%s, maxK=%s, temporal=%s, useParallel=%s", 
+        length(target_genes), paste(target_genes, sep = ", ", collapse = ", "), length(conditional_genes), paste(conditional_genes, 
+            sep = ", ", collapse = ", "), length(timeseriesCube), maxK, temporal, useParallel))
     
     # construct gene tree by timeseries * samples * timepoints(columns)
     internalloopByWhole <- function(i, target_genes, conditional_genes, maxK, temporal, mainParameters) {
@@ -72,12 +61,8 @@ constructFBNCube <- function(target_genes,
     mainParameters$previousStates_c <- getpreviousStates_c
     mainParameters$timeseries <- reducedCube
     
-    target_genes <- filterTargetGenesByConditionGenes(target_genes, 
-                                                      mainParameters, 
-                                                      conditional_genes, 
-                                                      NULL,
-                                                      temporal = temporal, 
-                                                      targetCounts = NULL)
+    target_genes <- filterTargetGenesByConditionGenes(target_genes, mainParameters, conditional_genes, NULL, temporal = temporal, 
+        targetCounts = NULL)
     
     if (useParallel) {
         res <- doParallelWork(internalloopByWhole, target_genes, conditional_genes, maxK, temporal, mainParameters)
@@ -92,48 +77,31 @@ constructFBNCube <- function(target_genes,
         class(res) <- c("FBNCube")
     }
     time2 <- as.numeric(Sys.time())
-    print(paste("Total cost ", time2 - time1, " seconds to construct gene cube with size of ", ((object.size(res)/1024)/1024), sep = "", collapse = ""))
+    print(paste("Total cost ", time2 - time1, " seconds to construct gene cube with size of ", ((object.size(res)/1024)/1024), 
+        sep = "", collapse = ""))
     
     if (useParallel) {
         closeAllConnections()
     }
     futile.logger::flog.info("Leave constructFBNCube zone.")
     res
-} 
+}
 
 #' @rdname constructFBNCube
 #' @export
-constructFBNNetwork <- function(target_genes, 
-                             conditional_genes, 
-                             timeseriesCube, 
-                             maxK = 5, 
-                             temporal = 1, 
-                             useParallel = FALSE) {
-    futile.logger::flog.info(sprintf("Enter constructFBNCube zone: target_genes=%s genes and they are %s, conditional_genes=%s genes and they are %s, data_length=%s, maxK=%s, temporal=%s, useParallel=%s",
-                                     length(target_genes),
-                                     paste(target_genes, sep = ", ", collapse = ", "),
-                                     length(conditional_genes),
-                                     paste(conditional_genes, sep = ", ", collapse = ", "),
-                                     length(timeseriesCube),
-                                     maxK,
-                                     temporal,
-                                     useParallel))
+constructFBNNetwork <- function(target_genes, conditional_genes, timeseriesCube, maxK = 5, temporal = 1, useParallel = FALSE) {
+    futile.logger::flog.info(sprintf("Enter constructFBNCube zone: target_genes=%s genes and they are %s, conditional_genes=%s genes and they are %s, data_length=%s, maxK=%s, temporal=%s, useParallel=%s", 
+        length(target_genes), paste(target_genes, sep = ", ", collapse = ", "), length(conditional_genes), paste(conditional_genes, 
+            sep = ", ", collapse = ", "), length(timeseriesCube), maxK, temporal, useParallel))
     
     # construct gene tree by timeseries * samples * timepoints(columns)
     internalloopByWhole <- function(i, target_genes, conditional_genes, maxK, temporal, mainParameters) {
         target_gene <- target_genes[[i]]
-        futile.logger::flog.info(sprintf("process constructFBNCube zone: target_gene=%s",
-                                         target_gene))
+        futile.logger::flog.info(sprintf("process constructFBNCube zone: target_gene=%s", target_gene))
         res <- vector(mode = "list", length = 1)
         res[[target_gene]] <- vector(mode = "list", length = 1)
-        rules <- mineNetworksDirect(targetGene = target_gene, 
-                                     mainParameters = mainParameters, 
-                                     genes = conditional_genes, 
-                                     matchedgenes = NULL, 
-                                     matchedexpression = NULL, 
-                                     maxK = maxK, 
-                                     temporal = temporal, 
-                                     targetCounts = NULL)
+        rules <- mineNetworksDirect(targetGene = target_gene, mainParameters = mainParameters, genes = conditional_genes, matchedgenes = NULL, 
+            matchedexpression = NULL, maxK = maxK, temporal = temporal, targetCounts = NULL)
         cond1 <- sapply(rules, function(entry) !is.null(entry))
         if (length(cond1) == 0) {
             return(NULL)
@@ -182,12 +150,8 @@ constructFBNNetwork <- function(target_genes,
     mainParameters$previousStates_c <- getpreviousStates_c
     mainParameters$timeseries <- reducedCube
     
-    target_genes <- filterTargetGenesByConditionGenes(target_genes, 
-                                                      mainParameters, 
-                                                      conditional_genes, 
-                                                      NULL,
-                                                      temporal = temporal, 
-                                                      targetCounts = NULL)
+    target_genes <- filterTargetGenesByConditionGenes(target_genes, mainParameters, conditional_genes, NULL, temporal = temporal, 
+        targetCounts = NULL)
     
     if (useParallel) {
         res <- doParallelWork(internalloopByWhole, target_genes, conditional_genes, maxK, temporal, mainParameters)
@@ -197,47 +161,34 @@ constructFBNNetwork <- function(target_genes,
     }
     
     if (!is.null(res) & length(res) > 0) {
-        cond1 <- sapply(res, function(entry) !is.null(entry) && length(entry)>0)
+        cond1 <- sapply(res, function(entry) !is.null(entry) && length(entry) > 0)
         res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
         class(res) <- c("FBNCube")
     }
     time2 <- as.numeric(Sys.time())
-    print(paste("Total cost ", time2 - time1, " seconds to construct gene cube with size of ", ((object.size(res)/1024)/1024), sep = "", collapse = ""))
+    print(paste("Total cost ", time2 - time1, " seconds to construct gene cube with size of ", ((object.size(res)/1024)/1024), 
+        sep = "", collapse = ""))
     
     if (useParallel) {
         closeAllConnections()
     }
     futile.logger::flog.info("Leave constructFBNCube zone.")
     res
-} 
+}
 
 
 
 
 #' @rdname constructFBNCube
 #' @export
-constructFBNCubeAndNetworkInSmallGroups <- function(groupedTimeseriesData, 
-                                                 maxK = 5, 
-                                                 temporal = 1, 
-                                                 useParallel = FALSE, 
-                                                 threshold_confidence = 1, 
-                                                 threshold_error = 0, 
-                                                 threshold_support = 0.00001, 
-                                                 maxFBNRules = 20,
-                                                 output_cube = FALSE,
-                                                 parallel_on_group = FALSE) {
-    futile.logger::flog.info(sprintf("Enter constructFBNCubeAndNetworkInSmallGroups zone: clusteredTimeseriesData=%s, maxK=%s, useParallel=%s, threshold_confidence=%s, threshold_error=%s, threshold_support=%s, maxFBNRules=%s, parallel_on_group=%s",
-                                     length(groupedTimeseriesData), 
-                                     maxK,
-                                     useParallel,
-                                     threshold_confidence,
-                                     threshold_error,
-                                     threshold_support,
-                                     maxFBNRules,
-                                     parallel_on_group))
+constructFBNCubeAndNetworkInSmallGroups <- function(groupedTimeseriesData, maxK = 5, temporal = 1, useParallel = FALSE, threshold_confidence = 1, 
+    threshold_error = 0, threshold_support = 1e-05, maxFBNRules = 20, output_cube = FALSE, parallel_on_group = FALSE) {
+    futile.logger::flog.info(sprintf("Enter constructFBNCubeAndNetworkInSmallGroups zone: clusteredTimeseriesData=%s, maxK=%s, useParallel=%s, threshold_confidence=%s, threshold_error=%s, threshold_support=%s, maxFBNRules=%s, parallel_on_group=%s", 
+        length(groupedTimeseriesData), maxK, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, 
+        parallel_on_group))
     
     if (parallel_on_group == TRUE) {
-        useParallel = FALSE ## ToDo need to find out how to do parallel inside parallel
+        useParallel = FALSE  ## ToDo need to find out how to do parallel inside parallel
     }
     
     ## get clusters
@@ -247,10 +198,12 @@ constructFBNCubeAndNetworkInSmallGroups <- function(groupedTimeseriesData,
     ## build combination clusters
     print("Starting.....")
     if (parallel_on_group) {
-        clusteredFBNCube <- doParallelWork(internal_constructCubeWithGroups, combined_clusters, conditional_genes, timeseries_data, maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doParallelWork(internal_constructCubeWithGroups, combined_clusters, conditional_genes, timeseries_data, 
+            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
         
     } else {
-        clusteredFBNCube <- doNonParallelWork(internal_constructCubeWithGroups,combined_clusters, conditional_genes, timeseries_data, maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doNonParallelWork(internal_constructCubeWithGroups, combined_clusters, conditional_genes, timeseries_data, 
+            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
     }
     
     
@@ -261,30 +214,16 @@ constructFBNCubeAndNetworkInSmallGroups <- function(groupedTimeseriesData,
 }
 
 
-#' @rdname "constructFBNCube"
+#' @rdname 'constructFBNCube'
 #' @export
-constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, 
-                                                 maxK = 5, 
-                                                 temporal = 1, 
-                                                 useParallel = FALSE, 
-                                                 threshold_confidence = 1, 
-                                                 threshold_error = 0, 
-                                                 threshold_support = 0.00001, 
-                                                 maxFBNRules = 20,
-                                                 output_cube = FALSE,
-                                                 parallel_on_group = FALSE) {
-    futile.logger::flog.info(sprintf("Enter constructFBNCubeAndNetworkInClusters zone: clusteredTimeseriesData=%s, maxK=%s, useParallel=%s, threshold_confidence=%s, threshold_error=%s, threshold_support=%s, maxFBNRules=%s, parallel_on_group=%s",
-                                     length(clusteredTimeseriesData), 
-                                     maxK,
-                                     useParallel,
-                                     threshold_confidence,
-                                     threshold_error,
-                                     threshold_support,
-                                     maxFBNRules,
-                                     parallel_on_group))
+constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, maxK = 5, temporal = 1, useParallel = FALSE, threshold_confidence = 1, 
+    threshold_error = 0, threshold_support = 1e-05, maxFBNRules = 20, output_cube = FALSE, parallel_on_group = FALSE) {
+    futile.logger::flog.info(sprintf("Enter constructFBNCubeAndNetworkInClusters zone: clusteredTimeseriesData=%s, maxK=%s, useParallel=%s, threshold_confidence=%s, threshold_error=%s, threshold_support=%s, maxFBNRules=%s, parallel_on_group=%s", 
+        length(clusteredTimeseriesData), maxK, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, 
+        parallel_on_group))
     
     if (parallel_on_group == TRUE) {
-        useParallel = FALSE ## ToDo need to find out how to do parallel inside parallel
+        useParallel = FALSE  ## ToDo need to find out how to do parallel inside parallel
     }
     
     ## get clusters
@@ -294,10 +233,12 @@ constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData,
     ## build combination clusters
     print("Starting.....")
     if (parallel_on_group) {
-        clusteredFBNCube <- doParallelWork(internal_constructCubeWithClusters, combined_clusters, target_genes, timeseries_data, maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doParallelWork(internal_constructCubeWithClusters, combined_clusters, target_genes, timeseries_data, 
+            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
         
     } else {
-        clusteredFBNCube <- doNonParallelWork(internal_constructCubeWithClusters,combined_clusters, target_genes, timeseries_data, maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doNonParallelWork(internal_constructCubeWithClusters, combined_clusters, target_genes, timeseries_data, 
+            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
     }
     
     
@@ -308,18 +249,8 @@ constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData,
 }
 
 #' @noRd
-internal_constructCubeWithClusters <- function(index,
-                                                combined_clusters,
-                                                target_genes,
-                                                timeseries_data,
-                                                maxK, 
-                                                temporal, 
-                                                useParallel, 
-                                                threshold_confidence, 
-                                                threshold_error, 
-                                                threshold_support, 
-                                                maxFBNRules,
-                                                output_cube) {
+internal_constructCubeWithClusters <- function(index, combined_clusters, target_genes, timeseries_data, maxK, temporal, useParallel, 
+    threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube) {
     res <- list()
     # get row values i.e. genes
     genes <- combined_clusters[[index]]
@@ -329,49 +260,31 @@ internal_constructCubeWithClusters <- function(index,
         res[[1]] <- constructFBNCube(target_genes, genes, timeseries_data, maxK, temporal, useParallel)
         names(res)[[1]] <- "Cube"
         
-        res[[2]] <- searchFBNNetworkCore(res[[1]], genes = target_genes, 
-                                         threshold_confidence = threshold_confidence, 
-                                         threshold_error = threshold_error, 
-                                         threshold_support = threshold_support, 
-                                         maxFBNRules = maxFBNRules,
-                                         useParallel = useParallel)
+        res[[2]] <- searchFBNNetworkCore(res[[1]], genes = target_genes, threshold_confidence = threshold_confidence, threshold_error = threshold_error, 
+            threshold_support = threshold_support, maxFBNRules = maxFBNRules, useParallel = useParallel)
         names(res)[[2]] <- "NetworkCores"
         
         res[[3]] <- genes
         names(res)[[3]] <- "Genes"
         
-    }else {
+    } else {
         this_cube <- constructFBNCube(target_genes, genes, timeseries_data, maxK, temporal, useParallel)
-        res[[1]] <- searchFBNNetworkCore(this_cube, genes = target_genes, 
-                                 threshold_confidence = threshold_confidence, 
-                                 threshold_error = threshold_error, 
-                                 threshold_support = threshold_support, 
-                                 maxFBNRules = maxFBNRules,
-                                 useParallel = useParallel)
+        res[[1]] <- searchFBNNetworkCore(this_cube, genes = target_genes, threshold_confidence = threshold_confidence, threshold_error = threshold_error, 
+            threshold_support = threshold_support, maxFBNRules = maxFBNRules, useParallel = useParallel)
         names(res)[[1]] <- "NetworkCores"
         
         res[[2]] <- genes
         names(res)[[2]] <- "Genes"
         
     }
-
+    
     futile.logger::flog.info(sprintf("leave internal_constructCubeWithClusters."))
     list(index = res)
 }
 
 #' @noRd
-internal_constructCubeWithGroups <- function(index,
-                                               combined_clusters,
-                                               conditional_genes,
-                                               timeseries_data,
-                                               maxK, 
-                                               temporal, 
-                                               useParallel, 
-                                               threshold_confidence, 
-                                               threshold_error, 
-                                               threshold_support, 
-                                               maxFBNRules,
-                                               output_cube) {
+internal_constructCubeWithGroups <- function(index, combined_clusters, conditional_genes, timeseries_data, maxK, temporal, 
+    useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube) {
     res <- list()
     # get row values i.e. genes
     genes <- combined_clusters[[index]]
@@ -381,25 +294,17 @@ internal_constructCubeWithGroups <- function(index,
         res[[1]] <- constructFBNCube(genes, conditional_genes, timeseries_data, maxK, temporal, useParallel)
         names(res)[[1]] <- "Cube"
         
-        res[[2]] <- searchFBNNetworkCore(res[[1]], genes = genes, 
-                                         threshold_confidence = threshold_confidence, 
-                                         threshold_error = threshold_error, 
-                                         threshold_support = threshold_support, 
-                                         maxFBNRules = maxFBNRules,
-                                         useParallel = useParallel)
+        res[[2]] <- searchFBNNetworkCore(res[[1]], genes = genes, threshold_confidence = threshold_confidence, threshold_error = threshold_error, 
+            threshold_support = threshold_support, maxFBNRules = maxFBNRules, useParallel = useParallel)
         names(res)[[2]] <- "NetworkCores"
         
         res[[3]] <- genes
         names(res)[[3]] <- "Genes"
         
-    }else {
+    } else {
         this_cube <- constructFBNCube(genes, conditional_genes, timeseries_data, maxK, temporal, useParallel)
-        res[[1]] <- searchFBNNetworkCore(this_cube, genes = genes, 
-                                         threshold_confidence = threshold_confidence, 
-                                         threshold_error = threshold_error, 
-                                         threshold_support = threshold_support, 
-                                         maxFBNRules = maxFBNRules,
-                                         useParallel = useParallel)
+        res[[1]] <- searchFBNNetworkCore(this_cube, genes = genes, threshold_confidence = threshold_confidence, threshold_error = threshold_error, 
+            threshold_support = threshold_support, maxFBNRules = maxFBNRules, useParallel = useParallel)
         names(res)[[1]] <- "NetworkCores"
         
         res[[2]] <- genes

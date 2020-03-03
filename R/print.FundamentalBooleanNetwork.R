@@ -18,7 +18,8 @@ print.FundamentalBooleanNetwork <- function(x, ...) {
             if (!is.null(interaction[[funcName]]$error)) {
                 cat(" (")
                 
-                # if (!is.null(interaction[[funcName]]$error)) cat('Error: ',as.character(as.numeric(interaction[[funcName]]$error) * 100), '%',sep='')
+                # if (!is.null(interaction[[funcName]]$error)) cat('Error: ',as.character(as.numeric(interaction[[funcName]]$error) * 100),
+                # '%',sep='')
                 
                 # cat(', ')
                 

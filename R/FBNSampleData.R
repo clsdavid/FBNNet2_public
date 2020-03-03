@@ -1,13 +1,13 @@
 #' Fundamental Boolean model Example
 #'
-#' Example described in the paper "A Novel Data-Driven Boolean Model for Genetic Regulatory Networks" (Chen, L., etc., 2018)
+#' Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
 #'
 #'
 #' @docType data
 #'
 #' @usage data(FBNSampleData)
 #'
-#' @format An object of class \code{"list"};
+#' @format An object of class \code{'list'};
 #'
 #' @keywords FBN, FBM, Fundamental Boolean Modelling, Fundamental Boolean Network
 #'

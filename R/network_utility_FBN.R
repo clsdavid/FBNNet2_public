@@ -446,8 +446,8 @@ convertToFBNNetwork <- function(network) {
                   probability <- 1 - as.numeric(error)
                 }
                 
-                interactions <- regenerateInteractions(paste(c(name, "_", j), collapse = ""), expression, unlist(network$genes), error, type, probability, support, 
-                  timestep)
+                interactions <- regenerateInteractions(paste(c(name, "_", j), collapse = ""), expression, unlist(network$genes), 
+                  error, type, probability, support, timestep)
                 # if(length(item)==1L) { entry[[name]][[length(entry[[name]])+1]]<-unlist(interactions,recursive=FALSE) }else {
                 for (i in seq_along(interactions)) {
                   iniIndex <- iniIndex + 1
@@ -522,8 +522,8 @@ convertMinedResultToFBNNetwork <- function(minerresult, genes) {
                   type <- as.numeric(interactionItems[[j]][[3]])
                   timestep <- interactionItems[[j]][[8]]
                   
-                  interactions <- regenerateInteractions(paste(c(name, "_", j), collapse = ""), expression, unlist(genes), error, type, probability, support, 
-                    timestep)
+                  interactions <- regenerateInteractions(paste(c(name, "_", j), collapse = ""), expression, unlist(genes), 
+                    error, type, probability, support, timestep)
                   for (i in seq_along(interactions)) {
                     iniIndex <- iniIndex + 1
                     entryitem <- interactions[[i]]

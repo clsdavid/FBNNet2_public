@@ -73,7 +73,7 @@ FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(FBNnetwork, david_gen
     links_16 <- c(NULL)
     for (i in seq_along(FBNnetwork$interactions)) {
         targetNode <- names(FBNnetwork$interactions)[[i]]
-        if(show_decay) {
+        if (show_decay) {
             # crate decay function create link part 1
             links_1 <- c(links_1, targetNode)
             links_2 <- c(links_2, targetNode)
@@ -92,7 +92,7 @@ FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(FBNnetwork, david_gen
             links_15 <- c(links_15, TRUE)
             links_16 <- c(links_16, TRUE)
         }
-
+        
         for (j in seq_along(FBNnetwork$interactions[[i]])) {
             sourceNode <- names(FBNnetwork$interactions[[i]])[[j]]
             nodes[[1]] <- c(nodes[[1]], sourceNode)  #(length(nodes[[1]])+1))
@@ -334,7 +334,8 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                       return(res)
                     }))
                     
-                    probability <- getProbabilityFromFunctionInput(1, funcOfActivators[[fa]]$expression, funcOfActivators[[fa]]$probability, pregeneInput)
+                    probability <- getProbabilityFromFunctionInput(1, funcOfActivators[[fa]]$expression, funcOfActivators[[fa]]$probability, 
+                      pregeneInput)
                     
                     if (!length(probability) == 0) {
                       result <- randomSelection(probability)
@@ -364,7 +365,8 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                       return(res)
                     }))
                     
-                    probability <- getProbabilityFromFunctionInput(0, funcOfInhibitors[[fd]]$expression, funcOfInhibitors[[fd]]$probability, pregeneInput)
+                    probability <- getProbabilityFromFunctionInput(0, funcOfInhibitors[[fd]]$expression, funcOfInhibitors[[fd]]$probability, 
+                      pregeneInput)
                     
                     if (!length(probability) == 0) {
                       result <- randomSelection(probability)
@@ -413,7 +415,8 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                 if (length(selectedActivationFunctions) > 0) {
                   for (a in seq_along(selectedActivationFunctions)) {
                     selectedActivationFunction <- selectedActivationFunctions[[a]]$fuc
-                    edges <- networkobject$edges[which(networkobject$edges$title == selectedActivationFunction & networkobject$edges$targetNode == gene), ]
+                    edges <- networkobject$edges[which(networkobject$edges$title == selectedActivationFunction & networkobject$edges$targetNode == 
+                      gene), ]
                     functioninput <- selectedActivationFunctions[[a]]$input
                     for (e in seq_along(rownames(edges))) {
                       rowvalue <- edges[e, ]
@@ -430,11 +433,13 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                         temporarymat[[newindx]] <- list()
                         names(temporarymat)[[newindx]] <- rowid
                         
-                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedActivationFunction, "activate")
+                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedActivationFunction, 
+                          "activate")
                         names(temporarymat[[newindx]])[[1]] <- i
                       } else {
                         newindex <- length(temporarymat[[rowid]]) + 1
-                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedActivationFunction, "activate")
+                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedActivationFunction, 
+                          "activate")
                         names(temporarymat[[rowid]])[[newindex]] <- i
                       }
                       
@@ -446,7 +451,8 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                 if (length(selectedInhibitionFunctions) > 0) {
                   for (d in seq_along(selectedInhibitionFunctions)) {
                     selectedInhibitionFunction <- selectedInhibitionFunctions[[d]]$fuc
-                    edges <- networkobject$edges[which(networkobject$edges$title == selectedInhibitionFunction & networkobject$edges$targetNode == gene), ]
+                    edges <- networkobject$edges[which(networkobject$edges$title == selectedInhibitionFunction & networkobject$edges$targetNode == 
+                      gene), ]
                     functioninput <- selectedInhibitionFunctions[[d]]$input
                     for (e in seq_along(rownames(edges))) {
                       rowvalue <- edges[e, ]
@@ -465,11 +471,13 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                         temporarymat[[newindx]] <- list()
                         names(temporarymat)[[newindx]] <- rowid
                         
-                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedInhibitionFunction, "inhibit")
+                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedInhibitionFunction, 
+                          "inhibit")
                         names(temporarymat[[newindx]])[[1]] <- i
                       } else {
                         newindex <- length(temporarymat[[rowid]]) + 1
-                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedInhibitionFunction, "inhibit")
+                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selectedInhibitionFunction, 
+                          "inhibit")
                         names(temporarymat[[rowid]])[[newindex]] <- i
                       }
                     }
@@ -481,7 +489,8 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                 if (length(decayFunctions) > 0) {
                   for (d in seq_along(decayFunctions)) {
                     selecteddecayFunction <- decayFunctions[[d]]$fuc
-                    edges <- networkobject$edges[which(networkobject$edges$type == selecteddecayFunction & networkobject$edges$targetNode == gene), ]
+                    edges <- networkobject$edges[which(networkobject$edges$type == selecteddecayFunction & networkobject$edges$targetNode == 
+                      gene), ]
                     functioninput <- decayFunctions[[d]]$input
                     for (e in seq_along(rownames(edges))) {
                       rowvalue <- edges[e, ]
@@ -500,11 +509,13 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
                         temporarymat[[newindx]] <- list()
                         names(temporarymat)[[newindx]] <- rowid
                         
-                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selecteddecayFunction, "decay")
+                        temporarymat[[newindx]][[1]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selecteddecayFunction, 
+                          "decay")
                         names(temporarymat[[newindx]])[[1]] <- i
                       } else {
                         newindex <- length(temporarymat[[rowid]]) + 1
-                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selecteddecayFunction, "decay")
+                        temporarymat[[rowid]][[newindex]] <- c(i - 1, i, as.numeric(fromid), as.numeric(toid), fromState, selecteddecayFunction, 
+                          "decay")
                         names(temporarymat[[rowid]])[[newindex]] <- i
                       }
                     }
@@ -607,14 +618,15 @@ FBNNetwork.Graph.CreateDynamicNetworkObjects <- function(networkobject, timepoin
     end <- length(timepoints)
     res <- list()
     while (start <= end) {
-        filterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) <= start & start <= as.numeric(dynamicNetworkGraphicObject$terminus)), 
-            ]
+        filterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) <= start & start <= 
+            as.numeric(dynamicNetworkGraphicObject$terminus)), ]
         
         if (length(rownames(filterddynamic)) > 0) {
             newedges <- networkobject$edges[which(rownames(networkobject$edges) %in% filterddynamic$edge.id), ]
             
             filterednode <- networkobject$nodes[which(networkobject$nodes$type == "gene"), ]
-            filterednode2 <- networkobject$nodes[which(networkobject$nodes$id %in% newedges$from | networkobject$nodes$id %in% newedges$to), ]
+            filterednode2 <- networkobject$nodes[which(networkobject$nodes$id %in% newedges$from | networkobject$nodes$id %in% 
+                newedges$to), ]
             if (length(filterednode2) > 0) {
                 newnodes <- unique(rbind.data.frame(filterednode, filterednode2))
             } else {
@@ -656,8 +668,8 @@ FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dyna
     
     
     if (timepoint > 0) {
-        filterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < timepoint & timepoint <= as.numeric(dynamicNetworkGraphicObject$terminus)), 
-            ]
+        filterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < timepoint & timepoint <= 
+            as.numeric(dynamicNetworkGraphicObject$terminus)), ]
     } else {
         filterddynamic <- dynamicNetworkGraphicObject
     }
@@ -666,28 +678,22 @@ FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dyna
     newedges <- networkobject$edges[which(rownames(networkobject$edges) %in% filterddynamic$edge.id), ]
     
     filterednode <- networkobject$nodes[which(networkobject$nodes$type == "gene"), ]
-    filterednode2 <- networkobject$nodes[which(networkobject$nodes$id %in% newedges$from | networkobject$nodes$id %in% newedges$to), ]
+    filterednode2 <- networkobject$nodes[which(networkobject$nodes$id %in% newedges$from | networkobject$nodes$id %in% newedges$to), 
+        ]
     
     newnodes <- unique(rbind.data.frame(filterednode, filterednode2))  # nodes data.frame for legend
-    lnodes <- data.frame(label = c("Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", "box", "box"), color = c("lightblue", "lightgreen", 
-        "orange"), shadow = c(TRUE, FALSE, FALSE))
+    lnodes <- data.frame(label = c("Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", "box", "box"), 
+        color = c("lightblue", "lightgreen", "orange"), shadow = c(TRUE, FALSE, FALSE))
     
     # edges data.frame for legend
-    ledges <- data.frame(color = c("darkblue", "darkred", "green", "red"), label = c("activate", "inhibit",  "activated input", "deactivated input"), 
-        arrows = c("to", "to", "none", "none"), dashes = c(FALSE, TRUE,  FALSE, TRUE), shadow = c(TRUE, TRUE, FALSE, FALSE))
+    ledges <- data.frame(color = c("darkblue", "darkred", "green", "red"), label = c("activate", "inhibit", "activated input", 
+        "deactivated input"), arrows = c("to", "to", "none", "none"), dashes = c(FALSE, TRUE, FALSE, TRUE), shadow = c(TRUE, 
+        TRUE, FALSE, FALSE))
     
-    graph <- visNetwork::visNetwork(newnodes,
-                                    newedges, 
-                                    main = paste("Fundamental Boolean Networks in the time step of ",
-                                                 " ", timepoint, sep = "", collapse = ""))
-    graph <- visNetwork::visLegend(graph,
-                                   addEdges = ledges, 
-                                   addNodes = lnodes, 
-                                   useGroups = FALSE)
-    visNetwork::visInteraction(graph,
-                               dragNodes = TRUE,
-                               dragView = TRUE,
-                               zoomView = TRUE)
+    graph <- visNetwork::visNetwork(newnodes, newedges, main = paste("Fundamental Boolean Networks in the time step of ", " ", 
+        timepoint, sep = "", collapse = ""))
+    graph <- visNetwork::visLegend(graph, addEdges = ledges, addNodes = lnodes, useGroups = FALSE)
+    visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
 }
 
 #'Display a static network in a slice
@@ -707,29 +713,23 @@ FBNNetwork.Graph.StaticNetwork <- function(networkobject, david_gene_list = NULL
     newedges <- networkobject$edges
     newnodes <- networkobject$nodes
     
-    lnodes <- data.frame(label = c("Gene", "Activate Function (+, Timestep)", "Inhibit Function (-, Timestep)"), shape = c("ellipse", "box", "box"), color = c("lightblue", 
-        "lightgreen", "orange"), shadow = c(TRUE, FALSE, FALSE))
+    lnodes <- data.frame(label = c("Gene", "Activate Function (+, Timestep)", "Inhibit Function (-, Timestep)"), shape = c("ellipse", 
+        "box", "box"), color = c("lightblue", "lightgreen", "orange"), shadow = c(TRUE, FALSE, FALSE))
     
     # edges data.frame for legend
-    ledges <- data.frame(color = c("darkblue", "darkred", "green", "red"), label = c("activate", "inhibit", "activated input", "deactivated input"), 
-        arrows = c("to", "to",  "none", "none"), dashes = c(FALSE, TRUE, FALSE, TRUE), shadow = c(TRUE, TRUE, FALSE, FALSE))
+    ledges <- data.frame(color = c("darkblue", "darkred", "green", "red"), label = c("activate", "inhibit", "activated input", 
+        "deactivated input"), arrows = c("to", "to", "none", "none"), dashes = c(FALSE, TRUE, FALSE, TRUE), shadow = c(TRUE, 
+        TRUE, FALSE, FALSE))
     
     
-    graph <- visNetwork::visNetwork(newnodes,
-                                    newedges,
-                                    main = paste("Fundamental Boolean Networks", sep = "", collapse = ""))
-    graph <- visNetwork::visLegend(graph,
-                                   addEdges = ledges,
-                                   addNodes = lnodes, 
-                                   useGroups = FALSE)
-    visNetwork::visInteraction(graph,
-                               dragNodes = TRUE,
-                               dragView = TRUE,
-                               zoomView = TRUE)
+    graph <- visNetwork::visNetwork(newnodes, newedges, main = paste("Fundamental Boolean Networks", sep = "", collapse = ""))
+    graph <- visNetwork::visLegend(graph, addEdges = ledges, addNodes = lnodes, useGroups = FALSE)
+    visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
 }
 
 #' @noRd
-FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, fromtimepoint, totimepoint, dynamicNetworkGraphicObject, timeseries) {
+FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, fromtimepoint, totimepoint, dynamicNetworkGraphicObject, 
+    timeseries) {
     
     if (is.null(timeseries) | !is.matrix(timeseries)) {
         stop("The parameter timeseries must be not NULL and is a class of Matrix")
@@ -755,8 +755,8 @@ FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, 
         # fromfilterddynamic<-dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset)<index &
         # index<=as.numeric(dynamicNetworkGraphicObject$terminus)),]
         
-        tofilterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < nextindex & nextindex <= as.numeric(dynamicNetworkGraphicObject$terminus)), 
-            ]
+        tofilterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < nextindex & nextindex <= 
+            as.numeric(dynamicNetworkGraphicObject$terminus)), ]
         
         
         tonewedges <- networkobject$edges[which(rownames(networkobject$edges) %in% tofilterddynamic$edge.id), ]
@@ -767,8 +767,8 @@ FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, 
         filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color = "pink"
         filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color = "lightblue"
         
-        tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from, 
-            "_", index, sep = "")
+        tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% 
+            filterednodeFromGene$id), ]$from, "_", index, sep = "")
         filterednodeFromGene$id <- paste(filterednodeFromGene$id, "_", index, sep = "")
         filterednodeFromGene$label <- paste(filterednodeFromGene$label, "_", index, sep = "")
         
@@ -778,20 +778,20 @@ FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, 
         filterednodeToGene[which(nextstate[filterednodeToGene$id] == 0), ]$color = "pink"
         filterednodeToGene[which(nextstate[filterednodeToGene$id] == 1), ]$color = "lightblue"
         
-        tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, "_", nextindex, 
-            sep = "")
+        tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), 
+            ]$to, "_", nextindex, sep = "")
         filterednodeToGene$id <- paste(filterednodeToGene$id, "_", nextindex, sep = "")
         filterednodeToGene$label <- paste(filterednodeToGene$label, "_", nextindex, sep = "")
         
         # TF
         filterednodeFromTF <- filterednodeFrom[which(filterednodeFrom$type == "TF"), ]
-        tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from, "_", 
-            nextindex, sep = "")
+        tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% 
+            filterednodeFromTF$id), ]$from, "_", nextindex, sep = "")
         filterednodeFromTF$id <- paste(filterednodeFromTF$id, "_", nextindex, sep = "")
         
         filterednodeToTF <- filterednodeTo[which(filterednodeTo$type == "TF"), ]
-        tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", nextindex, 
-            sep = "")
+        tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), 
+            ]$to, "_", nextindex, sep = "")
         filterednodeToTF$id <- paste(filterednodeToTF$id, "_", nextindex, sep = "")
         
         newnodes <- unique(rbind.data.frame(newnodes, filterednodeToGene, filterednodeFromGene, filterednodeFromTF, filterednodeToTF))  # nodes data.frame for legend
@@ -800,35 +800,25 @@ FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, 
     }
     
     
-    lnodes <- data.frame(label = c("Activated Gene", "Inhibited Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", "ellipse", "box", 
-        "box"), color = c("lightblue", "pink", "lightgreen", "orange"), shadow = c(TRUE, TRUE, FALSE, FALSE))
+    lnodes <- data.frame(label = c("Activated Gene", "Inhibited Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", 
+        "ellipse", "box", "box"), color = c("lightblue", "pink", "lightgreen", "orange"), shadow = c(TRUE, TRUE, FALSE, FALSE))
     
     # edges data.frame for legend
-    ledges <- data.frame(color = c("darkblue", "darkred", "grey", "green", "red"), label = c("activate", "inhibit", "decay", "activated input", "deactivated input"), 
-        arrows = c("to", "to", "to", "none", "none"), dashes = c(FALSE, TRUE, TRUE, FALSE, TRUE), shadow = c(TRUE, TRUE, TRUE, FALSE, FALSE))
+    ledges <- data.frame(color = c("darkblue", "darkred", "grey", "green", "red"), label = c("activate", "inhibit", "decay", 
+        "activated input", "deactivated input"), arrows = c("to", "to", "to", "none", "none"), dashes = c(FALSE, TRUE, TRUE, 
+        FALSE, TRUE), shadow = c(TRUE, TRUE, TRUE, FALSE, FALSE))
     
     
     
-    graph <- visNetwork::visNetwork(newnodes,
-                                    newedges,
-                                    main = paste("Dynamic Fundamental Boolean Networks from the time point of",
-                                        " ", fromtimepoint, " ", "to ", totimepoint, 
-        sep = "", collapse = "")) 
-    graph <- visNetwork::visLegend(graph,
-                                   addEdges = ledges,
-                                   addNodes = lnodes, 
-                                   useGroups = FALSE)
+    graph <- visNetwork::visNetwork(newnodes, newedges, main = paste("Dynamic Fundamental Boolean Networks from the time point of", 
+        " ", fromtimepoint, " ", "to ", totimepoint, sep = "", collapse = ""))
+    graph <- visNetwork::visLegend(graph, addEdges = ledges, addNodes = lnodes, useGroups = FALSE)
     
-    visNetwork::visInteraction(graph,
-                               dragNodes = TRUE,
-                               dragView = TRUE, 
-                               zoomView = TRUE)
+    visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
 }
 
 #' @noRd
-FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
-                                                      dynamicNetworkGraphicObject,
-                                                      matrix) {
+FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject, matrix) {
     if (is.null(matrix) | !is.matrix(matrix)) {
         stop("The parameter matrix must be not NULL and is a class of Matrix")
     }
@@ -855,8 +845,8 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
         # fromfilterddynamic<-dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset)<index &
         # index<=as.numeric(dynamicNetworkGraphicObject$terminus)),]
         
-        tofilterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < nextindex & nextindex <= as.numeric(dynamicNetworkGraphicObject$terminus)), 
-            ]
+        tofilterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < nextindex & nextindex <= 
+            as.numeric(dynamicNetworkGraphicObject$terminus)), ]
         
         
         tonewedges <- networkobject$edges[which(rownames(networkobject$edges) %in% tofilterddynamic$edge.id), ]
@@ -867,8 +857,8 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
         filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color = "pink"
         filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color = "lightblue"
         
-        tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from, 
-            "_", index, sep = "")
+        tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% 
+            filterednodeFromGene$id), ]$from, "_", index, sep = "")
         filterednodeFromGene$id <- paste(filterednodeFromGene$id, "_", index, sep = "")
         filterednodeFromGene$label <- paste(filterednodeFromGene$label, "_", index, sep = "")
         filterednodeFromGene <- cbind(filterednodeFromGene, level = rep(startlevel, length(rownames(filterednodeFromGene))))
@@ -883,23 +873,24 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
                 gene <- independeGenes[[k]]
                 genestate <- matrix[independeGenes[[k]], index]
                 if (as.numeric(genestate == 0)) {
-                  makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "pink", type = "gene", value = 4, label = paste(gene, 
-                    "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
+                  makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "pink", type = "gene", 
+                    value = 4, label = paste(gene, "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
                 } else {
-                  makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", value = 4, label = paste(gene, 
-                    "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
+                  makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", 
+                    value = 4, label = paste(gene, "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
                 }
                 
                 individualfromnode[[length(individualfromnode) + 1]] <- makeupnode
             }
             individualfromnode <- do.call(rbind.data.frame, individualfromnode)
-            colnames(individualfromnode) <- c("id", "shape", "color", "type", "value", "label", "shadow", "group", "title", "level")
+            colnames(individualfromnode) <- c("id", "shape", "color", "type", "value", "label", "shadow", "group", "title", 
+                "level")
         }
         
         # TF from
         filterednodeFromTF <- filterednodeFrom[which(filterednodeFrom$type == "TF"), ]
-        tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from, "_", 
-            nextindex, sep = "")
+        tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% 
+            filterednodeFromTF$id), ]$from, "_", nextindex, sep = "")
         filterednodeFromTF$id <- paste(filterednodeFromTF$id, "_", nextindex, sep = "")
         filterednodeFromTF <- cbind(filterednodeFromTF, level = rep(startlevel + 1, length(rownames(filterednodeFromTF))))
         
@@ -911,8 +902,8 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
         filterednodeToGene[which(nextstate[filterednodeToGene$id] == 0), ]$color = "pink"
         filterednodeToGene[which(nextstate[filterednodeToGene$id] == 1), ]$color = "lightblue"
         
-        tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, "_", nextindex, 
-            sep = "")
+        tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), 
+            ]$to, "_", nextindex, sep = "")
         filterednodeToGene$id <- paste(filterednodeToGene$id, "_", nextindex, sep = "")
         filterednodeToGene$label <- paste(filterednodeToGene$label, "_", nextindex, sep = "")
         filterednodeToGene <- cbind(filterednodeToGene, level = rep(startlevel + 2, length(rownames(filterednodeToGene))))
@@ -927,11 +918,13 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
                 gene <- independeGenes[[k]]
                 genestate <- matrix[independeGenes[[k]], nextindex]
                 if (as.numeric(genestate == 0)) {
-                  makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "pink", type = "gene", value = 4, label = paste(gene, 
-                    "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel + 2)
+                  makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "pink", type = "gene", 
+                    value = 4, label = paste(gene, "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, 
+                    level = startlevel + 2)
                 } else {
-                  makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", value = 4, label = paste(gene, 
-                    "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel + 2)
+                  makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", 
+                    value = 4, label = paste(gene, "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, 
+                    level = startlevel + 2)
                 }
                 
                 individualtonode[[length(individualtonode) + 1]] <- makeupnode
@@ -943,12 +936,13 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
         # to TF
         
         filterednodeToTF <- filterednodeTo[which(filterednodeTo$type == "TF"), ]
-        tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", nextindex, 
-            sep = "")
+        tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), 
+            ]$to, "_", nextindex, sep = "")
         filterednodeToTF$id <- paste(filterednodeToTF$id, "_", nextindex, sep = "")
         filterednodeToTF <- cbind(filterednodeToTF, level = rep(startlevel + 1, length(rownames(filterednodeToTF))))
         # filterednodeFromGene<-rbind.all.columns(filterednodeFromGene,individualnode)
-        newnodes <- unique(rbind.data.frame(newnodes, individualfromnode, individualtonode, filterednodeToGene, filterednodeFromGene, filterednodeFromTF, filterednodeToTF))  # nodes data.frame for legend
+        newnodes <- unique(rbind.data.frame(newnodes, individualfromnode, individualtonode, filterednodeToGene, filterednodeFromGene, 
+            filterednodeFromTF, filterednodeToTF))  # nodes data.frame for legend
         # newnodes<-newnodes[order(newnodes$title),]
         newedges <- unique(rbind.data.frame(newedges, tonewedges))
         index <- index + 1
@@ -956,32 +950,22 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject,
     }
     
     
-    lnodes <- data.frame(label = c("Activated Gene", "Inhibited Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", "ellipse", "box", 
-        "box"), color = c("lightblue", "pink", "lightgreen", "orange"), shadow = c(TRUE, TRUE, FALSE, FALSE))
+    lnodes <- data.frame(label = c("Activated Gene", "Inhibited Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", 
+        "ellipse", "box", "box"), color = c("lightblue", "pink", "lightgreen", "orange"), shadow = c(TRUE, TRUE, FALSE, FALSE))
     
     # edges data.frame for legend
-    ledges <- data.frame(color = c("darkblue", "darkred", "grey", "green", "red"), label = c("activate", "inhibit", "decay", "activated input", "deactivated input"), 
-        arrows = c("to", "to", "to", "none", "none"), dashes = c(FALSE, TRUE, TRUE, FALSE, TRUE), shadow = c(TRUE, TRUE, TRUE, FALSE, FALSE))
+    ledges <- data.frame(color = c("darkblue", "darkred", "grey", "green", "red"), label = c("activate", "inhibit", "decay", 
+        "activated input", "deactivated input"), arrows = c("to", "to", "to", "none", "none"), dashes = c(FALSE, TRUE, TRUE, 
+        FALSE, TRUE), shadow = c(TRUE, TRUE, TRUE, FALSE, FALSE))
     
     
     
-    graph <- visNetwork::visNetwork(newnodes, 
-                           newedges, 
-                           main = paste0("Dynamic Fundamental Boolean Networks from the time point of", " ", 1, " ", "to ", length(cNames))) 
-    graph <- visNetwork::visLegend(graph,
-                                   addEdges = ledges,
-                                   addNodes = lnodes,
-                                   useGroups = FALSE,
-                                   width = 0.1)
-    graph <- visNetwork::visInteraction(graph,
-                                        dragNodes = TRUE, 
-                                        dragView = TRUE, 
-                                        zoomView = TRUE)
-    graph <- visNetwork::visEdges(graph, 
-                                  arrows = "from")
-    visNetwork::visHierarchicalLayout(graph,
-                                      direction = "LR",
-                                      levelSeparation = 200)
+    graph <- visNetwork::visNetwork(newnodes, newedges, main = paste0("Dynamic Fundamental Boolean Networks from the time point of", 
+        " ", 1, " ", "to ", length(cNames)))
+    graph <- visNetwork::visLegend(graph, addEdges = ledges, addNodes = lnodes, useGroups = FALSE, width = 0.1)
+    graph <- visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
+    graph <- visNetwork::visEdges(graph, arrows = "from")
+    visNetwork::visHierarchicalLayout(graph, direction = "LR", levelSeparation = 200)
 }
 
 
@@ -1027,13 +1011,11 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
     
     data("DAVID_gene_list")
     david_gene_list <- DAVID_gene_list
-
-
+    
+    
     if (is.null(networkobject)) {
-        if(type == "dynamic")
-          networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = TRUE)
-        else
-          networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = FALSE)  
+        if (type == "dynamic") 
+            networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = TRUE) else networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = FALSE)
     }
     
     
@@ -1048,10 +1030,9 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
     
     # animation=FBNNetwork.Graph.DynamicNetworkInAnimation(timeseriesMatrix,fbnNetwork,orchardCube)
     
-    switch(type, 
-           static = FBNNetwork.Graph.StaticNetwork(networkobject, david_gene_list), 
-           staticSlice = FBNNetwork.Graph.StaticNetworkInSlice(networkobject, toTimePoint, dynamicnetworkobject), 
-           dynamic = FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject(networkobject, fromTimePoint, toTimePoint, dynamicnetworkobject, timeseriesMatrix))
+    switch(type, static = FBNNetwork.Graph.StaticNetwork(networkobject, david_gene_list), staticSlice = FBNNetwork.Graph.StaticNetworkInSlice(networkobject, 
+        toTimePoint, dynamicnetworkobject), dynamic = FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject(networkobject, fromTimePoint, 
+        toTimePoint, dynamicnetworkobject, timeseriesMatrix))
 }
 
 #' A method to draw attractors

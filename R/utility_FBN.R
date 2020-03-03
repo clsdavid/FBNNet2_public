@@ -95,10 +95,10 @@ generateSimilarReport <- function(similarityreport) {
 #' timeseriesReductionBasedOnRowVector(listtest,c('a','c'))
 #'@noRd
 timeseriesReductionBasedOnRowVector <- function(timeseriesCube, vector) {
-        # get FBN matrix
-        lapply(timeseriesCube, function(series) {
-            return(series[vector, ])
-        })
+    # get FBN matrix
+    lapply(timeseriesCube, function(series) {
+        return(series[vector, ])
+    })
 }
 
 #'Reduce timeseries data based a vector of nodes (genes)
@@ -114,10 +114,10 @@ timeseriesReductionBasedOnRowVector <- function(timeseriesCube, vector) {
 #' timeseriesReductionBasedOnColVector(listtest,c('a','c'))
 #'@noRd
 timeseriesReductionBasedOnColVector <- function(timeseriesCube, vector) {
-        # get FBN matrix
-        lapply(timeseriesCube, function(series) {
-            return(series[, vector])
-        })
+    # get FBN matrix
+    lapply(timeseriesCube, function(series) {
+        return(series[, vector])
+    })
 }
 
 #'@noRd
@@ -222,7 +222,7 @@ extractTimeseriesDataByColumn <- function(timeseriesmatrix, numofCulumns) {
     }
     columnames <- colnames(timeseriesmatrix)
     
-    if (length(columnames) %% numofCulumns != 0) {
+    if (length(columnames)%%numofCulumns != 0) {
         stop("The data cannot be split equallly")
     }
     
@@ -240,19 +240,19 @@ extractTimeseriesDataByColumn <- function(timeseriesmatrix, numofCulumns) {
 
 #'@noRd
 CheckRightTypeTimeseriesData <- function(timeseries_data) {
-    if (!is.list(timeseries_data))
+    if (!is.list(timeseries_data)) 
         stop("The type of timeseries_data must be LIST")
     
     check <- sapply(timeseries_data, is.matrix)
-    if (any(check) == FALSE)
+    if (any(check) == FALSE) 
         stop("The element of the data must be matrix or data.frame")
     
     NULL
 }
 
 #'@noRd
-checkNumeric <- function(x){
-    if (!is.numeric(x))
+checkNumeric <- function(x) {
+    if (!is.numeric(x)) 
         stop("The input is not a type of numeric")
     
     NULL
@@ -270,10 +270,9 @@ checkProbabilityTypeData <- function(x) {
 isBooleanTypeTimeseriesData <- function(x) {
     conds <- sapply(x, function(mat) {
         f_mat <- factor(mat)
-        if (all(unique(levels(f_mat)) %in% c(0,1)) || unique(all(levels(f_mat)) %in% c(FALSE, TRUE)))
-        {
+        if (all(unique(levels(f_mat)) %in% c(0, 1)) || unique(all(levels(f_mat)) %in% c(FALSE, TRUE))) {
             TRUE
-        }else {
+        } else {
             FALSE
         }
     })

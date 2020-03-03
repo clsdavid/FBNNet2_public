@@ -28,13 +28,8 @@
 #' print(attractor)
 #' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 #' @export
-searchForAttractors <- function(fbnnetwork, 
-                                startStates = list(), 
-                                genes, 
-                                type = c("synchronous", "asynchronous"), 
-                                genesOn = c(), 
-                                genesOff = c(), 
-                                maxSearch = 1000) {
+searchForAttractors <- function(fbnnetwork, startStates = list(), genes, type = c("synchronous", "asynchronous"), genesOn = c(), 
+    genesOff = c(), maxSearch = 1000) {
     if (!(inherits(fbnnetwork, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")
     
@@ -124,7 +119,8 @@ searchForAttractors <- function(fbnnetwork,
                   if (!Position(function(x) identical(x, nextState), attractors, nomatch = 0) > 0) {
                     currentlength <- length(resultList) + 1
                     resultList[[currentlength]] <- list()
-                    resultList[[currentlength]] <- dissolve(list(dissolve(searchedStates[searchedIndex:length(searchedStates)]), nextState))
+                    resultList[[currentlength]] <- dissolve(list(dissolve(searchedStates[searchedIndex:length(searchedStates)]), 
+                      nextState))
                     basinStates[[currentlength]] <- list()
                     temp <- dissolve(tempbasinStates)
                     basinStates[[currentlength]] <- temp[!temp %in% resultList[[currentlength]]]
@@ -163,9 +159,7 @@ searchForAttractors <- function(fbnnetwork,
 #'@param values, a vector of values for genes. 0 means fixing the gene to inhibition 1 means fixing the gene to activation
 #'  and -1 means no fixing
 #'@noRd
-networkFixUpdate <- function(network, 
-                             fixIndices, 
-                             values) {
+networkFixUpdate <- function(network, fixIndices, values) {
     if (!(inherits(network, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")
     

@@ -114,8 +114,10 @@ convertToBooleanNetworkCollection <- function(network) {
     genes1 <- network$genes
     genes2 <- network$genes
     totalGenes <- network$genes
-    merges <- mergeInteraction(lapply(network$interactions, convertInteraction), lapply(network$interactions, convertInteraction), genes1, genes2, totalGenes)
-    res <- list(interactions = merges, genes = unique(c(network$genes, network$genes)), fixed = network$fixed, timedecay = rep(1, length(network$genes)))
+    merges <- mergeInteraction(lapply(network$interactions, convertInteraction), lapply(network$interactions, convertInteraction), 
+        genes1, genes2, totalGenes)
+    res <- list(interactions = merges, genes = unique(c(network$genes, network$genes)), fixed = network$fixed, timedecay = rep(1, 
+        length(network$genes)))
     
     class(res) <- "BooleanNetworkCollection"
     return(res)
@@ -184,8 +186,8 @@ convertInteraction <- function(interaction) {
     if (mode(interaction) == "list") {
         res <- interaction
     } else if (mode(interaction) == "pairlist") {
-        res <- list(list(input = interaction$input, expression = interaction$expression, error == interaction$error, type = NA, probability = (1 - as.numeric(interaction$error)), 
-            support = NA, timestep = 1))
+        res <- list(list(input = interaction$input, expression = interaction$expression, error == interaction$error, type = NA, 
+            probability = (1 - as.numeric(interaction$error)), support = NA, timestep = 1))
     }
     return(res)
 }
@@ -197,7 +199,7 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
     
     res <- list()
     ## loog for interactions in the first group
-
+    
     for (name1 in names(interactions1)) {
         unique_express_1 <- c()
         unique_express_0 <- c()
@@ -210,25 +212,25 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
             for (j in seq(interactions1[[name1]])) {
                 inputgene1 <- genes1[interactions1[[name1]][[j]]$input]
                 if (length(inputgene1) == 0) {
-                    next
+                  next
                 }
                 
                 type <- interactions1[[name1]][[j]]$type
                 expression <- interactions1[[name1]][[j]]$expression
-
+                
                 temp_exp <- paste(sort(splitExpression(expression, 2, TRUE)), sep = "", collapse = "")
                 if (type == 1) {
-                    if (temp_exp %in% unique_express_1) {
-                        next
-                    }
-  
-                    unique_express_1 <- c(unique_express_1, temp_exp)
+                  if (temp_exp %in% unique_express_1) {
+                    next
+                  }
+                  
+                  unique_express_1 <- c(unique_express_1, temp_exp)
                 } else {
-                    if (temp_exp %in% unique_express_0) {
-                        next
-                    }
-
-                    unique_express_0 <- c(unique_express_0, temp_exp)
+                  if (temp_exp %in% unique_express_0) {
+                    next
+                  }
+                  
+                  unique_express_0 <- c(unique_express_0, temp_exp)
                 }
                 
                 subindex <- length(res[[index]]) + 1
@@ -236,19 +238,15 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
                 if (length(newinput) == 0) {
                   next
                 }
-                res[[index]][[subindex]] <- list(input = newinput, 
-                                                 expression = interactions1[[name1]][[j]]$expression, 
-                                                 error = interactions1[[name1]][[j]]$error, 
-                                                 type = interactions1[[name1]][[j]]$type, 
-                                                 probability = interactions1[[name1]][[j]]$probability, 
-                                                 support = interactions1[[name1]][[j]]$support, 
-                                                 timestep = interactions1[[name1]][[j]]$timestep)
+                res[[index]][[subindex]] <- list(input = newinput, expression = interactions1[[name1]][[j]]$expression, error = interactions1[[name1]][[j]]$error, 
+                  type = interactions1[[name1]][[j]]$type, probability = interactions1[[name1]][[j]]$probability, support = interactions1[[name1]][[j]]$support, 
+                  timestep = interactions1[[name1]][[j]]$timestep)
                 if (type == 1) {
-                    names(res[[index]])[[subindex]] <- paste(name1, "_", a_index, "_", "Activator", sep = "", collapse = "")
-                    a_index = a_index + 1
+                  names(res[[index]])[[subindex]] <- paste(name1, "_", a_index, "_", "Activator", sep = "", collapse = "")
+                  a_index = a_index + 1
                 } else {
-                    names(res[[index]])[[subindex]] <- paste(name1, "_", i_index, "_", "Inhibitor", sep = "", collapse = "")
-                    i_index = i_index + 1
+                  names(res[[index]])[[subindex]] <- paste(name1, "_", i_index, "_", "Inhibitor", sep = "", collapse = "")
+                  i_index = i_index + 1
                 }
                 
             }
@@ -260,42 +258,38 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
             for (j in seq(interactions2[[name1]])) {
                 inputgene2 <- genes2[interactions2[[name1]][[j]]$input]
                 if (length(inputgene2) == 0) {
-                    next
+                  next
                 }
                 
                 type <- interactions2[[name1]][[j]]$type
                 expression <- interactions2[[name1]][[j]]$expression
                 temp_exp <- paste(sort(splitExpression(expression, 2, TRUE)), sep = "", collapse = "")
                 if (type == 1) {
-                    if (temp_exp %in% unique_express_1) {
-                        next
-                    }
-                    unique_express_1 <- c(unique_express_1, temp_exp)
+                  if (temp_exp %in% unique_express_1) {
+                    next
+                  }
+                  unique_express_1 <- c(unique_express_1, temp_exp)
                 } else {
-                    if (temp_exp %in% unique_express_0) {
-                        next
-                    }
-                    
-                    unique_express_0 <- c(unique_express_0, temp_exp)
+                  if (temp_exp %in% unique_express_0) {
+                    next
+                  }
+                  
+                  unique_express_0 <- c(unique_express_0, temp_exp)
                 }
-   
-
-              subindex <- length(res[[name1]]) + 1
-              res[[name1]][[subindex]] <- list(input = which(mergedgenes %in% inputgene2), 
-                                               expression = interactions2[[name1]][[j]]$expression, 
-                                               error = interactions2[[name1]][[j]]$error, 
-                                               type = interactions2[[name1]][[j]]$type, 
-                                               probability = interactions2[[name1]][[j]]$probability, 
-                                               support = interactions2[[name1]][[j]]$support, 
-                                               timestep = interactions2[[name1]][[j]]$timestep)
-              if (type == 1) {
+                
+                
+                subindex <- length(res[[name1]]) + 1
+                res[[name1]][[subindex]] <- list(input = which(mergedgenes %in% inputgene2), expression = interactions2[[name1]][[j]]$expression, 
+                  error = interactions2[[name1]][[j]]$error, type = interactions2[[name1]][[j]]$type, probability = interactions2[[name1]][[j]]$probability, 
+                  support = interactions2[[name1]][[j]]$support, timestep = interactions2[[name1]][[j]]$timestep)
+                if (type == 1) {
                   names(res[[name1]])[[subindex]] <- paste(name1, "_", a_index, "_", "Activator", sep = "", collapse = "")
                   a_index = a_index + 1
-              } else {
+                } else {
                   names(res[[name1]])[[subindex]] <- paste(name1, "_", i_index, "_", "Inhibitor", sep = "", collapse = "")
                   i_index = i_index + 1
-              }
-   
+                }
+                
             }
         }
     }
@@ -305,7 +299,7 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
     for (name2 in names_2) {
         unique_express_1 <- c()
         unique_express_0 <- c()
-
+        
         if (!(name2 %in% names(res))) {
             index <- length(res) + 1
             res[[index]] <- list()
@@ -317,26 +311,26 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
                 if (length(inputgene2) == 0) {
                   next
                 }
-
+                
                 if (type == 1) {
-                    if (temp_exp %in% unique_express_1)
-                        next
-
-                    unique_express_1 <- c(unique_express_1, temp_exp)
+                  if (temp_exp %in% unique_express_1) 
+                    next
+                  
+                  unique_express_1 <- c(unique_express_1, temp_exp)
                 } else {
-                    if (temp_exp %in% unique_express_0)
-                        next
-
-                    unique_express_0 <- c(unique_express_0, temp_exp)
+                  if (temp_exp %in% unique_express_0) 
+                    next
+                  
+                  unique_express_0 <- c(unique_express_0, temp_exp)
                 }
-
+                
                 subindex <- length(res[[index]]) + 1
                 newinput <- which(mergedgenes %in% inputgene2)
                 if (length(newinput) == 0) {
                   next
                 }
-                res[[index]][[subindex]] <- list(input = newinput, expression = interactions2[[name2]][[j]]$expression, error = interactions2[[name2]][[j]]$error,
-                  type = interactions2[[name2]][[j]]$type, probability = interactions2[[name2]][[j]]$probability, support = interactions2[[name2]][[j]]$support,
+                res[[index]][[subindex]] <- list(input = newinput, expression = interactions2[[name2]][[j]]$expression, error = interactions2[[name2]][[j]]$error, 
+                  type = interactions2[[name2]][[j]]$type, probability = interactions2[[name2]][[j]]$probability, support = interactions2[[name2]][[j]]$support, 
                   timestep = interactions2[[name2]][[j]]$timestep)
                 names(res[[index]])[[subindex]] <- names(interactions2[[name2]])[[j]]
             }
@@ -369,26 +363,22 @@ mergeClusterNetworks <- function(clusteredFBNCube, threshold_error, maxFBNRules)
         un_common_genes <- gene_names_new[!gene_names_new %in% gene_names]
         genes <- unique(c(genes, genes2))
         combine_cores <- list(network_cores, next_cores[un_common_genes])
-        combine_cores <- unlist(combine_cores,
-                                recursive = FALSE)
-        for (t_genes in common_genes){
-            identities <- sapply(combine_cores[[t_genes]], function(entry)entry["identity.Identity"])
+        combine_cores <- unlist(combine_cores, recursive = FALSE)
+        for (t_genes in common_genes) {
+            identities <- sapply(combine_cores[[t_genes]], function(entry) entry["identity.Identity"])
             len_next <- length(next_cores[[t_genes]])
-            for (j in seq_len(len_next)){
+            for (j in seq_len(len_next)) {
                 entry <- next_cores[[t_genes]][[j]]
                 if (!entry["identity.Identity"] %in% identities) {
-                    len_c <- length(combine_cores[[t_genes]]) + 1
-                    combine_cores[[t_genes]][[len_c]] <- entry
+                  len_c <- length(combine_cores[[t_genes]]) + 1
+                  combine_cores[[t_genes]][[len_c]] <- entry
                 }
             }
         }
         network_cores <- combine_cores
         i <- i + 1
     }
-    mineFBNNetworkWithCores(searchFBNNetworkCore = network_cores, 
-                            genes = genes, 
-                            threshold_error = threshold_error, 
-                            maxFBNRules = maxFBNRules)
+    mineFBNNetworkWithCores(searchFBNNetworkCore = network_cores, genes = genes, threshold_error = threshold_error, maxFBNRules = maxFBNRules)
 }
 
 findAllInputGenes <- function(networkinteractions, genes) {
@@ -406,8 +396,8 @@ findAllInputGenes <- function(networkinteractions, genes) {
 findAllTargetGenes <- function(networkinteractions) {
     # todo, the for has a problem and need to address carefully
     res <- c()
-    for(name in names(networkinteractions)) {
-        if(length(networkinteractions[[name]]) > 0) {
+    for (name in names(networkinteractions)) {
+        if (length(networkinteractions[[name]]) > 0) {
             res <- c(res, name)
         }
     }
@@ -471,8 +461,8 @@ filterNetworkConnections <- function(networks) {
 #' @export
 filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive = TRUE, expand = FALSE) {
     # individualFilter2<-filterNetworkConnections(individualNetworks[[2]]) FBNNetwork.Graph(individualFilter2)
-    # individualFilter2<-filterNetworkConnectionsByGenes(individualFilter2,c('OR7A5','GFOD1','ANGPT2','LCN2','MCTP1','PNMT', 'SLC22A23'))
-    # FBNNetwork.Graph(individualFilter2) individualFilter2 originalgenes2<-individualNetworks[[2]]$genes
+    # individualFilter2<-filterNetworkConnectionsByGenes(individualFilter2,c('OR7A5','GFOD1','ANGPT2','LCN2','MCTP1','PNMT',
+    # 'SLC22A23')) FBNNetwork.Graph(individualFilter2) individualFilter2 originalgenes2<-individualNetworks[[2]]$genes
     # diffgenes2<-originalgenes2[!originalgenes2%in%individualFilter2$genes] diffgenes2
     if (length(genelist) == 0) {
         stop("The genelist is empty")
@@ -480,20 +470,20 @@ filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive 
     
     res <- networks
     genes <- res$genes
-    if(exclusive) {
+    if (exclusive) {
         filterednetworks <- res$interactions[!names(res$interactions) %in% genelist]
     } else {
         filterednetworks <- res$interactions[names(res$interactions) %in% genelist]
     }
-
+    
     regulategenes <- names(filterednetworks)
-
+    
     filteredinputgenes <- findAllInputGenes(filterednetworks, genes)
     
-    if(!expand) {
+    if (!expand) {
         extranetworks <- filterednetworks
         mixedgenes <- filteredinputgenes
-    }else {
+    } else {
         mixedgenes <- unique(c(regulategenes, filteredinputgenes))
         extranetworks <- res$interactions[names(res$interactions) %in% mixedgenes]
         mixedgenes <- findAllInputGenes(extranetworks, genes)
@@ -534,17 +524,12 @@ filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive 
 
 #'internal
 #' @noRd
-findAllBackwardRelatedGenes <- function(networks, 
-                                        target_gene, 
-                                        regulationType = NULL, 
-                                        target_type = NULL,  
-                                        maxDeep = 1, 
-                                        next_level_mix_type = FALSE) {
+findAllBackwardRelatedGenes <- function(networks, target_gene, regulationType = NULL, target_type = NULL, maxDeep = 1, next_level_mix_type = FALSE) {
     
-    prepare_network <- filterNetworkConnectionsByGenes(networks,target_gene, exclusive = FALSE, expand = FALSE)
+    prepare_network <- filterNetworkConnectionsByGenes(networks, target_gene, exclusive = FALSE, expand = FALSE)
     genes <- names(prepare_network$interactions)
     remove_index_gene <- list()
-
+    
     len <- length(genes)
     for (i in seq_len(len)) {
         interactions <- prepare_network$interactions[[i]]  #gene level
@@ -553,7 +538,7 @@ findAllBackwardRelatedGenes <- function(networks,
         for (j in seq_len(len_i)) {
             interaction <- interactions[[j]]  #function level
             type <- interaction$type
-
+            
             if (!is.null(regulationType) && type != regulationType) {
                 remove_index_function <- c(remove_index_function, j)
                 next
@@ -570,26 +555,22 @@ findAllBackwardRelatedGenes <- function(networks,
         remove_indexes <- remove_index_gene[[i]]
         prepare_network$interactions[[name]] <- prepare_network$interactions[[name]][-c(remove_indexes)]
     }
-   
+    
     prepare_network <- filterNetworkConnections(prepare_network)
     if (maxDeep > 1 && length(prepare_network$interactions) > 0) {
-        # cond1 <- sapply(prepare_network$interactions, function(interaction) length(interaction) > 0)
-        # filteredNetworkInteractions <- prepare_network$interactions[cond1]
-        # expand_genes <- names(filteredNetworkInteractions)
-        expand_genes <- prepare_network$genes[!prepare_network$genes%in%target_gene]
+        # cond1 <- sapply(prepare_network$interactions, function(interaction) length(interaction) > 0) filteredNetworkInteractions
+        # <- prepare_network$interactions[cond1] expand_genes <- names(filteredNetworkInteractions)
+        expand_genes <- prepare_network$genes[!prepare_network$genes %in% target_gene]
         maxDeep <- maxDeep - 1
-
+        
         for (this_target_gene in expand_genes) {
-          if (next_level_mix_type) {
-            
-          } else {
-            
-          }
-            new_nextwork <- findAllBackwardRelatedGenes(networks = networks, 
-                                                        target_gene = this_target_gene, 
-                                                        regulationType = regulationType,
-                                                        target_type = target_type,
-                                                        maxDeep = maxDeep)
+            if (next_level_mix_type) {
+                
+            } else {
+                
+            }
+            new_nextwork <- findAllBackwardRelatedGenes(networks = networks, target_gene = this_target_gene, regulationType = regulationType, 
+                target_type = target_type, maxDeep = maxDeep)
             prepare_network <- filterNetworkConnections(mergeNetwork(prepare_network, new_nextwork))
         }
     }
@@ -601,11 +582,7 @@ findAllBackwardRelatedGenes <- function(networks,
 #' @param networks The Fundamental Boolean Network
 #' @param genelist The target genes
 #' @export
-findBackwardRelatedNetworkByGenes <- function(networks,
-                                       target_gene_list = c(), 
-                                       regulationType = NULL, 
-                                       maxDeep = 1,
-                                       next_level_mix_type = FALSE) {
+findBackwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), regulationType = NULL, maxDeep = 1, next_level_mix_type = FALSE) {
     
     
     if (length(target_gene_list) == 0) {
@@ -616,15 +593,11 @@ findBackwardRelatedNetworkByGenes <- function(networks,
     for (target_gene in target_gene_list) {
         if (regulationType == 0) {
             target_type <- 0
-        }else{
+        } else {
             target_type <- 1
         }
-        new_nextwork <- findAllBackwardRelatedGenes(networks = networks, 
-                                                    target_gene = target_gene, 
-                                                    regulationType = regulationType, 
-                                                    target_type = target_type,
-                                                    maxDeep = maxDeep,
-                                                    next_level_mix_type = next_level_mix_type)
+        new_nextwork <- findAllBackwardRelatedGenes(networks = networks, target_gene = target_gene, regulationType = regulationType, 
+            target_type = target_type, maxDeep = maxDeep, next_level_mix_type = next_level_mix_type)
         if (is.null(prepare_network)) {
             prepare_network <- new_nextwork
         } else {
@@ -637,14 +610,8 @@ findBackwardRelatedNetworkByGenes <- function(networks,
 
 #'internal
 #' @noRd
-findAllForwardRelatedGenes <- function(networks, 
-                                       target_gene, 
-                                       regulationType = NULL, 
-                                       target_type = NULL, 
-                                       main_target_gene = NULL,
-                                       main_target_type = NULL,
-                                       maxDeep = 1,
-                                       next_level_mix_type = next_level_mix_type) {
+findAllForwardRelatedGenes <- function(networks, target_gene, regulationType = NULL, target_type = NULL, main_target_gene = NULL, 
+    main_target_type = NULL, maxDeep = 1, next_level_mix_type = next_level_mix_type) {
     genes <- networks$genes
     prepare_network <- networks
     remove_index_gene <- list()
@@ -658,7 +625,7 @@ findAllForwardRelatedGenes <- function(networks,
             input_Genes <- genes[interaction$input]
             type <- interaction$type
             expression <- interaction$expression
-
+            
             
             if (!target_gene %in% input_Genes) {
                 remove_index_function <- c(remove_index_function, j)
@@ -679,8 +646,8 @@ findAllForwardRelatedGenes <- function(networks,
             if (stringr::str_detect(expression, paste0("!", main_target_gene))) {
                 thismaintarget_type <- 0
             }
-
-            if(main_target_gene != target_gene && main_target_gene %in% input_Genes && thismaintarget_type != main_target_type) {
+            
+            if (main_target_gene != target_gene && main_target_gene %in% input_Genes && thismaintarget_type != main_target_type) {
                 remove_index_function <- c(remove_index_function, j)
                 next
             }
@@ -706,47 +673,32 @@ findAllForwardRelatedGenes <- function(networks,
     if (maxDeep > 1 && length(prepare_network$interactions) > 0) {
         cond1 <- sapply(prepare_network$interactions, function(interaction) length(interaction) > 0)
         filteredNetworkInteractions <- prepare_network$interactions[cond1]
-        #expand_genes <- names(filteredNetworkInteractions)
-        #expand_genes <- prepare_network$genes[!prepare_network$genes%in%target_gene]
+        # expand_genes <- names(filteredNetworkInteractions) expand_genes <-
+        # prepare_network$genes[!prepare_network$genes%in%target_gene]
         expand_genes <- findAllTargetGenes(filteredNetworkInteractions)
         expand_genes <- expand_genes[!expand_genes %in% target_gene]
         maxDeep <- maxDeep - 1
         if (regulationType == 1) {
             target_type <- 1
-        }else {
+        } else {
             target_type <- 0
         }
         
         for (this_target_gene in expand_genes) {
             if (next_level_mix_type) {
-                new_nextwork <- findAllForwardRelatedGenes(networks = networks, 
-                                                           target_gene = this_target_gene, 
-                                                           regulationType = 1, 
-                                                           target_type = target_type, 
-                                                           main_target_gene = main_target_gene,
-                                                           main_target_type = main_target_type,
-                                                           maxDeep = maxDeep,
-                                                           next_level_mix_type = next_level_mix_type)
+                new_nextwork <- findAllForwardRelatedGenes(networks = networks, target_gene = this_target_gene, regulationType = 1, 
+                  target_type = target_type, main_target_gene = main_target_gene, main_target_type = main_target_type, maxDeep = maxDeep, 
+                  next_level_mix_type = next_level_mix_type)
                 prepare_network <- filterNetworkConnections(mergeNetwork(prepare_network, new_nextwork))
                 
-                new_nextwork <- findAllForwardRelatedGenes(networks = networks, 
-                                                           target_gene = this_target_gene, 
-                                                           regulationType = 0, 
-                                                           target_type = target_type, 
-                                                           main_target_gene = main_target_gene,
-                                                           main_target_type = main_target_type,
-                                                           maxDeep = maxDeep,
-                                                           next_level_mix_type = next_level_mix_type)
+                new_nextwork <- findAllForwardRelatedGenes(networks = networks, target_gene = this_target_gene, regulationType = 0, 
+                  target_type = target_type, main_target_gene = main_target_gene, main_target_type = main_target_type, maxDeep = maxDeep, 
+                  next_level_mix_type = next_level_mix_type)
                 prepare_network <- filterNetworkConnections(mergeNetwork(prepare_network, new_nextwork))
             } else {
-                new_nextwork <- findAllForwardRelatedGenes(networks = networks, 
-                                                           target_gene = this_target_gene, 
-                                                           regulationType = regulationType, 
-                                                           target_type = target_type, 
-                                                           main_target_gene = main_target_gene,
-                                                           main_target_type = main_target_type,
-                                                           maxDeep = maxDeep,
-                                                           next_level_mix_type = next_level_mix_type)
+                new_nextwork <- findAllForwardRelatedGenes(networks = networks, target_gene = this_target_gene, regulationType = regulationType, 
+                  target_type = target_type, main_target_gene = main_target_gene, main_target_type = main_target_type, maxDeep = maxDeep, 
+                  next_level_mix_type = next_level_mix_type)
                 prepare_network <- filterNetworkConnections(mergeNetwork(prepare_network, new_nextwork))
             }
         }
@@ -761,26 +713,16 @@ findAllForwardRelatedGenes <- function(networks,
 #' @param regulationType The type of regulation either in 1 (Up regulation) or 0 (down regulation)
 #' @param target_type The boolean type of target genes either in 1 (Activation) or 0 (Inhibition)
 #' @export
-findForwardRelatedNetworkByGenes <- function(networks, 
-                                             target_gene_list = c(), 
-                                             regulationType = NULL, 
-                                             target_type = NULL, 
-                                             maxDeep = 1,
-                                             next_level_mix_type = FALSE) {
+findForwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), regulationType = NULL, target_type = NULL, maxDeep = 1, 
+    next_level_mix_type = FALSE) {
     if (length(target_gene_list) == 0) {
         stop("The genelist is empty")
     }
     
     prepare_network <- NULL
     for (target_gene in target_gene_list) {
-        new_nextwork <- findAllForwardRelatedGenes(networks = networks, 
-                                                   target_gene = target_gene, 
-                                                   regulationType = regulationType, 
-                                                   target_type = target_type, 
-                                                   main_target_gene = target_gene,
-                                                   main_target_type = target_type,
-                                                   maxDeep = maxDeep,
-                                                   next_level_mix_type = next_level_mix_type)
+        new_nextwork <- findAllForwardRelatedGenes(networks = networks, target_gene = target_gene, regulationType = regulationType, 
+            target_type = target_type, main_target_gene = target_gene, main_target_type = target_type, maxDeep = maxDeep, next_level_mix_type = next_level_mix_type)
         if (is.null(prepare_network)) {
             prepare_network <- new_nextwork
         } else {

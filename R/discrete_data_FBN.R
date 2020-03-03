@@ -12,7 +12,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
         stop("The type of time seriesdata is not supported")
     }
     
-    # std_sampledata<-lapply(1:nrow(fullData),function(rowIndex)sd(fullData[rowIndex,])) #standard deviation names(std_sampledata)<-rownames(fullData)
+    # std_sampledata<-lapply(1:nrow(fullData),function(rowIndex)sd(fullData[rowIndex,])) #standard deviation
+    # names(std_sampledata)<-rownames(fullData)
     
     mean_sampledata <- lapply(1:nrow(fullData), function(rowIndex) mean(fullData[rowIndex, ]))  #average
     names(mean_sampledata) <- rownames(fullData)
@@ -21,9 +22,11 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
     
     ## sem_sampledata<-std_sampledata/sqrt(length_sampledata) #Standard error of the mean
     
-    # max_sampledata<-lapply(1:nrow(fullData),function(rowIndex)max(fullData[rowIndex,])) names(max_sampledata)<-rownames(fullData)
+    # max_sampledata<-lapply(1:nrow(fullData),function(rowIndex)max(fullData[rowIndex,]))
+    # names(max_sampledata)<-rownames(fullData)
     
-    # min_sampledata<-lapply(1:nrow(fullData),function(rowIndex)min(fullData[rowIndex,])) names(min_sampledata)<-rownames(fullData)
+    # min_sampledata<-lapply(1:nrow(fullData),function(rowIndex)min(fullData[rowIndex,]))
+    # names(min_sampledata)<-rownames(fullData)
     
     
     
@@ -65,7 +68,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
         
         colmean <- t(mean_sampledata_max)
         
-        weigthMedian <- lapply(1:nrow(fullData), function(rowIndex) median(sort(sqrt((fullData[rowIndex, ] - mean(fullData[rowIndex, ]))^2))))
+        weigthMedian <- lapply(1:nrow(fullData), function(rowIndex) median(sort(sqrt((fullData[rowIndex, ] - mean(fullData[rowIndex, 
+            ]))^2))))
         names(weigthMedian) <- rownames(fullData)
         weigthMedian_max <- do.call(cbind, weigthMedian)
         
@@ -77,7 +81,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
             matrixMedian <- rep.col(colmedian, numofcol)
             colNames <- colnames(fullData)
             rowNames <- rownames(fullData)
-            binarizedTimeSeries <- sapply(as.data.frame(sqrt((fullData - matrixMean)^2) - matrixMedian), function(vr) as.numeric(vr > 0))
+            binarizedTimeSeries <- sapply(as.data.frame(sqrt((fullData - matrixMean)^2) - matrixMedian), function(vr) as.numeric(vr > 
+                0))
             rownames(binarizedTimeSeries) <- rowNames
             colnames(binarizedTimeSeries) <- colNames
         } else if (is.list(res)) {
@@ -89,7 +94,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
                 fullData <- abs(m) + 1  #add 1 to avoid 0
                 colNames <- colnames(m)
                 rowNames <- rownames(m)
-                sub_res <- sapply(as.data.frame(sqrt((fullData - matrixMean)^2) - matrixMedian), function(vr) as.numeric(vr > 0))
+                sub_res <- sapply(as.data.frame(sqrt((fullData - matrixMean)^2) - matrixMedian), function(vr) as.numeric(vr > 
+                  0))
                 rownames(sub_res) <- rowNames
                 colnames(sub_res) <- colNames
                 return(sub_res)
@@ -101,14 +107,17 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
 
 ## down graded
 #' @export
-# dividedDiscreteDataintosmallgroups <- function(originalTimeSeriesData, discretedTimeSeriesdata, minElements = 10, maxElements = 30, membexp = 2) {
-# findAllLeaves <- function(treegoups) { res1 <- list() len <- length(treegoups) nm <- names(treegoups)[1] if (nm == 'leaf') { res1[length(res1) + 1] <-
-# treegoups[1] } else { newlen <- length(res1) + 1 res1[[newlen]] <- list() res1[[newlen]] <- findAllLeaves(treegoups[[1]]) } if (len == 2) { nm <-
-# names(treegoups)[2] if (nm == 'leaf') { res1[length(res1) + 1] <- treegoups[2] } else { newlen2 <- length(res1) + 1 res1[[newlen2]] <- list()
-# res1[[newlen2]] <- dissolve(findAllLeaves(treegoups[[2]])) } } return(res1) } fuzzygroups <- dividedintosmallgroups(originalTimeSeriesData, minElements,
-# maxElements, membexp) groups <- dissolve(findAllLeaves(fuzzygroups)) res <- lapply(groups, function(subgroup, discretedTimeSeriesdata) { subnames <-
-# rownames(subgroup) res <- lapply(discretedTimeSeriesdata, function(mtx, subnames) { res1 <- mtx[rownames(mtx) %in% subnames, ] return(res1) }, subnames)
-# return(res) }, discretedTimeSeriesdata) names(res) <- c(1:length(res)) class(res) <- 'ClusteredTimeseriesData' return(res) }
+# dividedDiscreteDataintosmallgroups <- function(originalTimeSeriesData, discretedTimeSeriesdata, minElements = 10,
+# maxElements = 30, membexp = 2) { findAllLeaves <- function(treegoups) { res1 <- list() len <- length(treegoups) nm <-
+# names(treegoups)[1] if (nm == 'leaf') { res1[length(res1) + 1] <- treegoups[1] } else { newlen <- length(res1) + 1
+# res1[[newlen]] <- list() res1[[newlen]] <- findAllLeaves(treegoups[[1]]) } if (len == 2) { nm <- names(treegoups)[2] if
+# (nm == 'leaf') { res1[length(res1) + 1] <- treegoups[2] } else { newlen2 <- length(res1) + 1 res1[[newlen2]] <- list()
+# res1[[newlen2]] <- dissolve(findAllLeaves(treegoups[[2]])) } } return(res1) } fuzzygroups <-
+# dividedintosmallgroups(originalTimeSeriesData, minElements, maxElements, membexp) groups <-
+# dissolve(findAllLeaves(fuzzygroups)) res <- lapply(groups, function(subgroup, discretedTimeSeriesdata) { subnames <-
+# rownames(subgroup) res <- lapply(discretedTimeSeriesdata, function(mtx, subnames) { res1 <- mtx[rownames(mtx) %in%
+# subnames, ] return(res1) }, subnames) return(res) }, discretedTimeSeriesdata) names(res) <- c(1:length(res)) class(res)
+# <- 'ClusteredTimeseriesData' return(res) }
 
 
 

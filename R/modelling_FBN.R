@@ -30,14 +30,14 @@ isSatisfied <- function(geneState, expression) {
             if (identical(expression[index - 1], "!")) {
                 res <- res & !(as.numeric(geneState[[i]]) == 1L)
             } else {
-                if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], "(") & !identical(expression[index], 
-                                                                                                                                              ")")) {
-                    res <- res & (as.numeric(geneState[[i]]) == 1L)
+                if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], 
+                  "(") & !identical(expression[index], ")")) {
+                  res <- res & (as.numeric(geneState[[i]]) == 1L)
                 }
             }
         } else {
-            if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], "(") & !identical(expression[index], 
-                                                                                                                                          ")")) {
+            if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], "(") & 
+                !identical(expression[index], ")")) {
                 res <- res & (as.numeric(geneState[[i]]) == 1L)
             }
         }
@@ -54,7 +54,7 @@ isSatisfied <- function(geneState, expression) {
 #' coming later
 #' @export
 randomSelection <- function(probability) {
-   sample(c(FALSE, TRUE), size = 1, replace = TRUE, prob = c(1 - probability, probability))
+    sample(c(FALSE, TRUE), size = 1, replace = TRUE, prob = c(1 - probability, probability))
 }
 
 #'This method is used to reconstruct time series data
@@ -75,11 +75,8 @@ randomSelection <- function(probability) {
 #' listtestInitial<-list(mat1,mat2)
 #' result<-reconstructTimeseries(network,listtestInitial,1,'synchronous')
 #' @export
-reconstructTimeseries <- function(fbnnetwork, 
-                                  initialStates, 
-                                  type = c("synchronous", "asynchronous"), 
-                                  maxTimepoints = 100, 
-                                  useParallel = FALSE) {
+reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchronous", "asynchronous"), maxTimepoints = 100, 
+    useParallel = FALSE) {
     
     
     if (!is.numeric(maxTimepoints) | maxTimepoints <= 0L | !all.equal(maxTimepoints, as.integer(maxTimepoints))) 
@@ -91,7 +88,7 @@ reconstructTimeseries <- function(fbnnetwork,
     
     type <- type[1]
     # code
-
+    
     genes <- fbnnetwork$genes
     
     internal_fn <- function(i, p_initialStates, p_fbnnetwork, p_genes, p_type, p_maxTimepoints) {
@@ -125,12 +122,8 @@ reconstructTimeseries <- function(fbnnetwork,
 
 # private method
 
-transitionStates <- function(initialState, 
-                             fbnNetwork, 
-                             genes, 
-                             type = c("synchronous", "asynchronous"), 
-                             maxTimepoints) {
-
+transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchronous", "asynchronous"), maxTimepoints) {
+    
     numrow <- length(genes)
     rowNames <- genes
     colNames <- c(1:maxTimepoints)
@@ -144,14 +137,15 @@ transitionStates <- function(initialState,
     decayIndex <- c()
     timestepTrack <- list()
     while (k <= length(colNames)) {
-        nextState <- getFBMSuccessor(fbnNetwork = fbnNetwork, previous_states = premat, current_step = k, genes = rowNames, type = type, decayIndex = decayIndex)
+        nextState <- getFBMSuccessor(fbnNetwork = fbnNetwork, previous_states = premat, current_step = k, genes = rowNames, 
+            type = type, decayIndex = decayIndex)
         mat[, k] <- nextState$nextState
         premat <- mat[, 1:k]
         decayIndex <- nextState$decayIndex
         k <- k + 1
     }
     
-   mat
+    mat
 }
 
 #'This method is used to calculate the next state
@@ -214,7 +208,8 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
                   return(res)
                 }))
                 
-                probability <- getProbabilityFromFunctionInput(1, funcOfActivators[[fbnName]]$expression, funcOfActivators[[fbnName]]$probability, pregeneInput)
+                probability <- getProbabilityFromFunctionInput(1, funcOfActivators[[fbnName]]$expression, funcOfActivators[[fbnName]]$probability, 
+                  pregeneInput)
                 
                 if (!length(probability) == 0) {
                   prFA <- prFA | randomSelection(probability)
@@ -241,7 +236,8 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
                   return(res)
                 }))
                 
-                probability <- getProbabilityFromFunctionInput(0, funcOfInhibitors[[fbnName]]$expression, funcOfInhibitors[[fbnName]]$probability, pregeneInput)
+                probability <- getProbabilityFromFunctionInput(0, funcOfInhibitors[[fbnName]]$expression, funcOfInhibitors[[fbnName]]$probability, 
+                  pregeneInput)
                 
                 if (!length(probability) == 0) {
                   prFD <- prFD | randomSelection(probability)
@@ -300,7 +296,8 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
         names(decayIndex) <- genes
     }
     
-    ############################################################################################################# need to revise decayIndex[[gene]],currentState,timestepTrack to ensure it should work as expect randomly pick up a gene to process at time
+    ############################################################################################################# need to revise decayIndex[[gene]],currentState,timestepTrack to ensure it should work as expect randomly pick up a gene
+    ############################################################################################################# to process at time
     if (type == "asynchronous") {
         nonfixedgenes <- genes[!genes %in% fixedgenes]  #if gene is fixed then get the current gene stat
         # randomly pickup one
@@ -353,10 +350,7 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
 #'@return A probablity of the target regulatory function
 #'@examples
 #' coming later
-getProbabilityFromFunctionInput <- function(funcType, 
-                                            FBNExpression, 
-                                            FBNProbability, 
-                                            preGeneInputs) {
+getProbabilityFromFunctionInput <- function(funcType, FBNExpression, FBNProbability, preGeneInputs) {
     # internal functions
     isInputStateMatchedFBNFunction <- function(inputstate, expression) {
         splitedexpression <- splitExpression(expression, 1, FALSE)
