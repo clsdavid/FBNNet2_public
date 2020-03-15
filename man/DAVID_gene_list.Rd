@@ -4,7 +4,9 @@
 \name{DAVID_gene_list}
 \alias{DAVID_gene_list}
 \title{DAVID Gene Annotation data}
-\format{A table of gene list mapping probeset with gene names extracted from DAVID tools.}
+\format{
+A table of gene list mapping probeset with gene names extracted from DAVID tools.
+}
 \source{
 \href{https://david.ncifcrf.gov/}{DAVID Bioinformatic Database}
 }

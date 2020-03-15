@@ -17,11 +17,14 @@ searchForAttractors(
 \arguments{
 \item{fbnnetwork}{An object of FBNNetwork}
 
-\item{startStates}{A list of initial states, the row names of each state must be matched with the genes}
+\item{startStates}{A list of initial states, the row names of each state must
+be matched with the genes}
 
-\item{genes}{a list of genes which index order must match with the current state}
+\item{genes}{a list of genes which index order must match with the current
+state}
 
-\item{type}{A type of Boolean network update schema choosen from synchronous, asynchronous and time step based}
+\item{type}{A type of Boolean network update schema choosen from synchronous,
+asynchronous and time step based}
 
 \item{genesOn}{It is a vector of genes that are marked as On}
 
@@ -39,10 +42,20 @@ A function to find all possible FBM (Fundamental Boolean models) attractors
 requires(BoolNet)
 network<-loadNetwork('testthat/others/cellcycle.txt')
 initialStates<-generateAllCombinationBinary(network$genes)
-trainingseries<-genereateBoolNetTimeseries(network,initialStates,43, type='synchronous')
-cube<-constructFBNCube(network$genes,network$genes,trainingseries,4,1,TRUE)
+trainingseries<-genereateBoolNetTimeseries(network,
+ initialStates,
+ 43,
+  type='synchronous')
+cube<-constructFBNCube(network$genes,
+network$genes,
+trainingseries,
+4,
+1,
+TRUE)
 NETWORK2<-mineFBNNetwork(cube,network$genes)
-attractor<-searchForAttractors(NETWORK2,initialStates,network$genes)
+attractor<-searchForAttractors(NETWORK2,
+initialStates,
+network$genes)
 print(attractor)
 FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 }
@@ -51,7 +64,8 @@ Chen et al.(2018), Front. Physiol., 25 September 2018,
 (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 
 Mussel, Hopfensitz et al. 2010, 
- BoolNet - an R package for generation, reconstruction and analysis of Boolean networks
+ BoolNet - an R package for generation, reconstruction and analysis of
+  Boolean networks
 }
 \author{
 Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com

@@ -1,8 +1,6 @@
 context("networkapplication")
 setupdata <- function() {
-  require(BoolNet)
-  require(FBNNet)
-  network <- loadNetwork("D:\\Dropbox/Dropbox/FBNNet/tempdata/Example.txt")
+  network <- BoolNet::loadNetwork("D:\\Dropbox/Dropbox/FBNNet/tempdata/Example.txt")
   # trainingseries<-FBNDataReduction(generateTimeSeries(network,1000,43,noiseLevel=0.0))
   initialStates <- generateAllCombinationBinary(network$genes)
   trainingseries <- genereateBoolNetTimeseries(network, initialStates, 43, type = "synchronous")

@@ -23,43 +23,57 @@ generateFBMNetwork(
 \arguments{
 \item{timeseries_data}{A list of timeseries data of samples.}
 
-\item{method}{an optonal parameter to discrete the data in the range of ("average", "kmeans", "edgeDetector", "scanStatistic"). 
-The system applies the function provided by the BoolNet package to convert the data from numeric continually value to boolean value.}
+\item{method}{an optonal parameter to discrete the data in the range of
+('average', 'kmeans', 'edgeDetector', 'scanStatistic'). 
+The system applies the function provided by the BoolNet package to convert
+ the data from numeric continually value to boolean value.}
 
 \item{maxK}{The maximum deep of the Orchard Cube can mine into.}
 
-\item{useParallel}{optional, by default it is TRUE to run the network inference algorithm in parallel. FALSE without parallel}
+\item{useParallel}{optional, by default it is TRUE to run the network
+inference algorithm in parallel. FALSE without parallel}
 
-\item{parallel_on_group}{optional, if TRUE will run the parallel on the sub gene groups, otherwise on the genes level}
+\item{parallel_on_group}{optional, if TRUE will run the parallel on the
+sub gene groups, otherwise on the genes level}
 
-\item{max_deep_temporal, }{a setting for Temporal Fundamental Boolean model that specifies the maximum temporal space}
+\item{max_deep_temporal, }{a setting for Temporal Fundamental Boolean model
+that specifies the maximum temporal space}
 
-\item{threshold_confidence}{A threshod of confidence (between 0 and 1) that used to filter the Fundamental Boolean functions}
+\item{threshold_confidence}{A threshod of confidence (between 0 and 1) 
+that used to filter the Fundamental Boolean functions}
 
-\item{threshold_error}{A threshod of error rate (between 0 and 1) that used to filter the Fundamental Boolean functions}
+\item{threshold_error}{A threshod of error rate (between 0 and 1) that used
+to filter the Fundamental Boolean functions}
 
-\item{threshold_support}{A threshod of support (between 0 and 1) that used to filter the Fundamental Boolean functions}
+\item{threshold_support}{A threshod of support (between 0 and 1) that used
+to filter the Fundamental Boolean functions}
 
-\item{maxFBNRules}{The maximum rules per type (Activation and Inhibition) per gene can be mined, the rest will be discarded}
+\item{maxFBNRules}{The maximum rules per type (Activation and Inhibition)
+per gene can be mined, the rest will be discarded}
 
-\item{maxGenesForSingleCube}{The maximum number of genes for a single cube. If there are more than the maximum value, the system will}
+\item{maxGenesForSingleCube}{The maximum number of genes for a single
+cube. If there are more than the maximum value, the system will}
 
-\item{network_only}{optional for Debug purpose, if TRUE, only output the networks only, otherwise, output the Orchard cube as well. Warning, 
+\item{network_only}{optional for Debug purpose, if TRUE, only output the
+ networks only, otherwise, output the Orchard cube as well. Warning, 
 turn off this may cause memory leaking if the number of nodes is too large.
  divide them into subgroups.}
 
-\item{usingFunnayCluster}{optional to use Fanny cluster algorithm to divide large nodes into groups.}
+\item{usingFunnayCluster}{optional to use Fanny cluster algorithm to 
+divide large nodes into groups.}
 }
 \value{
-An object of a list contains Fundamental Boolean Network, Orchard cube (optional) and discreted timeseries data
+An object of a list contains Fundamental Boolean Network, Orchard
+ cube (optional) and discreted timeseries data
 }
 \description{
-This is the main entry of the package FBNNet that can be used to mine the gene regulatory network.
+This is the main entry of the package FBNNet that can be used to mine the
+ gene regulatory network.
 }
 \examples{
  
 library(BoolNet)
-data("yeastTimeSeries")
+data('yeastTimeSeries')
 network <- generateFBMNetwork(yeastTimeSeries)
 network
 }
@@ -67,7 +81,8 @@ network
 Chen et al.(2018), Front. Physiol., 25 September 2018, 
 (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 
-Mussel, Hopfensitz et al. 2010, BoolNet - an R package for generation, reconstruction and analysis of Boolean networks
+Mussel, Hopfensitz et al. 2010, BoolNet - an R package
+ for generation, reconstruction and analysis of Boolean networks
 }
 \author{
 Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com

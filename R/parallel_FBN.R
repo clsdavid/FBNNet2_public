@@ -18,7 +18,8 @@ doParallelWork <- function(parallelFuc, listitems, ...) {
     
     cl <- parallel::makeCluster(parallel::detectCores()[1] - 1, type = "SOCK")
     # * Do the work .....**
-    res <- parallel::clusterApply(cl, 1:length(listitems), parallelFuc, listitems, ...)
+    len <- length(listitems)
+    res <- parallel::clusterApply(cl, seq_len(len), parallelFuc, listitems, ...)
     parallel::stopCluster(cl)
     res <- unlist(res, recursive = FALSE)
     # closeAllConnections()
@@ -45,8 +46,8 @@ doNonParallelWork <- function(parallelFuc, listitems, ...) {
     if (is.null(listitems)) {
         stop("The type of listitems must be a list")
     }
-    
-    res <- lapply(1:length(listitems), parallelFuc, listitems, ...)
+    len <- length(listitems)
+    res <- lapply(seq_len(len), parallelFuc, listitems, ...)
     res <- unlist(res, recursive = FALSE)
     cond1 <- sapply(res, function(entry) !is.null(entry))
     # remove the unwant outer list
@@ -73,8 +74,8 @@ doNonParallelWorkDecrease <- function(parallelFuc, listitems, unprocessedListite
     if (is.null(listitems)) {
         stop("The type of listitems must be a list")
     }
-    
-    res <- lapply(1:length(listitems), function(k, listitems, ...) {
+    len <- length(listitems)
+    res <- lapply(seq_len(len), function(k, listitems, ...) {
         if (length(unprocessedListitems) > 0) {
             reindex <- which(listitems[k] %in% unprocessedListitems)
             unprocessedListitems2 <- unprocessedListitems[-reindex]

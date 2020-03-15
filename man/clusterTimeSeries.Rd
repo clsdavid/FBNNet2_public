@@ -2,7 +2,8 @@
 % Please edit documentation in R/cluster_FBN.R
 \name{clusterTimeSeries}
 \alias{clusterTimeSeries}
-\title{ClusterTimeSeries is a method to cluster timeseries data into small sets of timeseries data}
+\title{ClusterTimeSeries is a method to cluster timeseries data into small sets of
+timeseries data}
 \usage{
 clusterTimeSeries(
   timeSeriesData,
@@ -11,23 +12,30 @@ clusterTimeSeries(
 )
 }
 \arguments{
-\item{timeSeriesData}{A list of timeseries matrix (genes on row and time points on columns)}
+\item{timeSeriesData}{A list of timeseries matrix (genes on row and time
+points on columns)}
 
 \item{method}{Clustering method}
 
 \item{modelParameters}{An object of ModelParameter}
 
-\item{originalTimeSeriesData}{The original timeseries data that contains continual values}
+\item{originalTimeSeriesData}{The original timeseries data that contains
+continual values}
 
-\item{discretedTimeSeriesdata}{Discreted timeseries data that contains boolean values}
+\item{discretedTimeSeriesdata}{Discreted timeseries data that contains
+boolean values}
 
-\item{requireddata}{The expression data that are going to be clustered. The data must have time steps on colums and genes on rows}
+\item{requireddata}{The expression data that are going to be clustered.
+The data must have time steps on colums and genes on rows}
 
-\item{minElements}{Each cluster must have elements more or equal than the value specified}
+\item{minElements}{Each cluster must have elements more or equal than the
+value specified}
 
-\item{maxElements}{Each cluster must have elements less or equal than the value specified}
+\item{maxElements}{Each cluster must have elements less or equal than the
+value specified}
 
-\item{membexp}{A value for fussy algorithm to specify the degree of fussy. Big number, big fussy}
+\item{membexp}{A value for fussy algorithm to specify the degree of fussy.
+Big number, big fussy}
 
 \item{useParallel}{Turned on parallel}
 }
@@ -35,24 +43,49 @@ clusterTimeSeries(
 Clustered timeseries data
 }
 \description{
-ClusterTimeSeries is a method to cluster timeseries data into small sets of timeseries data
+ClusterTimeSeries is a method to cluster timeseries data into small sets of
+timeseries data
 }
 \examples{
-kmeansParameters<-list(type='kmeans',numOfClusters=10,nstart=100,iter.max=1000)
+kmeansParameters<-list(type='kmeans',
+numOfClusters=10,
+nstart=100,
+iter.max=1000)
 class(kmeansParameters)='ModelParameter'
-hierarchicalParameters<-list(type='hierarchical',distmethod='euclidean',hclustmethod='ward.D2')
+hierarchicalParameters<-list(type='hierarchical',
+distmethod='euclidean',
+hclustmethod='ward.D2')
 class(hierarchicalParameters)='ModelParameter'
-nbclustParameters<-list(type='nbclust',distmethod='euclidean',min.nc=2,max.nc=10,nbmethod='complete',nbindex='all')
+nbclustParameters<-list(type='nbclust',
+distmethod='euclidean',
+min.nc=2,
+max.nc=10,
+nbmethod='complete',
+nbindex='all')
 class(nbclustParameters)='ModelParameter'
-dianaParameters<-list(type='diana',numOfClusters=10,palette='jco')
+dianaParameters<-list(type='diana',
+numOfClusters=10,palette='jco')
 class(dianaParameters)='ModelParameter'
-fuzzyParameters<-list(type='fanny',metric = 'euclidean', stand = FALSE)
+fuzzyParameters<-list(type='fanny',
+metric = 'euclidean',
+ stand = FALSE)
 class(fuzzyParameters)='ModelParameter'
 
-sortedtimeseries<-constructTestGSE2677Data('Your Cel Data folder',useGCRMA=FALSE)
-clustered_kmeans<-clusterTimeSeries(sortedtimeseries,method='kmeans',kmeansParameters)
-clustered_hierarchical<-clusterTimeSeries(sortedtimeseries,method='hierarchical',hierarchicalParameters)
-clustered_nbclust<-clusterTimeSeries(sortedtimeseries,method='nbclust',nbclustParameters)
-clustered_diana<-clusterTimeSeries(sortedtimeseries,method='diana',dianaParameters)
-clusteredFanny<-clusterTimeSeries(sortedtimeseries,method='fanny',fuzzyParameters)
+sortedtimeseries<-constructTestGSE2677Data('Your Cel Data folder',
+useGCRMA=FALSE)
+clustered_kmeans<-clusterTimeSeries(sortedtimeseries,
+method='kmeans',
+kmeansParameters)
+clustered_hierarchical<-clusterTimeSeries(sortedtimeseries,
+method='hierarchical',
+hierarchicalParameters)
+clustered_nbclust<-clusterTimeSeries(sortedtimeseries,
+method='nbclust',
+nbclustParameters)
+clustered_diana<-clusterTimeSeries(sortedtimeseries,
+method='diana',
+dianaParameters)
+clusteredFanny<-clusterTimeSeries(sortedtimeseries,
+method='fanny',
+fuzzyParameters)
 }

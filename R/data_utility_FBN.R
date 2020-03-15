@@ -57,7 +57,8 @@ convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste
 #'@param func A function that specified how to split the column names
 #'@export
 reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[length(x)], splitor = as.character("-")) {
-    res <- lapply(1:length(convertedTimeSeries), function(index) {
+    len <- length(convertedTimeSeries)
+    res <- lapply(seq_len(len), function(index) {
         result <- convertedTimeSeries[[index]]
         ocolnames <- colnames(result)
         ocolnames <- gsub("\\..*", "", ocolnames)
@@ -189,7 +190,8 @@ generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
     }
     result <- expand.grid(res)[begin:last, ]
     result <- t(result)
-    split(result, rep(1:ncol(result), each = nrow(result)))
+    ncols <- ncol(result)
+    split(result, rep(seq_len(ncols), each = nrow(result)))
 }
 
 #'A method to generate binary data randomly

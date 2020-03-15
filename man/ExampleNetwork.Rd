@@ -4,7 +4,9 @@
 \name{ExampleNetwork}
 \alias{ExampleNetwork}
 \title{Example Network data}
-\format{A simple network}
+\format{
+A simple network
+}
 \usage{
 data(ExampleNetwork)
 }

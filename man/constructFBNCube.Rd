@@ -4,7 +4,8 @@
 \alias{constructFBNCube}
 \alias{constructFBNNetwork}
 \alias{constructFBNCubeAndNetworkInSmallGroups}
-\title{Create an Orchard cube}
+\title{'''''''1'''''''''2'''''''''3'''''''''4'''''''''5'''''''''6'''''''''7'''''''''8
+Create an Orchard cube}
 \usage{
 constructFBNCube(
   target_genes,
@@ -40,16 +41,20 @@ constructFBNCubeAndNetworkInSmallGroups(
 \arguments{
 \item{target_genes}{A vector of genes that will be treated as target genes}
 
-\item{conditional_genes}{All genes that are available for building up the cube}
+\item{conditional_genes}{All genes that are available for building up the
+cube}
 
-\item{timeseriesCube}{A list of samples in which a sample is a matrix that contains gene states 
+\item{timeseriesCube}{A list of samples in which a sample is a matrix that
+contains gene states 
 where genes in rows and time points in columms}
 
 \item{maxK}{The maximum level the cube can dig in}
 
-\item{temporal}{A value that used to be 1 indicates the previous steps the current one can depend on}
+\item{temporal}{A value that used to be 1 indicates the previous steps the
+current one can depend on}
 
-\item{useParallel}{If it is TRUE, the constructing will run it in parallel, otherwise in a singl thread}
+\item{useParallel}{If it is TRUE, the constructing will run it in parallel,
+otherwise in a singl thread}
 
 \item{clusteredTimeseriesData}{clustered timeseries data}
 }
@@ -57,12 +62,17 @@ where genes in rows and time points in columms}
 A Orcahrd cube that contains all precomputed measures
 }
 \description{
-This is the main function(s) to genereate a sigle Orchard Cube or a group of cubes
+This is the main function(s) to genereate a sigle Orchard Cube or a group
+ of cubes
 }
 \examples{
-mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
+mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
+             3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
+mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
+             3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
 listtest<-list(mat1,mat2)
-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtest,4,1,FALSE)
+constructFBNCube(c('gene1','gene2'),
+                 c('gene1','gene2','gene3'),
+                 listtest,4,1,FALSE)
 
 }
