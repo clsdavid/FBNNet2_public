@@ -16,5 +16,5 @@ An organized similarity report
 Generate similarity report
 }
 \examples{
-coming later
+##coming later
 }

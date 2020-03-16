@@ -20,5 +20,5 @@ An object of FBN network
 Load FBN network data into a FBN network object
 }
 \examples{
-coming later
+##coming later
 }

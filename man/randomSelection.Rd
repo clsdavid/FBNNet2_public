@@ -16,5 +16,5 @@ TRUE or FALSE indicating whether or not the event has been selected
 A random selection function denoted as P[]
 }
 \examples{
-coming later
+##coming later
 }

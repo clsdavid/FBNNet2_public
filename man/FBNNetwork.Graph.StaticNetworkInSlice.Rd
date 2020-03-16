@@ -24,5 +24,5 @@ No return
 Display a dynamic network in a slice
 }
 \examples{
-coming later
+##coming later
 }

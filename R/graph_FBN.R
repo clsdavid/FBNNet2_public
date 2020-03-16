@@ -4,7 +4,7 @@
 #'@param david_gene_list A data frame of DAVID biological annotation
 #'@return An network graphic object
 #'@examples
-#' coming later
+#' ##coming later
 #' @noRd
 FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(FBNnetwork, david_gene_list = NULL, show_decay = FALSE) {
     if (!(inherits(FBNnetwork, "FundamentalBooleanNetwork"))) 
@@ -653,7 +653,7 @@ FBNNetwork.Graph.CreateDynamicNetworkObjects <- function(networkobject, timepoin
 #' @param dynamicNetworkGraphicObject A dynamic network graphic object
 #' @return No return
 #' @examples
-#' coming later
+#' ##coming later
 #' @export
 FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dynamicNetworkGraphicObject) {
     
@@ -702,7 +702,7 @@ FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dyna
 #'@param david_gene_list the list object of DAVID annotation gene list
 #'@return No return
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 FBNNetwork.Graph.StaticNetwork <- function(networkobject, david_gene_list = NULL) {
     
@@ -1002,7 +1002,7 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetw
 #'@param toTimePoint The time point at the end
 #'@return No return
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NULL, fromTimePoint = 1, toTimePoint = 5, networkobject = NULL) {
     

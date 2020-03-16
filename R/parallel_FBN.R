@@ -6,7 +6,7 @@
 #'@param ... other parameters
 #'@return No return
 #'@examples
-#'coming later
+#' ##coming later
 #' @export
 doParallelWork <- function(parallelFuc, listitems, ...) {
     if (!is.function(match.fun(parallelFuc))) {
@@ -35,7 +35,7 @@ doParallelWork <- function(parallelFuc, listitems, ...) {
 #'@param ... other parameters
 #'@return No return
 #'@examples
-#'coming later
+#' ##coming later
 #' @export
 doNonParallelWork <- function(parallelFuc, listitems, ...) {
     # foreach environment, the option stringsAsFactors is required to be set to FALSE
@@ -63,7 +63,7 @@ doNonParallelWork <- function(parallelFuc, listitems, ...) {
 #'@param ... other parameters
 #'@return No return
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 doNonParallelWorkDecrease <- function(parallelFuc, listitems, unprocessedListitems, ...) {
     # foreach environment, the option stringsAsFactors is required to be set to FALSE

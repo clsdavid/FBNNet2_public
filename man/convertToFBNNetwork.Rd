@@ -16,5 +16,5 @@ An object of FBN network
 Convert a boolean network object to fundamental boolean function object
 }
 \examples{
-coming later
+##coming later
 }

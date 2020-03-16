@@ -5,7 +5,7 @@
 #'@param expression The expression of the target regulatory function
 #'@return TRUE or FALSE
 #'@examples
-#' coming later
+#' ##coming later
 isSatisfied <- function(geneState, expression) {
     res <- TRUE
     # inistate<-geneState[[1]][[1]]
@@ -51,7 +51,7 @@ isSatisfied <- function(geneState, expression) {
 #'@param probability A probability of an event
 #'@return TRUE or FALSE indicating whether or not the event has been selected
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 randomSelection <- function(probability) {
     sample(c(FALSE, TRUE), size = 1, replace = TRUE, prob = c(1 - probability, probability))
@@ -349,7 +349,7 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
 #'@param preGeneInputs pre input genes' state
 #'@return A probablity of the target regulatory function
 #'@examples
-#' coming later
+#' ##coming later
 getProbabilityFromFunctionInput <- function(funcType, FBNExpression, FBNProbability, preGeneInputs) {
     # internal functions
     isInputStateMatchedFBNFunction <- function(inputstate, expression) {

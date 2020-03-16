@@ -269,7 +269,7 @@ constructFBNFunctions <- function(expressionTree) {
 #'@param genes The involved genes contains in the expression string
 #'@return A type object of interaction
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 generateFBNInteraction <- function(expressionString, genes) {
     res <- list()
@@ -391,7 +391,7 @@ regenerateInteractions <- function(name, expressionstring, genes, error, type, p
 #'@param network A boolean network object
 #'@return An object of FBN network
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 convertToFBNNetwork <- function(network) {
     # validate network types

@@ -18,5 +18,5 @@ TRUE or FALSE
 An utility function to verify whether or not the input expression and the required gene input are marched
 }
 \examples{
-coming later
+##coming later
 }

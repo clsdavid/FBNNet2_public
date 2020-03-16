@@ -18,5 +18,5 @@ A type object of interaction
 generate FBN interaction
 }
 \examples{
-coming later
+##coming later
 }

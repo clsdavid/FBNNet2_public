@@ -18,5 +18,5 @@ No return
 Display a static network in a slice
 }
 \examples{
-coming later
+##coming later
 }

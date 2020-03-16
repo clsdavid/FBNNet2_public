@@ -20,7 +20,7 @@ FBNDataReduction <- function(timeseriescube) {
 #'@param reconstructedTimeSeriesCube The reconstructed data set that contains samples and each sample contains genes and time points
 #'@return similarity report
 #'@examples
-#' coming later
+#' ##coming later
 #'@export
 checkSimilarity <- function(originalTimeseriesCube, reconstructedTimeSeriesCube) {
     res <- list()
@@ -43,7 +43,7 @@ checkSimilarity <- function(originalTimeseriesCube, reconstructedTimeSeriesCube)
 #'@param similarityreport The raw similarity report which was created by the function checkSimilarity
 #'@return An organized similarity report
 #'@examples
-#' coming later
+#' ##coming later
 #'@export
 generateSimilarReport <- function(similarityreport) {
     cond1 <- sapply(similarityreport, function(entry) as.numeric(entry[[2]]) >= 0.9)

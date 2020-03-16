@@ -18,5 +18,5 @@ similarity report
 Check the similarity between time series
 }
 \examples{
-coming later
+##coming later
 }

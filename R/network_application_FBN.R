@@ -5,7 +5,7 @@
 #'@param lowercaseGenes if all genes are in lower case
 #'@return An object of FBN network
 #'@examples
-#' coming later
+#' ##coming later
 #' @export
 loadFBNNetwork <- function(file, bodySeparator = ",", lowercaseGenes = FALSE) {
     # internal function

@@ -29,5 +29,5 @@ A probablity of the target regulatory function
 An internal method to get the probability of regulatory function from the cube
 }
 \examples{
-coming later
+##coming later
 }

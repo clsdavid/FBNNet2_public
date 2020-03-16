@@ -1,17 +1,17 @@
 context("attractor")
 setupdata <- function() {
     print("*********************Executing test unittest_FBNProcessForMultipleFiles********************")
-    browser()
-    data("ExampleNetwork")
-    network <- ExampleNetwork
     # trainingseries<-FBNDataReduction(generateTimeSeries(network,1000,43,noiseLevel=0.0))
-    initialStates <- generateAllCombinationBinary(network$genes)
-    trainingseries <- genereateBoolNetTimeseries(network, initialStates, 43, type = "synchronous")
-    
-    cube <- constructFBNCube(network$genes, network$genes, trainingseries, 5, 1, FALSE)
-    NETWORK2 <- mineFBNNetwork(cube, network$genes)
-    
-    return(list(network = NETWORK2, initialStates = initialStates, timeseries = trainingseries))
+    with(ExampleNetwork, {
+        initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+        trainingseries <- genereateBoolNetTimeseries(ExampleNetwork, initialStates, 43, type = "synchronous")
+        
+        cube <- constructFBNCube(ExampleNetwork$genes, ExampleNetwork$genes, trainingseries, 5, 1, FALSE)
+        NETWORK2 <- mineFBNNetwork(cube, ExampleNetwork$genes)
+        
+        return(list(network = NETWORK2, initialStates = initialStates, timeseries = trainingseries))
+    })
+
 }
 
 describe("run synchronous should succeed", {
@@ -21,7 +21,7 @@ describe("run synchronous should succeed", {
                                                          test_info$initialStates,
                                                          type = "synchronous",
                                                          maxTimepoints = 43,
-                                                         useParallel = TRUE), 
+                                                         useParallel = FALSE), 
             NA)
         
         similarreport <- expect_error(generateSimilaryReport(test_info$timeseries, resultfile), NA)
