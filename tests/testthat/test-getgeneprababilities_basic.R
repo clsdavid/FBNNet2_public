@@ -26,12 +26,20 @@ setupdata <- function() {
         index <- index - 1
     }
     
+    total_timepoints <- sum(vapply(testseries, function(timeshet) ncol(timeshet),
+                                   integer(1)));
+    total_samples <- length(testseries)
+    all_gene_names <- rownames(testseries[[1]])
+    
+    
     mainParameters <- new.env(parent = globalenv())
     mainParameters$currentStates <- getCurrentStates
     mainParameters$previousStates <- getpreviousStates
     mainParameters$currentStates_c <- getCurrentStates_c
     mainParameters$previousStates_c <- getpreviousStates_c
-    mainParameters$timeseries <- testseries
+    mainParameters$total_samples <- total_samples
+    mainParameters$all_gene_names <- all_gene_names
+    mainParameters$total_timepoints <- total_timepoints
     return(mainParameters)
 }
 

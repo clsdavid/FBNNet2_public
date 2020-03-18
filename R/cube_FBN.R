@@ -96,7 +96,6 @@ constructFBNCube <- function(target_genes,
     mainParameters$previousStates <- getpreviousStates
     mainParameters$currentStates_c <- getCurrentStates_c
     mainParameters$previousStates_c <- getpreviousStates_c
-    mainParameters$timeseries <- reducedCube
     mainParameters$total_samples <- total_samples
     mainParameters$all_gene_names <- all_gene_names
     mainParameters$total_timepoints <- total_timepoints

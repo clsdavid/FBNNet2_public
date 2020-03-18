@@ -234,11 +234,12 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   
   //P(B|A)=P(A & B)/P(A)=(frq(A&B)/n)/(frq(A)/n)=frq(A&B)/frq(A)=P(A&D)/(P(A&D)+P(!A & D)) Bayers rule
   //order of target_genes is very important
-  List dataCube = main_parameters_in_ref["timeseries"]; //ToDo, not need
-  CharacterVector all_gene_names = rownames(dataCube[0]); //ToDo, should pass from up stream as it is static
-  
-  int total_samples = dataCube.length();//main_parameters_in_ref["total_samples"];//ToDo, should pass from up stream as it is static
-  //CharacterVector all_gene_names = main_parameters_in_ref["total_samples"];
+  // List dataCube = main_parameters_in_ref["timeseries"]; //ToDo, not need
+  // CharacterVector all_gene_names = rownames(dataCube[0]); //ToDo, should pass from up stream as it is static
+  // 
+  int total_samples = main_parameters_in_ref["total_samples"];//ToDo, should pass from up stream as it is static
+  CharacterVector all_gene_names = main_parameters_in_ref["all_gene_names"];
+  int n_timepoints = main_parameters_in_ref["total_timepoints"];;
     // mainParameters$total_samples <- total_samples
     // mainParameters$all_gene_names <- all_gene_names
     // mainParameters$total_timepoints <- total_timepoints
@@ -337,13 +338,6 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
                                                                temporal);
   
   List resultGroup(getAllTemporalStates.length());
-  //should pass from up stream as it is static
-  int n_timepoints =0;
-  for(int j=0;j<total_samples;j++){
-    NumericMatrix temp_cube = dataCube[j];
-    n_timepoints += (int)temp_cube.ncol();
-  }
-  
   bool recount_target = false;
   Rcpp::List new_targetCounts(getAllTemporalStates.length());
   if(targetCounts.isNull()){
