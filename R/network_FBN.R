@@ -334,9 +334,6 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
         }
         
         res[[i]] <- preresponse
-        rm(list = "temp_res")
-        rm(list = "preresponse")
-        gc()
         res
     }
     
