@@ -3,7 +3,11 @@
 using namespace Rcpp;
 
 /////////// external concatenate methods
-// At the C-level, all R objects are stored in a common datatype, the SEXP, or S-expression. All R objects are S-expressions so every C function that you create must return a SEXP as output and take SEXPs as inputs. (Technically, this is a pointer to a structure with typedef SEXPREC.) A SEXP is a variant type, with subtypes for all R’s data structures. The most important types are:
+// At the C-level, all R objects are stored in a common datatype, the SEXP, 
+// or S-expression. All R objects are S-expressions so every C function that you create
+// must return a SEXP as output and take SEXPs as inputs. (Technically, this is a pointer
+// to a structure with typedef SEXPREC.) A SEXP is a variant type, with subtypes for all 
+// R’s data structures. The most important types are:
 //   
 //   REALSXP: numeric vector
 //   INTSXP: integer vector
@@ -19,9 +23,13 @@ std::string to_string(double val){
   stm << val ;
   return stm.str() ;
 }
-
+//' A function concate a vector with a sperator
+//' @param x The vector
+//' @param sep Seperator
+//' @return A new string
 // [[Rcpp::export]]
-Rcpp::String mpaste(Rcpp::CharacterVector x, std::string sep){
+Rcpp::String mpaste(Rcpp::CharacterVector x,
+                    std::string sep){
   Rcpp::String res;
   for(int i=0;i<x.length();i++){
     if(i<x.length()-1){
@@ -35,7 +43,8 @@ Rcpp::String mpaste(Rcpp::CharacterVector x, std::string sep){
 }
 
 // [[Rcpp::export]]
-Rcpp::CharacterVector concatenator(Rcpp::CharacterVector a, Rcpp::CharacterVector b) {
+Rcpp::CharacterVector concatenator(Rcpp::CharacterVector a,
+                                   Rcpp::CharacterVector b) {
   int alen = a.length();
   int blen = b.length();
   Rcpp::CharacterVector out(alen+blen);
@@ -51,7 +60,8 @@ Rcpp::CharacterVector concatenator(Rcpp::CharacterVector a, Rcpp::CharacterVecto
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector a, Rcpp::IntegerVector b) {
+Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector a,
+                                  Rcpp::IntegerVector b) {
   int alen = a.length();
   int blen = b.length();
   Rcpp::IntegerVector out(alen+blen);
@@ -67,7 +77,8 @@ Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector a, Rcpp::IntegerVector b) 
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector concatenatorN(Rcpp::NumericVector a, Rcpp::NumericVector b) {
+Rcpp::NumericVector concatenatorN(Rcpp::NumericVector a,
+                                  Rcpp::NumericVector b) {
   int alen = a.length();
   int blen = b.length();
   Rcpp::NumericVector out(alen+blen);
@@ -83,7 +94,8 @@ Rcpp::NumericVector concatenatorN(Rcpp::NumericVector a, Rcpp::NumericVector b) 
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix mcbind(Rcpp::NumericMatrix a, Rcpp::NumericMatrix b) {
+Rcpp::NumericMatrix mcbind(Rcpp::NumericMatrix a,
+                           Rcpp::NumericMatrix b) {
   int acoln = a.ncol();
   int bcoln = b.ncol();
   int arown = a.nrow();
@@ -115,7 +127,8 @@ Rcpp::NumericMatrix mcbind(Rcpp::NumericMatrix a, Rcpp::NumericMatrix b) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix mrbind(Rcpp::NumericMatrix a, Rcpp::NumericMatrix b) {
+Rcpp::NumericMatrix mrbind(Rcpp::NumericMatrix a,
+                           Rcpp::NumericMatrix b) {
   int acoln = a.ncol();
   int bcoln = b.ncol();
   int arown = a.nrow();
@@ -166,7 +179,8 @@ int countZeros(Rcpp::NumericVector v){
 
 //' @title Accessing R's fisher.test function from Rcpp
 // [[Rcpp::export]]
-Rcpp::List fisher_test_cpp(const Rcpp::NumericMatrix& x, double conf_level){
+Rcpp::List fisher_test_cpp(const Rcpp::NumericMatrix& x, 
+                           double conf_level){
   
   // Obtain environment containing function
   Rcpp::Environment base("package:stats"); 
@@ -183,7 +197,8 @@ Rcpp::List fisher_test_cpp(const Rcpp::NumericMatrix& x, double conf_level){
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix m, Rcpp::NumericVector v)
+Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix m, 
+                               Rcpp::NumericVector v)
 {
   Rcpp::NumericMatrix res =NumericMatrix(m.nrow(),m.ncol());// clone(m);
   const int ncol=m.ncol();

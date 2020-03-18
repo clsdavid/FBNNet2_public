@@ -16,7 +16,7 @@ doParallelWork <- function(parallelFuc, listitems, ...) {
         stop("The type of listitems must be a list")
     }
     
-    cl <- parallel::makeCluster(parallel::detectCores()[1] - 1, type = "SOCK")
+    cl <- parallel::makeCluster(parallel::detectCores()[1], type = "SOCK")
     # * Do the work .....**
     len <- length(listitems)
     res <- parallel::clusterApply(cl, seq_len(len), parallelFuc, listitems, ...)
@@ -25,6 +25,7 @@ doParallelWork <- function(parallelFuc, listitems, ...) {
     # closeAllConnections()
     cond1 <- sapply(res, function(entry) !is.null(entry))
     res[cond1][unlist(lapply(res[cond1], length) != 0)]
+    # on.exit(.C("freeAllMemory", PACKAGE = "FBNNet"))
     res
 }
 

@@ -11,47 +11,15 @@
 
 using namespace Rcpp;
 
-
-// [[Rcpp::export]]
-Rcpp::CharacterVector filterTargetGenesByConditionGenes(
-      Rcpp::CharacterVector targetGenes,
-      Rcpp::Environment mainParameters,
-      Rcpp::CharacterVector genes,
-      Rcpp::Nullable<Rcpp::List> matchedgenes,
-      Rcpp::IntegerVector temporal=1,
-      Nullable<Rcpp::List> targetCounts = R_NilValue)
-{
-   int tlen = targetGenes.length();
-   int len = genes.length();
-   Rcpp::CharacterVector filteredTagetGene;
-   List res(len);
-   
-   for(int t=0;t<tlen;t++){
-      std::string targetGene = (std::string)targetGenes[t];
-      for(int i=0;i<len;i++){
-         std::string gene = (std::string)genes[i];
-         List probabilityOfFourCombines=getGenePrababilities(mainParameters,matchedgenes,targetGene,gene,temporal,targetCounts);
-         if(Rf_isNull(probabilityOfFourCombines))
-         {
-            continue;
-         }
-         List probabilityOfFourCombines_P;
-         List probabilityOfFourCombines_N;
-         Rcpp::List new_targetCounts = probabilityOfFourCombines["targetCounts"];
-         probabilityOfFourCombines_P=probabilityOfFourCombines["getBestFitP"];
-         probabilityOfFourCombines_N=probabilityOfFourCombines["getBestFitN"];
-
-         if(!probabilityOfFourCombines_P["is_essential_gene"] && !probabilityOfFourCombines_N["is_essential_gene"]){
-            continue;
-         }
-
-         filteredTagetGene.push_back(targetGene);
-         break;
-      }
-   }
-   return(filteredTagetGene);
-}
-
+//' Get the main measurements based on the input data
+//' 
+//' @param targetGene The target gene
+//' @param mainParameters An environment variable holds all input data
+//' @param genes All conditional genes
+//' @param matchedgenes processed genes
+//' @param temporal The temporal time steps
+//' @param targetCounts 
+//' 
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_measurements(
       Rcpp::CharacterVector targetGene,
@@ -65,9 +33,14 @@ Rcpp::List getGenePrababilities_measurements(
    int len = genes.length();
    List res(len);
 
-   for(int i=0;i<len;i++){
-      std::string gene = (std::string)genes[i];
-      List probabilityOfFourCombines=getGenePrababilities(mainParameters,matchedgenes,targetGene,gene,temporal,targetCounts);
+   for(int i = 0;i < len;i++){
+      std::string gene = as<std::string>(genes[i]);
+      List probabilityOfFourCombines=getGenePrababilities(mainParameters,
+                                                          matchedgenes,
+                                                          targetGene,
+                                                          gene,
+                                                          temporal,
+                                                          targetCounts);
       if(Rf_isNull(probabilityOfFourCombines))
       {
          continue;
@@ -75,10 +48,11 @@ Rcpp::List getGenePrababilities_measurements(
       List probabilityOfFourCombines_P;
       List probabilityOfFourCombines_N;
       Rcpp::List new_targetCounts = probabilityOfFourCombines["targetCounts"];
-      probabilityOfFourCombines_P=probabilityOfFourCombines["getBestFitP"];
-      probabilityOfFourCombines_N=probabilityOfFourCombines["getBestFitN"];
+      probabilityOfFourCombines_P = probabilityOfFourCombines["getBestFitP"];
+      probabilityOfFourCombines_N = probabilityOfFourCombines["getBestFitN"];
 
-      if(!probabilityOfFourCombines_P["is_essential_gene"] && !probabilityOfFourCombines_N["is_essential_gene"]){
+      if(!probabilityOfFourCombines_P["is_essential_gene"] 
+            && !probabilityOfFourCombines_N["is_essential_gene"]){
          continue;
       }
       
@@ -92,11 +66,13 @@ Rcpp::List getGenePrababilities_measurements(
       }
       
       
-      if(!probabilityOfFourCombines_P["isPossitiveCorrelated"] && !probabilityOfFourCombines_P["isNegativeCorrelated"]){
+      if(!probabilityOfFourCombines_P["isPossitiveCorrelated"] 
+            && !probabilityOfFourCombines_P["isNegativeCorrelated"]){
          probabilityOfFourCombines_P=probabilityOfFourCombines_N;
       }
       
-      if(!probabilityOfFourCombines_N["isPossitiveCorrelated"] && !probabilityOfFourCombines_N["isNegativeCorrelated"])
+      if(!probabilityOfFourCombines_N["isPossitiveCorrelated"] 
+            && !probabilityOfFourCombines_N["isNegativeCorrelated"])
       {
          if(is_true(Rcpp::all(probabilityOfFourCombines_P==probabilityOfFourCombines_N)))
             continue;
@@ -108,7 +84,9 @@ Rcpp::List getGenePrababilities_measurements(
       in_res[0]= probabilityOfFourCombines_P;
       in_res[1]= probabilityOfFourCombines_N;
       in_res[2]=new_targetCounts;
-      CharacterVector in_res_names = CharacterVector::create("probabilityOfFourCombines_P", "probabilityOfFourCombines_N", "targetCounts");
+      CharacterVector in_res_names = CharacterVector::create("probabilityOfFourCombines_P",
+                                                             "probabilityOfFourCombines_N",
+                                                             "targetCounts");
 
       in_res.attr("names") = in_res_names;
       res[i] = in_res;
@@ -680,7 +658,7 @@ Rcpp::List mineNetworksDirect(
 }
 
 // [[Rcpp::export]]
-Rcpp::List internalloopByWhole2(Rcpp::CharacterVector target_gene, 
+Rcpp::List process_cube_algorithm(Rcpp::CharacterVector target_gene, 
                                 Rcpp::CharacterVector conditional_genes, 
                                 Rcpp::IntegerVector maxK, 
                                 Rcpp::IntegerVector temporal, 

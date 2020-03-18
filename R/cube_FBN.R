@@ -1,8 +1,7 @@
-#''''''''1'''''''''2'''''''''3'''''''''4'''''''''5'''''''''6'''''''''7'''''''''8
 #' Create an Orchard cube
 #'
 #' This is the main function(s) to genereate a sigle Orchard Cube or a group
-#'  of cubes
+#' of cubes
 #'
 #' @param target_genes A vector of genes that will be treated as target genes
 #' @param conditional_genes All genes that are available for building up the
@@ -25,13 +24,8 @@
 #' listtest<-list(mat1,mat2)
 #' constructFBNCube(c('gene1','gene2'),
 #'                  c('gene1','gene2','gene3'),
-#'                  listtest,4,1,FALSE)
+#'                  listtest, 4, 1, FALSE)
 #' 
-#' @name constructFBNCube
-NULL
-
-
-#' @rdname constructFBNCube
 #' @export
 constructFBNCube <- function(target_genes,
                              conditional_genes,
@@ -64,11 +58,11 @@ constructFBNCube <- function(target_genes,
                                     temporal,
                                     mainParameters) {
         target_gene <- target_genes[[i]]
-        internalloopByWhole2(target_gene,
-                             conditional_genes,
-                             maxK,
-                             temporal,
-                             mainParameters)
+        process_cube_algorithm(target_gene,
+                               conditional_genes,
+                               maxK,
+                               temporal,
+                               mainParameters)
     }
     
     time1 <- as.numeric(Sys.time())
@@ -92,21 +86,20 @@ constructFBNCube <- function(target_genes,
         index <- index - 1
     }
     
+    total_timepoints <- sum(vapply(reducedCube, function(timeshet) ncol(timeshet),
+                                   integer(1)));
+    total_samples <- length(reducedCube)
+    all_gene_names <- rownames(reducedCube[[1]])
+    
     mainParameters <- new.env(hash = TRUE, parent = globalenv())
     mainParameters$currentStates <- getCurrentStates
     mainParameters$previousStates <- getpreviousStates
     mainParameters$currentStates_c <- getCurrentStates_c
     mainParameters$previousStates_c <- getpreviousStates_c
     mainParameters$timeseries <- reducedCube
-    
-    target_genes <- filterTargetGenesByConditionGenes(
-        target_genes,
-        mainParameters, 
-        conditional_genes,
-        NULL,
-        temporal = temporal, 
-        targetCounts = NULL)
-    
+    mainParameters$total_samples <- total_samples
+    mainParameters$all_gene_names <- all_gene_names
+    mainParameters$total_timepoints <- total_timepoints
     if (useParallel) {
         res <- doParallelWork(internalloopByWhole,
                               target_genes,
@@ -141,149 +134,6 @@ constructFBNCube <- function(target_genes,
     futile.logger::flog.info("Leave constructFBNCube zone.")
     res
 }
-
-#' @rdname constructFBNCube
-#' @export
-constructFBNNetwork <- function(target_genes,
-                                conditional_genes, 
-                                timeseriesCube, 
-                                maxK = 5, 
-                                temporal = 1,
-                                useParallel = FALSE) {
-    futile.logger::flog.info(
-        sprintf("Enter constructFBNCube zone:
-                target_genes=%s genes and they are %s,
-                conditional_genes=%s genes and they are %s,
-                data_length=%s,
-                maxK=%s, 
-                temporal=%s,
-                useParallel=%s", 
-                length(target_genes),
-                paste(target_genes, sep = ", ", collapse = ", "),
-                length(conditional_genes),
-                paste(conditional_genes, sep = ", ", collapse = ", "),
-                length(timeseriesCube),
-                maxK,
-                temporal,
-                useParallel))
-    
-    # construct gene tree by timeseries * samples * timepoints(columns)
-    internalloopByWhole <- function(i, 
-                                    target_genes, 
-                                    conditional_genes,
-                                    maxK,
-                                    temporal, 
-                                    mainParameters) {
-        target_gene <- target_genes[[i]]
-        futile.logger::flog.info(
-            sprintf("process constructFBNCube zone: target_gene=%s",
-                    target_gene))
-        res <- vector(mode = "list", length = 1)
-        res[[target_gene]] <- vector(mode = "list", length = 1)
-        rules <- mineNetworksDirect(targetGene = target_gene,
-                                    mainParameters = mainParameters,
-                                    genes = conditional_genes,
-                                    matchedgenes = NULL, 
-                                    matchedexpression = NULL,
-                                    maxK = maxK,
-                                    temporal = temporal, 
-                                    targetCounts = NULL)
-        cond1 <- sapply(rules, function(entry) !is.null(entry))
-        if (length(cond1) == 0) {
-            return(NULL)
-        }
-        res[[target_gene]][["Rules"]] <- rules[cond1][
-            unlist(lapply(rules[cond1], length) != 0)]
-        if (is.null(res[[target_gene]][["Rules"]])) {
-            return(NULL)
-        }
-        
-        cond1 <- sapply(res[[target_gene]], function(entry) !is.null(entry))
-        if (length(cond1) == 0) {
-            return(NULL)
-        }
-        res[[target_gene]] <- 
-            res[[target_gene]][cond1][unlist(lapply(res[[target_gene]][cond1],
-                                                    length) != 0)]
-        if (is.null(res[[target_gene]])) {
-            return(NULL)
-        }
-        
-        res
-    }
-    
-    time1 <- as.numeric(Sys.time())
-    #try to improve the performance using vector
-    res <- vector("list", length = length(target_genes))  
-    # need to verify this that may use removeduplicateCol
-    reducedCube <- FBNDataReduction(timeseriesCube)
-    
-    getCurrentStates <- vector("list", length = temporal)
-    getpreviousStates <- vector("list", length = temporal)
-    getCurrentStates_c <- vector("list", length = temporal)
-    getpreviousStates_c <- vector("list", length = temporal)
-    # set up data sheet for each temporal
-    index <- temporal
-    while (index > 0) {
-        getCurrentStates[[index]] <- 
-            extractGeneStateFromTimeSeriesCube(reducedCube, index)
-        getpreviousStates[[index]] <- getCurrentStates[[index]]
-        getCurrentStates_c[[index]] <- getCurrentStates[[index]]
-        getpreviousStates_c[[index]] <- getCurrentStates[[index]]
-        index <- index - 1
-    }
-    
-    mainParameters <- new.env(hash = TRUE, parent = globalenv())
-    mainParameters$currentStates <- getCurrentStates
-    mainParameters$previousStates <- getpreviousStates
-    mainParameters$currentStates_c <- getCurrentStates_c
-    mainParameters$previousStates_c <- getpreviousStates_c
-    mainParameters$timeseries <- reducedCube
-    
-    target_genes <- filterTargetGenesByConditionGenes(
-        target_genes,
-        mainParameters,
-        conditional_genes, 
-        NULL, 
-        temporal = temporal, 
-        targetCounts = NULL)
-    
-    if (useParallel) {
-        res <- doParallelWork(internalloopByWhole,
-                              target_genes, 
-                              conditional_genes,
-                              maxK,
-                              temporal,
-                              mainParameters)
-        
-    } else {
-        res <- doNonParallelWork(internalloopByWhole,
-                                 target_genes,
-                                 conditional_genes,
-                                 maxK,
-                                 temporal,
-                                 mainParameters)
-    }
-    
-    if (!is.null(res) & length(res) > 0) {
-        cond1 <- sapply(res, function(entry) !is.null(entry) && length(entry) > 0)
-        res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
-        class(res) <- c("FBNCube")
-    }
-    time2 <- as.numeric(Sys.time())
-    print(paste("Total cost ",
-                time2 - time1, 
-                " seconds to construct gene cube with size of ", 
-                ((object.size(res)/1024)/1024), 
-        sep = "", collapse = ""))
-    
-    if (useParallel) {
-        closeAllConnections()
-    }
-    futile.logger::flog.info("Leave constructFBNCube zone.")
-    res
-}
-
 
 
 

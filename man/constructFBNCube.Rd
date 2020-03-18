@@ -2,21 +2,10 @@
 % Please edit documentation in R/cube_FBN.R
 \name{constructFBNCube}
 \alias{constructFBNCube}
-\alias{constructFBNNetwork}
 \alias{constructFBNCubeAndNetworkInSmallGroups}
-\title{'''''''1'''''''''2'''''''''3'''''''''4'''''''''5'''''''''6'''''''''7'''''''''8
-Create an Orchard cube}
+\title{Create an Orchard cube}
 \usage{
 constructFBNCube(
-  target_genes,
-  conditional_genes,
-  timeseriesCube,
-  maxK = 5,
-  temporal = 1,
-  useParallel = FALSE
-)
-
-constructFBNNetwork(
   target_genes,
   conditional_genes,
   timeseriesCube,
@@ -63,7 +52,7 @@ A Orcahrd cube that contains all precomputed measures
 }
 \description{
 This is the main function(s) to genereate a sigle Orchard Cube or a group
- of cubes
+of cubes
 }
 \examples{
 mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
@@ -73,6 +62,6 @@ mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
 listtest<-list(mat1,mat2)
 constructFBNCube(c('gene1','gene2'),
                  c('gene1','gene2','gene3'),
-                 listtest,4,1,FALSE)
+                 listtest, 4, 1, FALSE)
 
 }

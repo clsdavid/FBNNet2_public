@@ -1,6 +1,6 @@
 context("constructFBNCube")
+require(BoolNet)
 setupdata <- function() {
-    require(BoolNet)
     genesInput <- c("CycD", "p27", "CycE", "E2F")
     testseries <- list()
     testseries[[1]] <- matrix(c(1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0), nrow = 4, ncol = 6, byrow = FALSE, dimnames = list(genesInput, 

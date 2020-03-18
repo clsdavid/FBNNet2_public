@@ -65,21 +65,36 @@ randomSelection <- function(probability) {
 #'@param maxTimepoints The max time points that are going to be constructed
 #'@return A list object that contains reconstructed time series and FBN network
 #'@examples
-#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
+#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
+#'              3,
+#'              3,
+#'              dimnames=list(c('gene1','gene2','gene3'),
+#'              c('1','2','3')))
+#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
+#'              3,
+#'              3, 
+#'              dimnames=list(c('gene1','gene2','gene3'),
+#'              c('1','2','3')))
 #' listtestOriginal<-list(mat1,mat2)
-#' cube<-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtestOriginal,4,1,FALSE)
+#' cube<-constructFBNCube(c('gene1','gene2'),
+#'                        c('gene1','gene2','gene3'),
+#'                        listtestOriginal,4,1,FALSE)
 #' network<-mineFBNNetwork(cube,c('gene1','gene2'))
 #' mat1<-matrix(c('1','1','0'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
 #' mat2<-matrix(c('1','1','1'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
 #' listtestInitial<-list(mat1,mat2)
 #' result<-reconstructTimeseries(network,listtestInitial,1,'synchronous')
 #' @export
-reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchronous", "asynchronous"), maxTimepoints = 100, 
+reconstructTimeseries <- function(fbnnetwork,
+                                  initialStates,
+                                  type = c("synchronous", "asynchronous"),
+                                  maxTimepoints = 100, 
     useParallel = FALSE) {
     
     
-    if (!is.numeric(maxTimepoints) | maxTimepoints <= 0L | !all.equal(maxTimepoints, as.integer(maxTimepoints))) 
+    if (!is.numeric(maxTimepoints) | 
+        maxTimepoints <= 0L | 
+        !all.equal(maxTimepoints, as.integer(maxTimepoints))) 
         stop("maxTimepoints must be integer")
     
     
@@ -91,25 +106,45 @@ reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchrono
     
     genes <- fbnnetwork$genes
     
-    internal_fn <- function(i, p_initialStates, p_fbnnetwork, p_genes, p_type, p_maxTimepoints) {
+    internal_fn <- function(i, 
+                            p_initialStates, 
+                            p_fbnnetwork,
+                            p_genes, 
+                            p_type, 
+                            p_maxTimepoints) {
         initialState <- p_initialStates[[i]]
         res <- list()
-        res[[i]] <- transitionStates(initialState, p_fbnnetwork, p_genes, p_type, p_maxTimepoints)
+        res[[i]] <- transitionStates(initialState, 
+                                     p_fbnnetwork, 
+                                     p_genes,
+                                     p_type,
+                                     p_maxTimepoints)
         return(res)
     }
     
     if (useParallel) {
-        reconstructed <- doParallelWork(internal_fn, initialStates, fbnnetwork, genes, type, maxTimepoints)
+        reconstructed <- doParallelWork(internal_fn,
+                                        initialStates, 
+                                        fbnnetwork, 
+                                        genes, 
+                                        type,
+                                        maxTimepoints)
         
     } else {
-        reconstructed <- doNonParallelWork(internal_fn, initialStates, fbnnetwork, genes, type, maxTimepoints)
+        reconstructed <- doNonParallelWork(internal_fn, 
+                                           initialStates, 
+                                           fbnnetwork, 
+                                           genes, 
+                                           type,
+                                           maxTimepoints)
     }
     
     # doNonParallelWork
     if (!is.null(reconstructed) & length(reconstructed) > 0) {
         # remove null entry
         cond1 <- sapply(reconstructed, function(entry) !is.null(entry))
-        reconstructed <- (reconstructed[cond1][unlist(lapply(reconstructed[cond1], length) != 0)])
+        reconstructed <- (reconstructed[cond1][unlist(lapply(reconstructed[cond1],
+                                                             length) != 0)])
         class(reconstructed) <- c("FBNTimeSeries")
     }
     
@@ -122,12 +157,21 @@ reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchrono
 
 # private method
 
-transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchronous", "asynchronous"), maxTimepoints) {
+transitionStates <- function(initialState,
+                             fbnNetwork,
+                             genes, 
+                             type = c("synchronous", "asynchronous"),
+                             maxTimepoints) {
     
     numrow <- length(genes)
     rowNames <- genes
     colNames <- c(1:maxTimepoints)
-    mat <- matrix(0, nrow = numrow, ncol = length(colNames), byrow = FALSE, dimnames = list(rowNames, colNames))
+    mat <- matrix(0, 
+                  nrow = numrow, 
+                  ncol = length(colNames), 
+                  byrow = FALSE, 
+                  dimnames = list(rowNames, 
+                                  colNames))
     
     vector <- unlist(initialState)
     # get initial state
@@ -137,8 +181,12 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
     decayIndex <- c()
     timestepTrack <- list()
     while (k <= length(colNames)) {
-        nextState <- getFBMSuccessor(fbnNetwork = fbnNetwork, previous_states = premat, current_step = k, genes = rowNames, 
-            type = type, decayIndex = decayIndex)
+        nextState <- getFBMSuccessor(fbnNetwork = fbnNetwork,
+                                     previous_states = premat,
+                                     current_step = k,
+                                     genes = rowNames, 
+                                     type = type, 
+                                     decayIndex = decayIndex)
         mat[, k] <- nextState$nextState
         premat <- mat[, 1:k]
         decayIndex <- nextState$decayIndex
@@ -152,9 +200,12 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
 #'
 #'@param fbnnetwork An object of FBNNetwork
 #'@param previous_states A vector of current gene state
-#'@param genes a list of genes which index order must match with the current state
-#'@param type A type of Boolean network update schema choosen from synchronous, asynchronous based. Asynchronous will randomly pick up a gene to process at time.
-#'@param decayIndex An value indicates the period of time when to degrade an activated gene if no activators presented. It is usually one time step
+#'@param genes a list of genes which index order must match with the
+#' current state
+#'@param type A type of Boolean network update schema choosen from synchronous,
+#' asynchronous based. Asynchronous will randomly pick up a gene to process at time.
+#'@param decayIndex An value indicates the period of time when to degrade 
+#'an activated gene if no activators presented. It is usually one time step
 #'@return A list object that contains reconstructed time series and FBN network
 #'@examples
 #' require(BoolNet)
@@ -167,8 +218,19 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
 #' names(state)<-c('CycD','Rb','E2F','CycE','CycA','p27','Cdc20','Cdh1','UbcH10','CycB')
 #' getFBMSuccessor(NETWORK2,state,names(state),'synchronous')
 #' @export
-getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, type = c("synchronous", "asynchronous"), decayIndex = c()) {
-    internalFun <- function(gene, interactions, geneState, previous_states, current_step, timedecay, decayIndex = 1) {
+getFBMSuccessor <- function(fbnNetwork,
+                            previous_states, 
+                            current_step,
+                            genes,
+                            type = c("synchronous", "asynchronous"),
+                            decayIndex = c()) {
+    internalFun <- function(gene,
+                            interactions,
+                            geneState, 
+                            previous_states,
+                            current_step,
+                            timedecay, 
+                            decayIndex = 1) {
         # gene, a target gene
         genefunctions <- interactions[[gene]]
         ini <- geneState
@@ -177,10 +239,12 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
             decay <- 1L
         if (length(genefunctions) > 0) {
             # find all activators' probabilities
-            condOfActivation <- sapply(genefunctions, function(activator) activator$type == 1L)
+            condOfActivation <- sapply(genefunctions, 
+                                       function(activator) as.numeric(activator$type) == 1L)
             funcOfActivators <- genefunctions[condOfActivation]
             # find all inhibitors' probabilities
-            condOfInhibitors <- sapply(genefunctions, function(inhibitor) inhibitor$type == 0L)
+            condOfInhibitors <- sapply(genefunctions, 
+                                       function(inhibitor) as.numeric(inhibitor$type) == 0L)
             funcOfInhibitors <- genefunctions[condOfInhibitors]
         } else {
             funcOfActivators <- list()
@@ -201,14 +265,17 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
                   (next)()  #skip not enough timestep
                 }
                 
-                pregeneInput <- dissolve(lapply(funcOfActivators[[fbnName]]$input, function(geneindex) {
+                pregeneInput <- dissolve(lapply(funcOfActivators[[fbnName]]$input,
+                                                function(geneindex) {
                   res <- list()
                   res[[1]] <- previous_states[geneindex, adapted_timestep]
                   names(res)[[1]] <- genes[[geneindex]]
                   return(res)
                 }))
                 
-                probability <- getProbabilityFromFunctionInput(1, funcOfActivators[[fbnName]]$expression, funcOfActivators[[fbnName]]$probability, 
+                probability <- getProbabilityFromFunctionInput(1, 
+                                                               funcOfActivators[[fbnName]]$expression, 
+                                                               funcOfActivators[[fbnName]]$probability, 
                   pregeneInput)
                 
                 if (!length(probability) == 0) {
@@ -229,14 +296,17 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
                   (next)()  #skip not enough timestep
                 }
                 
-                pregeneInput <- dissolve(lapply(funcOfInhibitors[[fbnName]]$input, function(geneindex) {
+                pregeneInput <- dissolve(lapply(funcOfInhibitors[[fbnName]]$input,
+                                                function(geneindex) {
                   res <- list()
                   res[[1]] <- previous_states[geneindex, adapted_timestep]
                   names(res)[[1]] <- genes[[geneindex]]
                   return(res)
                 }))
                 
-                probability <- getProbabilityFromFunctionInput(0, funcOfInhibitors[[fbnName]]$expression, funcOfInhibitors[[fbnName]]$probability, 
+                probability <- getProbabilityFromFunctionInput(0,
+                                                               funcOfInhibitors[[fbnName]]$expression,
+                                                               funcOfInhibitors[[fbnName]]$probability, 
                   pregeneInput)
                 
                 if (!length(probability) == 0) {
@@ -296,17 +366,27 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
         names(decayIndex) <- genes
     }
     
-    ############################################################################################################# need to revise decayIndex[[gene]],currentState,timestepTrack to ensure it should work as expect randomly pick up a gene
-    ############################################################################################################# to process at time
+    #############################################################################
+    ## need to revise decayIndex[[gene]],currentState,timestepTrack to ensure it 
+    ## should work as expect randomly pick up a gene to process at time
+    #############################################################################
+ 
     if (type == "asynchronous") {
-        nonfixedgenes <- genes[!genes %in% fixedgenes]  #if gene is fixed then get the current gene stat
+        #if gene is fixed then get the current gene stat
+        nonfixedgenes <- genes[!genes %in% fixedgenes]  
         # randomly pickup one
         set.seed(100)
         gene <- sample(nonfixedgenes, 1)
         timedecay <- fbnNetwork$timedecay[[gene]]
         nextState <- previous_states[, current_step - 1]
         ini <- previous_states[gene, current_step - 1] == 1L
-        result <- internalFun(gene, interactions, ini, previous_states, current_step, timedecay, decayIndex[[gene]])
+        result <- internalFun(gene, 
+                              interactions, 
+                              ini,
+                              previous_states, 
+                              current_step,
+                              timedecay, 
+                              decayIndex[[gene]])
         names(nextState) <- genes
         names(decayIndex) <- genes
         
@@ -323,7 +403,13 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
             if (gene %in% fixedgenes) {
                 return(ini, 0)
             }
-            result <- internalFun(gene, interactions, ini, previous_states, current_step, timedecay, decayIndex[[gene]])
+            result <- internalFun(gene, 
+                                  interactions,
+                                  ini, 
+                                  previous_states,
+                                  current_step,
+                                  timedecay, 
+                                  decayIndex[[gene]])
             return(c(as.numeric(result[[1]]), result[[2]]))
         })
         nextState <- sapply(s_res, function(entry) entry[[1]])
@@ -350,7 +436,10 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
 #'@return A probablity of the target regulatory function
 #'@examples
 #' ##coming later
-getProbabilityFromFunctionInput <- function(funcType, FBNExpression, FBNProbability, preGeneInputs) {
+getProbabilityFromFunctionInput <- function(funcType, 
+                                            FBNExpression, 
+                                            FBNProbability, 
+                                            preGeneInputs) {
     # internal functions
     isInputStateMatchedFBNFunction <- function(inputstate, expression) {
         splitedexpression <- splitExpression(expression, 1, FALSE)

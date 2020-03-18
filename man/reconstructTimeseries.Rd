@@ -28,10 +28,20 @@ A list object that contains reconstructed time series and FBN network
 This method is used to reconstruct time series data
 }
 \examples{
-mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
+mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
+             3,
+             3,
+             dimnames=list(c('gene1','gene2','gene3'),
+             c('1','2','3')))
+mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
+             3,
+             3, 
+             dimnames=list(c('gene1','gene2','gene3'),
+             c('1','2','3')))
 listtestOriginal<-list(mat1,mat2)
-cube<-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtestOriginal,4,1,FALSE)
+cube<-constructFBNCube(c('gene1','gene2'),
+                       c('gene1','gene2','gene3'),
+                       listtestOriginal,4,1,FALSE)
 network<-mineFBNNetwork(cube,c('gene1','gene2'))
 mat1<-matrix(c('1','1','0'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
 mat2<-matrix(c('1','1','1'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))

@@ -16,11 +16,14 @@ getFBMSuccessor(
 \arguments{
 \item{previous_states}{A vector of current gene state}
 
-\item{genes}{a list of genes which index order must match with the current state}
+\item{genes}{a list of genes which index order must match with the
+current state}
 
-\item{type}{A type of Boolean network update schema choosen from synchronous, asynchronous based. Asynchronous will randomly pick up a gene to process at time.}
+\item{type}{A type of Boolean network update schema choosen from synchronous,
+asynchronous based. Asynchronous will randomly pick up a gene to process at time.}
 
-\item{decayIndex}{An value indicates the period of time when to degrade an activated gene if no activators presented. It is usually one time step}
+\item{decayIndex}{An value indicates the period of time when to degrade 
+an activated gene if no activators presented. It is usually one time step}
 
 \item{fbnnetwork}{An object of FBNNetwork}
 }

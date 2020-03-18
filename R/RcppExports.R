@@ -29,6 +29,14 @@ getGenePrababilities_advanced <- function(getGenePrababilities_basic) {
     .Call(`_FBNNet_getGenePrababilities_advanced`, getGenePrababilities_basic)
 }
 
+#' The main function to main FBN probabilities from time series data
+#' 
+#' @param main_parameters_in_ref The environment that contains the required data.
+#' @param fixedgenestate The up stream fixed gene state.
+#' @param target_gene The target gene.
+#' @param new_conditional_gene The current stream conditional gene.
+#' @param temporal The temporal time step.
+#' @param targetCounts A list of pre-calculated targe genes.
 getGenePrababilities <- function(main_parameters_in_ref, fixedgenestate, target_gene, new_conditional_gene, temporal, targetCounts) {
     .Call(`_FBNNet_getGenePrababilities`, main_parameters_in_ref, fixedgenestate, target_gene, new_conditional_gene, temporal, targetCounts)
 }
@@ -37,10 +45,15 @@ networkFiltering <- function(res) {
     .Call(`_FBNNet_networkFiltering`, res)
 }
 
-filterTargetGenesByConditionGenes <- function(targetGenes, mainParameters, genes, matchedgenes, temporal = 1L, targetCounts = NULL) {
-    .Call(`_FBNNet_filterTargetGenesByConditionGenes`, targetGenes, mainParameters, genes, matchedgenes, temporal, targetCounts)
-}
-
+#' Get the main measurements based on the input data
+#' 
+#' @param targetGene The target gene
+#' @param mainParameters An environment variable holds all input data
+#' @param genes All conditional genes
+#' @param matchedgenes processed genes
+#' @param temporal The temporal time steps
+#' @param targetCounts 
+#' 
 getGenePrababilities_measurements <- function(targetGene, mainParameters, genes, matchedgenes, temporal = 1L, targetCounts = NULL) {
     .Call(`_FBNNet_getGenePrababilities_measurements`, targetGene, mainParameters, genes, matchedgenes, temporal, targetCounts)
 }
@@ -53,14 +66,18 @@ mineNetworksDirect <- function(targetGene, mainParameters, genes, matchedgenes, 
     .Call(`_FBNNet_mineNetworksDirect`, targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK, temporal, targetCounts, findPositiveRegulate, findNegativeRegulate)
 }
 
-internalloopByWhole2 <- function(target_gene, conditional_genes, maxK, temporal, mainParameters) {
-    .Call(`_FBNNet_internalloopByWhole2`, target_gene, conditional_genes, maxK, temporal, mainParameters)
+process_cube_algorithm <- function(target_gene, conditional_genes, maxK, temporal, mainParameters) {
+    .Call(`_FBNNet_process_cube_algorithm`, target_gene, conditional_genes, maxK, temporal, mainParameters)
 }
 
 to_string <- function(val) {
     .Call(`_FBNNet_to_string`, val)
 }
 
+#' A function concate a vector with a sperator
+#' @param x The vector
+#' @param sep Seperator
+#' @return A new string
 mpaste <- function(x, sep) {
     .Call(`_FBNNet_mpaste`, x, sep)
 }

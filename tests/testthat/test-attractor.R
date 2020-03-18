@@ -1,7 +1,6 @@
 context("attractor")
+require(BoolNet)
 setupdata <- function() {
-    print("*********************Executing test unittest_FBNProcessForMultipleFiles********************")
-    # trainingseries<-FBNDataReduction(generateTimeSeries(network,1000,43,noiseLevel=0.0))
     with(ExampleNetwork, {
         initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
         trainingseries <- genereateBoolNetTimeseries(ExampleNetwork, initialStates, 43, type = "synchronous")

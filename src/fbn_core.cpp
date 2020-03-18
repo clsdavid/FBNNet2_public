@@ -54,7 +54,8 @@ Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix, Rcpp::CharacterVector targetgenes)
+Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix,
+                                      Rcpp::CharacterVector targetgenes)
 {
   Rcpp::CharacterVector names = Rcpp::rownames(stateMatrix);
   IntegerVector r_index = a_in_b_index(targetgenes,names);
@@ -68,7 +69,10 @@ Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix, Rcpp::Cha
 }
 
 // [[Rcpp::export]]
-Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters, Rcpp::CharacterVector targetgene, Rcpp::CharacterVector conditional_genes, Rcpp::IntegerVector temporal)
+Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
+                                      Rcpp::CharacterVector targetgene, 
+                                      Rcpp::CharacterVector conditional_genes, 
+                                      Rcpp::IntegerVector temporal)
 {
     Rcpp::List getCurrentStates  =  mainParameters["currentStates"];
     Rcpp::List getpreviousStates  =  mainParameters["previousStates"];
@@ -220,33 +224,44 @@ Rcpp::List getBasicMeasures(
 //
 
 // [[Rcpp::export]]
-Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref, Rcpp::Nullable<Rcpp::List> fixedgenestate, Rcpp::CharacterVector target_gene, Rcpp::CharacterVector new_conditional_gene, Rcpp::IntegerVector temporal, Rcpp::Nullable<Rcpp::List> targetCounts)
+Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
+                                      Rcpp::Nullable<Rcpp::List> fixedgenestate, 
+                                      Rcpp::CharacterVector target_gene, 
+                                      Rcpp::CharacterVector new_conditional_gene,
+                                      Rcpp::IntegerVector temporal,
+                                      Rcpp::Nullable<Rcpp::List> targetCounts)
 {
   
   //P(B|A)=P(A & B)/P(A)=(frq(A&B)/n)/(frq(A)/n)=frq(A&B)/frq(A)=P(A&D)/(P(A&D)+P(!A & D)) Bayers rule
   //order of target_genes is very important
-  List dataCube = main_parameters_in_ref["timeseries"];
-  CharacterVector all_gene_names = rownames(dataCube[0]);
-  int total_samples = dataCube.length();
+  List dataCube = main_parameters_in_ref["timeseries"]; //ToDo, not need
+  CharacterVector all_gene_names = rownames(dataCube[0]); //ToDo, should pass from up stream as it is static
+  
+  int total_samples = dataCube.length();//main_parameters_in_ref["total_samples"];//ToDo, should pass from up stream as it is static
+  //CharacterVector all_gene_names = main_parameters_in_ref["total_samples"];
+    // mainParameters$total_samples <- total_samples
+    // mainParameters$all_gene_names <- all_gene_names
+    // mainParameters$total_timepoints <- total_timepoints
+    
   CharacterVector conditional_genes;
   
   List cur_fixed_state;
   
-  if (fixedgenestate.isNull())
+  if(fixedgenestate.isNull())
   {
-    conditional_genes = new_conditional_gene;
-  }else
+      conditional_genes = new_conditional_gene;
+  } else
   {
-    List temp_state(fixedgenestate);
-    cur_fixed_state = temp_state;
-    //sub level
-    conditional_genes = cur_fixed_state.names();
+      Rcpp::List temp_state(fixedgenestate);
+      cur_fixed_state = temp_state;
+      //sub level
+      conditional_genes = cur_fixed_state.names();
     
     
-    if (!is_true(all(a_in_b(conditional_genes,all_gene_names))))
-    {
-      throw std::runtime_error("All or some part of the conditional genes are not founded in the timeseries cube");
-    }
+      if(!is_true(all(a_in_b(conditional_genes,all_gene_names))))
+      {
+          throw std::runtime_error("All or some part of the conditional genes are not founded in the timeseries cube");
+      }
     
     if (is_true(any(a_in_b(new_conditional_gene,conditional_genes))))
     {
@@ -316,9 +331,13 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref, 
   //#get all combination of temporal timeserise
   //#for example if temporal =1, the index is 1, then the data will be column 0 and column 1
   //# if temporal =2, the index is 2, then data will be 1) column 0 abd column 2,;2) column 1 and colun 2
-  Rcpp::List getAllTemporalStates = generateTemporalGeneStates(main_parameters_in_ref,target_gene,conditional_genes,temporal);
+  Rcpp::List getAllTemporalStates = generateTemporalGeneStates(main_parameters_in_ref,
+                                                               target_gene,
+                                                               conditional_genes,
+                                                               temporal);
   
   List resultGroup(getAllTemporalStates.length());
+  //should pass from up stream as it is static
   int n_timepoints =0;
   for(int j=0;j<total_samples;j++){
     NumericMatrix temp_cube = dataCube[j];
@@ -766,11 +785,27 @@ Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_b
                         _["targetCounts"] =targetCounts));
 }
 
+//' The main function to main FBN probabilities from time series data
+//' 
+//' @param main_parameters_in_ref The environment that contains the required data.
+//' @param fixedgenestate The up stream fixed gene state.
+//' @param target_gene The target gene.
+//' @param new_conditional_gene The current stream conditional gene.
+//' @param temporal The temporal time step.
+//' @param targetCounts A list of pre-calculated targe genes.
 // [[Rcpp::export]]
-Rcpp::List getGenePrababilities(Rcpp::Environment main_parameters_in_ref, Rcpp::Nullable<Rcpp::List> fixedgenestate, Rcpp::CharacterVector target_gene, Rcpp::CharacterVector new_conditional_gene, Rcpp::IntegerVector temporal, Rcpp::Nullable<Rcpp::List> targetCounts)
+Rcpp::List getGenePrababilities(Rcpp::Environment main_parameters_in_ref,
+                                Rcpp::Nullable<Rcpp::List> fixedgenestate, 
+                                Rcpp::CharacterVector target_gene, 
+                                Rcpp::CharacterVector new_conditional_gene,
+                                Rcpp::IntegerVector temporal, 
+                                Rcpp::Nullable<Rcpp::List> targetCounts)
 {
   
-    Rcpp::List basic_measures = getGenePrababilities_basic(main_parameters_in_ref,fixedgenestate,target_gene,new_conditional_gene,temporal, targetCounts);
+    Rcpp::List basic_measures = getGenePrababilities_basic(main_parameters_in_ref,
+                                                           fixedgenestate,target_gene,
+                                                           new_conditional_gene,temporal, 
+                                                           targetCounts);
     Rcpp::List probability = getGenePrababilities_advanced(basic_measures);
 
     if(Rf_isNull(probability))

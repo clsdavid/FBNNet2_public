@@ -1,17 +1,15 @@
 context("fbngraphic")
+require(BoolNet)
 setupdata <- function() {
-    require(BoolNet)
-    require(FBNNet)
-    print("*********************Executing test unittest_FBNProcessForMultipleFiles********************")
-    network <- BoolNet::loadNetwork("D:\\Dropbox/Dropbox/FBNNet/tempdata/Example.txt")
-    # trainingseries<-FBNDataReduction(generateTimeSeries(network,1000,43,noiseLevel=0.0))
-    initialStates <- generateAllCombinationBinary(network$genes)
-    trainingseries <- genereateBoolNetTimeseries(network, initialStates, 43, type = "synchronous")
-    
-    cube <- constructFBNCube(network$genes, network$genes, trainingseries, 5, 1, FALSE)
-    NETWORK2 <- mineFBNNetwork(cube, network$genes)
-    
+  with(ExampleNetwork, {
+    initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+    trainingseries <- genereateBoolNetTimeseries(ExampleNetwork, initialStates, 43, type = "synchronous")
+
+    cube <- constructFBNCube(ExampleNetwork$genes, ExampleNetwork$genes, trainingseries, 5, 1, FALSE)
+    NETWORK2 <- mineFBNNetwork(cube, ExampleNetwork$genes)
+
     return(list(network = NETWORK2, initialStates = initialStates, timeseries = trainingseries))
+  })
 }
 
 describe("run synchronous should succeed", {

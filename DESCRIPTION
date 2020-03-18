@@ -26,7 +26,6 @@ Suggests:
     stringr,
     futile.logger,
     magrittr,
-    BoolNet,
     dplyr,
     snow
 RoxygenNote: 7.1.0

@@ -235,14 +235,22 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
 #' @param type the type of the network in traditional Boolean modelling
 #' @param geneProbabilities optional if type is probabilistic, and then it is a need to specify the probabilities for each gene
 #' @export
-genereateBoolNetTimeseries <- function(network, initialStates, numMeasurements, type = c("synchronous", "asynchronous", "probabilistic"), 
+genereateBoolNetTimeseries <- function(network,
+                                       initialStates,
+                                       numMeasurements,
+                                       type = c("synchronous",
+                                                "asynchronous", 
+                                                "probabilistic"), 
     geneProbabilities = NULL) {
     # initialStates<-initialStates[match(network$genes,rownames(initialStates)),]
     lapply(initialStates, function(state) {
         res <- state
         startState <- state
         for (j in 2:numMeasurements) {
-            startState <- BoolNet::stateTransition(network, startState, type = type, geneProbabilities = geneProbabilities)
+            startState <- BoolNet::stateTransition(network,
+                                                   startState,
+                                                   type = type,
+                                                   geneProbabilities = geneProbabilities)
             res <- cbind(res, startState)
         }
         rownames(res) <- network$genes
