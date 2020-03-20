@@ -62,10 +62,6 @@ buildProbabilityTreeOnTargetGene <- function(targetGene, mainParameters, genes, 
     .Call(`_FBNNet_buildProbabilityTreeOnTargetGene`, targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK, temporal, targetCounts, findPositiveRegulate, findNegativeRegulate)
 }
 
-mineNetworksDirect <- function(targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK = 4L, temporal = 1L, targetCounts = NULL, findPositiveRegulate = FALSE, findNegativeRegulate = FALSE) {
-    .Call(`_FBNNet_mineNetworksDirect`, targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK, temporal, targetCounts, findPositiveRegulate, findNegativeRegulate)
-}
-
 process_cube_algorithm <- function(target_gene, conditional_genes, maxK, temporal, mainParameters) {
     .Call(`_FBNNet_process_cube_algorithm`, target_gene, conditional_genes, maxK, temporal, mainParameters)
 }

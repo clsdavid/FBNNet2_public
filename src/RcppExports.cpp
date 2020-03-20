@@ -166,26 +166,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mineNetworksDirect
-Rcpp::List mineNetworksDirect(Rcpp::CharacterVector targetGene, Rcpp::Environment mainParameters, Rcpp::CharacterVector genes, Rcpp::Nullable<Rcpp::List> matchedgenes, Rcpp::Nullable<Rcpp::CharacterVector> matchedexpression, Rcpp::IntegerVector maxK, Rcpp::IntegerVector temporal, Nullable<Rcpp::List> targetCounts, bool findPositiveRegulate, bool findNegativeRegulate);
-RcppExport SEXP _FBNNet_mineNetworksDirect(SEXP targetGeneSEXP, SEXP mainParametersSEXP, SEXP genesSEXP, SEXP matchedgenesSEXP, SEXP matchedexpressionSEXP, SEXP maxKSEXP, SEXP temporalSEXP, SEXP targetCountsSEXP, SEXP findPositiveRegulateSEXP, SEXP findNegativeRegulateSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type targetGene(targetGeneSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Environment >::type mainParameters(mainParametersSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type genes(genesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type matchedgenes(matchedgenesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type matchedexpression(matchedexpressionSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type maxK(maxKSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type temporal(temporalSEXP);
-    Rcpp::traits::input_parameter< Nullable<Rcpp::List> >::type targetCounts(targetCountsSEXP);
-    Rcpp::traits::input_parameter< bool >::type findPositiveRegulate(findPositiveRegulateSEXP);
-    Rcpp::traits::input_parameter< bool >::type findNegativeRegulate(findNegativeRegulateSEXP);
-    rcpp_result_gen = Rcpp::wrap(mineNetworksDirect(targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK, temporal, targetCounts, findPositiveRegulate, findNegativeRegulate));
-    return rcpp_result_gen;
-END_RCPP
-}
 // process_cube_algorithm
 Rcpp::List process_cube_algorithm(Rcpp::CharacterVector target_gene, Rcpp::CharacterVector conditional_genes, Rcpp::IntegerVector maxK, Rcpp::IntegerVector temporal, Rcpp::Environment mainParameters);
 RcppExport SEXP _FBNNet_process_cube_algorithm(SEXP target_geneSEXP, SEXP conditional_genesSEXP, SEXP maxKSEXP, SEXP temporalSEXP, SEXP mainParametersSEXP) {
@@ -525,7 +505,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_FBNNet_networkFiltering", (DL_FUNC) &_FBNNet_networkFiltering, 1},
     {"_FBNNet_getGenePrababilities_measurements", (DL_FUNC) &_FBNNet_getGenePrababilities_measurements, 6},
     {"_FBNNet_buildProbabilityTreeOnTargetGene", (DL_FUNC) &_FBNNet_buildProbabilityTreeOnTargetGene, 10},
-    {"_FBNNet_mineNetworksDirect", (DL_FUNC) &_FBNNet_mineNetworksDirect, 10},
     {"_FBNNet_process_cube_algorithm", (DL_FUNC) &_FBNNet_process_cube_algorithm, 5},
     {"_FBNNet_to_string", (DL_FUNC) &_FBNNet_to_string, 1},
     {"_FBNNet_mpaste", (DL_FUNC) &_FBNNet_mpaste, 2},

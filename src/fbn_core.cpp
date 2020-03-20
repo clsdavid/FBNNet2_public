@@ -176,30 +176,30 @@ Rcpp::List getBasicMeasures(
   int target_F_count=0;
 
 //condition#####################################################################################
-  int lenTT=matchCount(m,cond_T_target_T_state);
-  int lenTF=matchCount(m,cond_F_target_T_state);
-  int lenFT=matchCount(m,cond_T_target_F_state);
-  int lenFF=matchCount(m,cond_F_target_F_state);
+  int lenTT = matchCount(m, cond_T_target_T_state);
+  int lenTF = matchCount(m, cond_F_target_T_state);
+  int lenFT = matchCount(m, cond_T_target_F_state);
+  int lenFF = matchCount(m, cond_F_target_F_state);
   if(recount_target){
     if(stateTCond.length()>1){
-      Rcpp::NumericMatrix m2=m(Range(m.nrow()-2,m.nrow()-1),_);
-      int sresTT=matchCount(m2,NumericVector::create(1,1));
-      int sresTF=matchCount(m2,NumericVector::create(0,1));
-      int sresFT=matchCount(m2,NumericVector::create(1,0));
-      int sresFF=matchCount(m2,NumericVector::create(0,0));
+      Rcpp::NumericMatrix m2 = m(Range(m.nrow()-2,m.nrow()-1),_);
+      int sresTT=matchCount(m2, NumericVector::create(1,1));
+      int sresTF=matchCount(m2, NumericVector::create(0,1));
+      int sresFT=matchCount(m2, NumericVector::create(1,0));
+      int sresFF=matchCount(m2, NumericVector::create(0,0));
       
-      target_T_count=sresTT+sresTF;
-      target_F_count=sresFT+sresFF;
+      target_T_count = sresTT+sresTF;
+      target_F_count = sresFT+sresFF;
     }else{
       target_T_count = lenTT + lenTF;
       target_F_count = lenFT + lenFF;
     }
   }
 
-  int lenTT_c=matchCount(mc,cond_T_target_T_state_c);
-  int lenTF_c=matchCount(mc,cond_F_target_T_state_c);
-  int lenFT_c=matchCount(mc,cond_T_target_F_state_c);
-  int lenFF_c=matchCount(mc,cond_F_target_F_state_c);
+  int lenTT_c = matchCount(mc,cond_T_target_T_state_c);
+  int lenTF_c = matchCount(mc,cond_F_target_T_state_c);
+  int lenFT_c = matchCount(mc,cond_T_target_F_state_c);
+  int lenFF_c = matchCount(mc,cond_F_target_F_state_c);
 
   List res = List::create(_("target_T_count") = target_T_count,
                           _("target_F_count") = target_F_count,
@@ -234,16 +234,9 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   
   //P(B|A)=P(A & B)/P(A)=(frq(A&B)/n)/(frq(A)/n)=frq(A&B)/frq(A)=P(A&D)/(P(A&D)+P(!A & D)) Bayers rule
   //order of target_genes is very important
-  // List dataCube = main_parameters_in_ref["timeseries"]; //ToDo, not need
-  // CharacterVector all_gene_names = rownames(dataCube[0]); //ToDo, should pass from up stream as it is static
-  // 
   int total_samples = main_parameters_in_ref["total_samples"];//ToDo, should pass from up stream as it is static
   CharacterVector all_gene_names = main_parameters_in_ref["all_gene_names"];
   int n_timepoints = main_parameters_in_ref["total_timepoints"];;
-    // mainParameters$total_samples <- total_samples
-    // mainParameters$all_gene_names <- all_gene_names
-    // mainParameters$total_timepoints <- total_timepoints
-    
   CharacterVector conditional_genes;
   
   List cur_fixed_state;
@@ -264,21 +257,21 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
           throw std::runtime_error("All or some part of the conditional genes are not founded in the timeseries cube");
       }
     
-    if (is_true(any(a_in_b(new_conditional_gene,conditional_genes))))
-    {
-      IntegerVector indexs = a_in_b_index(new_conditional_gene,conditional_genes);
-      for(int i=0;i<indexs.length();i++){
-        conditional_genes.erase(i);
+      if(is_true(any(a_in_b(new_conditional_gene,conditional_genes))))
+      {
+          IntegerVector indexs = a_in_b_index(new_conditional_gene, conditional_genes);
+          for(int i=0;i<indexs.length();i++){
+              conditional_genes.erase(i);
+          }
+        
+          IntegerVector indexs2 = a_in_b_index(new_conditional_gene, cur_fixed_state.names());
+          for(int i=0;i<indexs2.length();i++){
+              cur_fixed_state.erase(i);
+          }
+      }else
+      {
+          conditional_genes = concatenator(conditional_genes, new_conditional_gene);
       }
-      
-      IntegerVector indexs2 = a_in_b_index(new_conditional_gene,cur_fixed_state.names());
-      for(int i=0;i<indexs2.length();i++){
-        cur_fixed_state.erase(i);
-      }
-    }else
-    {
-      conditional_genes = concatenator(conditional_genes,new_conditional_gene);
-    }
     
   }
   
@@ -301,32 +294,33 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   
   int num_of_conditional_genes = uniqued_conditional_genes.length();
   
-  cond_gene_T_states = orderByname(cond_gene_T_states,uniqued_conditional_genes);
-  cond_gene_F_states = orderByname(cond_gene_F_states,uniqued_conditional_genes);
+  cond_gene_T_states = orderByname(cond_gene_T_states, uniqued_conditional_genes);
+  cond_gene_F_states = orderByname(cond_gene_F_states, uniqued_conditional_genes);
   
+
   NumericVector stateTCond;
   NumericVector stateFCond;
-  for(int i=0;i<cond_gene_T_states.length();i++){
-    stateTCond.push_back(cond_gene_T_states[i],(std::string)uniqued_conditional_genes[i]);
+  for(int i=0;i < cond_gene_T_states.length(); i++){
+      stateTCond.push_back(cond_gene_T_states[i], (std::string)uniqued_conditional_genes[i]);
   }
   
-  for(int i=0;i<cond_gene_F_states.length();i++){
-    stateFCond.push_back(cond_gene_F_states[i],(std::string)uniqued_conditional_genes[i]);
+  for(int i=0;i < cond_gene_F_states.length(); i++){
+      stateFCond.push_back(cond_gene_F_states[i], (std::string)uniqued_conditional_genes[i]);
   }
   
   NumericVector mTRUE = NumericVector::create(1);
   NumericVector mFALSE = NumericVector::create(0);
   
   //#prepare, the last bit is the target, the variable name TT, the front is target, the other is conditional
-  NumericVector cond_T_target_T_state = concatenatorN(stateTCond,mTRUE);
-  NumericVector cond_F_target_T_state = concatenatorN(stateFCond,mTRUE);
-  NumericVector cond_T_target_F_state = concatenatorN(stateTCond,mFALSE);
-  NumericVector cond_F_target_F_state = concatenatorN(stateFCond,mFALSE);
+  NumericVector cond_T_target_T_state = concatenatorN(stateTCond, mTRUE);
+  NumericVector cond_F_target_T_state = concatenatorN(stateFCond, mTRUE);
+  NumericVector cond_T_target_F_state = concatenatorN(stateTCond, mFALSE);
+  NumericVector cond_F_target_F_state = concatenatorN(stateFCond, mFALSE);
   //#prepare counter
-  NumericVector cond_T_target_T_state_c = concatenatorN(mTRUE,stateTCond);
-  NumericVector cond_F_target_T_state_c = concatenatorN(mFALSE,stateTCond);
-  NumericVector cond_T_target_F_state_c = concatenatorN(mTRUE,stateFCond);
-  NumericVector cond_F_target_F_state_c = concatenatorN(mFALSE,stateFCond);
+  NumericVector cond_T_target_T_state_c = concatenatorN(mTRUE, stateTCond);
+  NumericVector cond_F_target_T_state_c = concatenatorN(mFALSE, stateTCond);
+  NumericVector cond_T_target_F_state_c = concatenatorN(mTRUE, stateFCond);
+  NumericVector cond_F_target_F_state_c = concatenatorN(mFALSE, stateFCond);
   
   
   //#get all combination of temporal timeserise
@@ -346,7 +340,7 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
     new_targetCounts = targetCounts.as();
   }
   
-  for(int i=0;i<getAllTemporalStates.length();i++){
+  for(int i=0; i < getAllTemporalStates.length(); i++){
     List temporalState = getAllTemporalStates[i];
     int time_step = temporalState["timeStep"];
     int total_calculated_timepoints = 0;
@@ -806,8 +800,6 @@ Rcpp::List getGenePrababilities(Rcpp::Environment main_parameters_in_ref,
       return (R_NilValue);
     
     Rcpp::List new_targetCounts =  probability["targetCounts"];
-    //Rcpp::List result_group = probability["result_group"];
-    //Named("result_group") = probability["result_group"], 
     return (List::create(_["getBestFitP"] = probability["getBestFitP"], 
                          _["getBestFitN"] = probability["getBestFitN"], 
                          _["targetCounts"] = new_targetCounts));
