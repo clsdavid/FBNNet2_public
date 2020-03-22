@@ -2,7 +2,6 @@
 % Please edit documentation in R/cube_FBN.R
 \name{constructFBNCube}
 \alias{constructFBNCube}
-\alias{constructFBNCubeAndNetworkInSmallGroups}
 \title{Create an Orchard cube}
 \usage{
 constructFBNCube(
@@ -12,19 +11,6 @@ constructFBNCube(
   maxK = 5,
   temporal = 1,
   useParallel = FALSE
-)
-
-constructFBNCubeAndNetworkInSmallGroups(
-  groupedTimeseriesData,
-  maxK = 5,
-  temporal = 1,
-  useParallel = FALSE,
-  threshold_confidence = 1,
-  threshold_error = 0,
-  threshold_support = 1e-05,
-  maxFBNRules = 20,
-  output_cube = FALSE,
-  parallel_on_group = FALSE
 )
 }
 \arguments{
@@ -55,13 +41,19 @@ This is the main function(s) to genereate a sigle Orchard Cube or a group
 of cubes
 }
 \examples{
-mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
-             3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
-             3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-listtest<-list(mat1,mat2)
-constructFBNCube(c('gene1','gene2'),
-                 c('gene1','gene2','gene3'),
-                 listtest, 4, 1, FALSE)
-
+require(BoolNet)
+data("ExampleNetwork")
+initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+                                           initialStates,
+                                           43,
+                                           type='synchronous')
+cube <- constructFBNCube(ExampleNetwork$genes,
+                       ExampleNetwork$genes,
+                       trainingseries,
+                       4,
+                       1,
+                       TRUE)
+NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
+NETWORK
 }

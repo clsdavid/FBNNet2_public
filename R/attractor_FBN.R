@@ -1,7 +1,7 @@
 #~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
 #'A function to find all possible FBM (Fundamental Boolean models) attractors
 #'
-#'@param fbnnetwork An object of FBNNetwork
+#'@param fbnNetwork An object of FBNNetwork
 #'@param startStates A list of initial states, the row names of each state must
 #' be matched with the genes
 #'@param genes a list of genes which index order must match with the current
@@ -23,33 +23,33 @@
 #'   Boolean networks
 #' 
 #'@examples
-#' requires(BoolNet)
-#' network<-loadNetwork('testthat/others/cellcycle.txt')
-#' initialStates<-generateAllCombinationBinary(network$genes)
-#' trainingseries<-genereateBoolNetTimeseries(network,
-#'  initialStates,
-#'  43,
-#'   type='synchronous')
-#' cube<-constructFBNCube(network$genes,
-#' network$genes,
-#' trainingseries,
-#' 4,
-#' 1,
-#' TRUE)
-#' NETWORK2<-mineFBNNetwork(cube,network$genes)
-#' attractor<-searchForAttractors(NETWORK2,
-#' initialStates,
-#' network$genes)
+#' require(BoolNet)
+#' data("ExampleNetwork")
+#' initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+#' trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+#'                                            initialStates,
+#'                                            43,
+#'                                            type='synchronous')
+#' cube<-constructFBNCube(ExampleNetwork$genes,
+#'                        ExampleNetwork$genes,
+#'                        trainingseries,
+#'                        4,
+#'                        1,
+#'                        TRUE)
+#' NETWORK2 <- mineFBNNetwork(cube,ExampleNetwork$genes)
+#' attractor <- searchForAttractors(NETWORK2,
+#'                                initialStates,
+#'                                ExampleNetwork$genes)
 #' print(attractor)
 #' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 #' @export
-searchForAttractors <- function(fbnnetwork,
+searchForAttractors <- function(fbnNetwork,
                                 startStates = list(), 
                                 genes,
                                 type = c("synchronous", "asynchronous"),
                                 genesOn = c(), 
     genesOff = c(), maxSearch = 1000) {
-    if (!(inherits(fbnnetwork, "FundamentalBooleanNetwork"))) 
+    if (!(inherits(fbnNetwork, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")
     
     type <- match.arg(type, c("synchronous", "asynchronous"))
@@ -59,12 +59,12 @@ searchForAttractors <- function(fbnnetwork,
         startStates <- generateAllCombinationBinary(genes)
     }
     
-    if (length(genesOn) > 0 & is.vector(genesOn)) {
+    if (length(genesOn) > 0 && is.vector(genesOn)) {
         genesOnIndexes <- which(genes %in% genesOn)
         lapply(startStates, function(state) state[genesOnIndexes] <- 1)
     }
     
-    if (length(genesOff) > 0 & is.vector(genesOff)) {
+    if (length(genesOff) > 0 && is.vector(genesOff)) {
         genesOffIndexes <- which(genes %in% genesOff)
         lapply(startStates, function(state) state[genesOffIndexes] <- 0)
     }
@@ -107,9 +107,9 @@ searchForAttractors <- function(fbnnetwork,
             tempbasinStates[[length(tempbasinStates) + 1]] <- iniState
             decayIndex <- c()
             
-            while (!found & maxS <= maxSearch) {
+            while (!found && maxS <= maxSearch) {
                 k <- maxS + 1
-                result <- getFBMSuccessor(fbnnetwork,
+                result <- getFBMSuccessor(fbnNetwork,
                                           premat,
                                           k,
                                           genes, 
@@ -137,7 +137,7 @@ searchForAttractors <- function(fbnnetwork,
                       foundI <- statesIndex
                     }
                   })
-                  if (length(tempbasinStates) > 0 & foundI > 0) {
+                  if (length(tempbasinStates) > 0 && foundI > 0) {
                     basinStates[[foundI]] <- unique(
                         dissolve(list(dissolve(basinStates[[foundI]]),
                                  tempbasinStates)))
@@ -210,7 +210,7 @@ networkFixUpdate <- function(network, fixIndices, values) {
     if (any(is.na(network$fixed[fixIndices]))) 
         stop("fixIndices contains invalid indices!")
     
-    if (any(values != 0 & values != 1 & values != -1)) 
+    if (any(!values %in% c(0, 1, -1)) )
         stop("Please supply only 0, 1, or -1 in values!")
     
     network$fixed[fixIndices] <- as.integer(values)

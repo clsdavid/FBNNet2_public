@@ -196,27 +196,30 @@ transitionStates <- function(initialState,
     mat
 }
 
-#'This method is used to calculate the next state
+#' This method is used to calculate the next state
 #'
-#'@param fbnnetwork An object of FBNNetwork
-#'@param previous_states A vector of current gene state
-#'@param genes a list of genes which index order must match with the
+#' @param fbnnetwork An object of FBNNetwork
+#' @param previous_states A vector of current gene state
+#' @param genes a list of genes which index order must match with the
 #' current state
-#'@param type A type of Boolean network update schema choosen from synchronous,
+#' @param type A type of Boolean network update schema choosen from synchronous,
 #' asynchronous based. Asynchronous will randomly pick up a gene to process at time.
-#'@param decayIndex An value indicates the period of time when to degrade 
-#'an activated gene if no activators presented. It is usually one time step
-#'@return A list object that contains reconstructed time series and FBN network
-#'@examples
+#' @param decayIndex An value indicates the period of time when to degrade 
+#' an activated gene if no activators presented. It is usually one time step
+#' @return A list object that contains reconstructed time series and FBN network
+#' @examples
 #' require(BoolNet)
-#' require(FBNNet)
-#' network<-loadNetwork('testthat/others/cellcycle.txt')
-#' trainingseries<-FBNDataReduction(generateTimeSeries(network,2000,43))
-#' cube<-constructFBNCube(network$genes,network$genes,trainingseries,4,1,TRUE)
-#' NETWORK2<-mineFBNNetwork(cube,network$genes)
-#' state<-c('0','1','1','0','1','1','1','1','0','0')
-#' names(state)<-c('CycD','Rb','E2F','CycE','CycA','p27','Cdc20','Cdh1','UbcH10','CycB')
-#' getFBMSuccessor(NETWORK2,state,names(state),'synchronous')
+#' data(ExampleNetwork)
+#' trainingseries<-FBNDataReduction(generateTimeSeries(ExampleNetwork,2000,43))
+#' cube<-constructFBNCube(ExampleNetwork$genes,ExampleNetwork$genes,trainingseries,4,1,TRUE)
+#' NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
+#' state<-c('0','1','1','0','1')
+#' names(state)<-c('Gene1','Gene2','Gene3','Gene4','Gene5')
+#' getFBMSuccessor(NETWORK2, 
+#'                 previous_states= state,
+#'                 current_step = 2,
+#'                 genes = names(state),
+#'                 type = 'synchronous')
 #' @export
 getFBMSuccessor <- function(fbnNetwork,
                             previous_states, 

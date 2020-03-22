@@ -2,16 +2,40 @@
 % Please edit documentation in R/graph_FBN.R
 \name{FBNNetwork.Graph.DrawAttractor}
 \alias{FBNNetwork.Graph.DrawAttractor}
-\title{A method to draw attractors}
+\title{A method to draw attractors in the form of dynamic Network}
 \usage{
-FBNNetwork.Graph.DrawAttractor(
-  fbnNetwork,
-  FBMAttractors,
-  index = 1,
-  networkobject = NULL,
-  dynamicnetworkobject = NULL
-)
+FBNNetwork.Graph.DrawAttractor(fbnNetwork, FBMAttractors, index = 1)
+}
+\arguments{
+\item{fbnNetwork}{An object of FBNNetwork}
+
+\item{FBMAttractors}{A list of attractors extracted via 
+\code{searchForAttractors}.}
+
+\item{index}{The indiex of an attractor in the list 
+\code{FBMAttractors}.}
 }
 \description{
-A method to draw attractors
+A method to draw attractors in the form of dynamic Network
+}
+\examples{
+require(BoolNet)
+data("ExampleNetwork")
+initialStates<-generateAllCombinationBinary(ExampleNetwork$genes)
+trainingseries<-genereateBoolNetTimeseries(ExampleNetwork,
+                                           initialStates,
+                                           43,
+                                           type='synchronous')
+cube<-constructFBNCube(ExampleNetwork$genes,
+                       ExampleNetwork$genes,
+                       trainingseries,
+                       4,
+                       1,
+                       TRUE)
+NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
+attractor<-searchForAttractors(NETWORK2,
+                               initialStates,
+                               ExampleNetwork$genes)
+print(attractor)
+FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 }

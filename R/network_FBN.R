@@ -15,12 +15,21 @@
 #'@references Chen et al.(2018), Front. Physiol., 25 September 2018, 
 #'(\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 #'@examples
-#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' listtest<-list(mat1,mat2)
-#' cube<-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtest,4,1,FALSE)
-#' network<-mineFBNNetwork(cube,c('gene1','gene2'))
-#' @rdname 'FBNNetwork'
+#' require(BoolNet)
+#' data("ExampleNetwork")
+#' initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+#' trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+#'                                            initialStates,
+#'                                            43,
+#'                                            type='synchronous')
+#' cube <- constructFBNCube(ExampleNetwork$genes,
+#'                        ExampleNetwork$genes,
+#'                        trainingseries,
+#'                        4,
+#'                        1,
+#'                        TRUE)
+#' NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
+#' NETWORK
 #' @export
 mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, threshold_confidence = 1, threshold_error = 0, threshold_support = 1e-05, 
     maxFBNRules = 5) {

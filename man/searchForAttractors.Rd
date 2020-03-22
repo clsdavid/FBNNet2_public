@@ -5,7 +5,7 @@
 \title{A function to find all possible FBM (Fundamental Boolean models) attractors}
 \usage{
 searchForAttractors(
-  fbnnetwork,
+  fbnNetwork,
   startStates = list(),
   genes,
   type = c("synchronous", "asynchronous"),
@@ -15,7 +15,7 @@ searchForAttractors(
 )
 }
 \arguments{
-\item{fbnnetwork}{An object of FBNNetwork}
+\item{fbnNetwork}{An object of FBNNetwork}
 
 \item{startStates}{A list of initial states, the row names of each state must
 be matched with the genes}
@@ -39,23 +39,23 @@ Attractor objects
 A function to find all possible FBM (Fundamental Boolean models) attractors
 }
 \examples{
-requires(BoolNet)
-network<-loadNetwork('testthat/others/cellcycle.txt')
-initialStates<-generateAllCombinationBinary(network$genes)
-trainingseries<-genereateBoolNetTimeseries(network,
- initialStates,
- 43,
-  type='synchronous')
-cube<-constructFBNCube(network$genes,
-network$genes,
-trainingseries,
-4,
-1,
-TRUE)
-NETWORK2<-mineFBNNetwork(cube,network$genes)
-attractor<-searchForAttractors(NETWORK2,
-initialStates,
-network$genes)
+require(BoolNet)
+data("ExampleNetwork")
+initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+                                           initialStates,
+                                           43,
+                                           type='synchronous')
+cube<-constructFBNCube(ExampleNetwork$genes,
+                       ExampleNetwork$genes,
+                       trainingseries,
+                       4,
+                       1,
+                       TRUE)
+NETWORK2 <- mineFBNNetwork(cube,ExampleNetwork$genes)
+attractor <- searchForAttractors(NETWORK2,
+                               initialStates,
+                               ExampleNetwork$genes)
 print(attractor)
 FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 }

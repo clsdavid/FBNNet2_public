@@ -17,15 +17,21 @@
 #' @param clusteredTimeseriesData clustered timeseries data
 #' @return A Orcahrd cube that contains all precomputed measures
 #' @examples
-#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
-#'              3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
-#'              3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' listtest<-list(mat1,mat2)
-#' constructFBNCube(c('gene1','gene2'),
-#'                  c('gene1','gene2','gene3'),
-#'                  listtest, 4, 1, FALSE)
-#' 
+#' require(BoolNet)
+#' data("ExampleNetwork")
+#' initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+#' trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+#'                                            initialStates,
+#'                                            43,
+#'                                            type='synchronous')
+#' cube <- constructFBNCube(ExampleNetwork$genes,
+#'                        ExampleNetwork$genes,
+#'                        trainingseries,
+#'                        4,
+#'                        1,
+#'                        TRUE)
+#' NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
+#' NETWORK
 #' @export
 constructFBNCube <- function(target_genes,
                              conditional_genes,
@@ -51,6 +57,8 @@ constructFBNCube <- function(target_genes,
                 useParallel))
     
     # construct gene tree by timeseries * samples * timepoints(columns)
+    # divid into sub groups
+    
     internalloopByWhole <- function(i,
                                     target_genes,
                                     conditional_genes,
@@ -115,7 +123,7 @@ constructFBNCube <- function(target_genes,
                                  mainParameters)
     }
     
-    if (!is.null(res) & length(res) > 0) {
+    if (!is.null(res) && length(res) > 0) {
         cond1 <- sapply(res, function(entry) !is.null(entry))
         res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
         class(res) <- c("FBNCube")
@@ -136,7 +144,6 @@ constructFBNCube <- function(target_genes,
 
 
 
-#' @rdname constructFBNCube
 #' @export
 constructFBNCubeAndNetworkInSmallGroups <- function(
     groupedTimeseriesData,
@@ -219,7 +226,6 @@ constructFBNCubeAndNetworkInSmallGroups <- function(
 }
 
 
-#' @rdname 'constructFBNCube'
 #' @export
 constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, maxK = 5, temporal = 1, useParallel = FALSE, threshold_confidence = 1, 
     threshold_error = 0, threshold_support = 1e-05, maxFBNRules = 20, output_cube = FALSE, parallel_on_group = FALSE) {

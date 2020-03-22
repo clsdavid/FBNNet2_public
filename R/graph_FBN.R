@@ -6,7 +6,10 @@
 #'@examples
 #' ##coming later
 #' @noRd
-FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(FBNnetwork, david_gene_list = NULL, show_decay = FALSE) {
+FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(
+    FBNnetwork, 
+    david_gene_list = NULL, 
+    show_decay = FALSE) {
     if (!(inherits(FBNnetwork, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")
     
@@ -261,14 +264,16 @@ FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(FBNnetwork, david_gen
     names(res)[[1]] <- "nodes"
     res[[2]] <- as.data.frame(links)
     names(res)[[2]] <- "edges"
-    # net<-network(links,vertex.attr=nodes, matrix.type='edgelist',loops=T,multiple=T,igonre.eval=T)
-    return(res)
+    res
 }
 
 #' internal method
 #'
 #' @noRd
-FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FBNnetwork, networkobject) {
+FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
+    timeseries, 
+    FBNnetwork, 
+    networkobject) {
     
     if (is.null(timeseries) | !is.matrix(timeseries)) {
         stop("The parameter timeseries must be not NULL and is a class of Matrix")
@@ -613,7 +618,10 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(timeseries, FB
 #' internal method
 #' 
 #' @noRd
-FBNNetwork.Graph.CreateDynamicNetworkObjects <- function(networkobject, timepoints, dynamicNetworkGraphicObject) {
+FBNNetwork.Graph.CreateDynamicNetworkObjects <- function(
+    networkobject,
+    timepoints, 
+    dynamicNetworkGraphicObject) {
     start <- 1
     end <- length(timepoints)
     res <- list()
@@ -969,28 +977,6 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetw
 }
 
 
-#' 
-#' #' @export
-#' FBNNetwork.Graph.DrawAllForwardNetworks <- function(fbnNetwork, targetGenes = NULL, maxDeep = 1, david_gene_list_csv = NULL) {
-#'     if (is.null(targetGenes)) 
-#'         targetGenes <- fbnNetwork$genes
-#'     ## the target gene as the source of activation, the regulation type is activator
-#'     net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 1, maxDeep = maxDeep)
-#'     net2 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 1, maxDeep = maxDeep)
-#'     net3 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 0, maxDeep = maxDeep)
-#'     net4 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 0, maxDeep = maxDeep)
-#'     # net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 1, maxDeep = maxDeep) net1 <-
-#'     # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 0, maxDeep = maxDeep) net1 <-
-#'     # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = NULL, maxDeep = maxDeep) net1 <-
-#'     # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = NULL, maxDeep = maxDeep)
-#'     par(mfrow = c(2, 2))
-#'     FBNNetwork.Graph(net1)
-#'     FBNNetwork.Graph(net2)
-#'     FBNNetwork.Graph(net3)
-#'     FBNNetwork.Graph(net4)
-#'     # dev.off()
-#' }
-
 
 # type=static | dynamic | animation | staticSlice
 #'Executing a list of processes in parallel with decreasing list
@@ -1035,27 +1021,53 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
         toTimePoint, dynamicnetworkobject, timeseriesMatrix))
 }
 
-#' A method to draw attractors
+#' A method to draw attractors in the form of dynamic Network
+#' 
+#' @param fbnNetwork An object of FBNNetwork
+#' @param FBMAttractors A list of attractors extracted via 
+#' \code{searchForAttractors}.
+#' @param index The indiex of an attractor in the list 
+#' \code{FBMAttractors}.
+#'@examples
+#' require(BoolNet)
+#' data("ExampleNetwork")
+#' initialStates<-generateAllCombinationBinary(ExampleNetwork$genes)
+#' trainingseries<-genereateBoolNetTimeseries(ExampleNetwork,
+#'                                            initialStates,
+#'                                            43,
+#'                                            type='synchronous')
+#' cube<-constructFBNCube(ExampleNetwork$genes,
+#'                        ExampleNetwork$genes,
+#'                        trainingseries,
+#'                        4,
+#'                        1,
+#'                        TRUE)
+#' NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
+#' attractor<-searchForAttractors(NETWORK2,
+#'                                initialStates,
+#'                                ExampleNetwork$genes)
+#' print(attractor)
+#' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
 #' @export
-FBNNetwork.Graph.DrawAttractor <- function(fbnNetwork, FBMAttractors, index = 1, networkobject = NULL, dynamicnetworkobject = NULL) {
+FBNNetwork.Graph.DrawAttractor <- function(fbnNetwork,
+                                           FBMAttractors, 
+                                           index = 1) {
     attractor <- FBMAttractors$Attractors[[index]]
     genes <- FBMAttractors$Genes
-    
-    if (is.null(networkobject)) {
-        networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, show_decay = FALSE)
-    }
-    
-    dynamicnetworkobject <- NULL
+    networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, 
+                                                                        show_decay = FALSE)
     if (!is.null(attractor)) {
         matrix <- do.call(cbind, attractor)
         rownames(matrix) <- genes
         colnames(matrix) <- c(1:length(attractor))
         
         
-        dynamicnetworkobject <- FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject(matrix, fbnNetwork, networkobject)
+        dynamicnetworkobject <- 
+            FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject(matrix,
+                                                                  fbnNetwork,
+                                                                  networkobject)
     }
-    
-    # animation=FBNNetwork.Graph.DynamicNetworkInAnimation(timeseriesMatrix,fbnNetwork,orchardCube)
-    
-    FBNNetwork.Graph.DrawingAttractorInternal(networkobject, dynamicnetworkobject, matrix)
+    FBNNetwork.Graph.DrawingAttractorInternal(networkobject,
+                                              dynamicnetworkobject,
+                                              matrix)
 }

@@ -2,27 +2,7 @@
 % Please edit documentation in R/graph_FBN.R
 \name{FBNNetwork.Graph}
 \alias{FBNNetwork.Graph}
-\title{#' @export
-FBNNetwork.Graph.DrawAllForwardNetworks <- function(fbnNetwork, targetGenes = NULL, maxDeep = 1, david_gene_list_csv = NULL) {
-    if (is.null(targetGenes)) 
-        targetGenes <- fbnNetwork$genes
-    ## the target gene as the source of activation, the regulation type is activator
-    net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 1, maxDeep = maxDeep)
-    net2 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 1, maxDeep = maxDeep)
-    net3 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 0, maxDeep = maxDeep)
-    net4 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 0, maxDeep = maxDeep)
-    # net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 1, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 0, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = NULL, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = NULL, maxDeep = maxDeep)
-    par(mfrow = c(2, 2))
-    FBNNetwork.Graph(net1)
-    FBNNetwork.Graph(net2)
-    FBNNetwork.Graph(net3)
-    FBNNetwork.Graph(net4)
-    # dev.off()
-}
-Executing a list of processes in parallel with decreasing list}
+\title{Executing a list of processes in parallel with decreasing list}
 \usage{
 FBNNetwork.Graph(
   fbnNetwork,
@@ -48,26 +28,6 @@ FBNNetwork.Graph(
 No return
 }
 \description{
-#' @export
-FBNNetwork.Graph.DrawAllForwardNetworks <- function(fbnNetwork, targetGenes = NULL, maxDeep = 1, david_gene_list_csv = NULL) {
-    if (is.null(targetGenes)) 
-        targetGenes <- fbnNetwork$genes
-    ## the target gene as the source of activation, the regulation type is activator
-    net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 1, maxDeep = maxDeep)
-    net2 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 1, maxDeep = maxDeep)
-    net3 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = 0, maxDeep = maxDeep)
-    net4 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = 0, maxDeep = maxDeep)
-    # net1 <- findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 1, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = NULL, sourceType = 0, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 1, sourceType = NULL, maxDeep = maxDeep) net1 <-
-    # findForwardRelatedNetworkByGenes(fbnNetwork, targetGenes, regulationType = 0, sourceType = NULL, maxDeep = maxDeep)
-    par(mfrow = c(2, 2))
-    FBNNetwork.Graph(net1)
-    FBNNetwork.Graph(net2)
-    FBNNetwork.Graph(net3)
-    FBNNetwork.Graph(net4)
-    # dev.off()
-}
 Executing a list of processes in parallel with decreasing list
 }
 \examples{

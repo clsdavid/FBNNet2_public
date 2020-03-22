@@ -35,12 +35,15 @@ This method is used to calculate the next state
 }
 \examples{
 require(BoolNet)
-require(FBNNet)
-network<-loadNetwork('testthat/others/cellcycle.txt')
-trainingseries<-FBNDataReduction(generateTimeSeries(network,2000,43))
-cube<-constructFBNCube(network$genes,network$genes,trainingseries,4,1,TRUE)
-NETWORK2<-mineFBNNetwork(cube,network$genes)
-state<-c('0','1','1','0','1','1','1','1','0','0')
-names(state)<-c('CycD','Rb','E2F','CycE','CycA','p27','Cdc20','Cdh1','UbcH10','CycB')
-getFBMSuccessor(NETWORK2,state,names(state),'synchronous')
+data(ExampleNetwork)
+trainingseries<-FBNDataReduction(generateTimeSeries(ExampleNetwork,2000,43))
+cube<-constructFBNCube(ExampleNetwork$genes,ExampleNetwork$genes,trainingseries,4,1,TRUE)
+NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
+state<-c('0','1','1','0','1')
+names(state)<-c('Gene1','Gene2','Gene3','Gene4','Gene5')
+getFBMSuccessor(NETWORK2, 
+                previous_states= state,
+                current_step = 2,
+                genes = names(state),
+                type = 'synchronous')
 }

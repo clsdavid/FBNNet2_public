@@ -47,45 +47,44 @@ ClusterTimeSeries is a method to cluster timeseries data into small sets of
 timeseries data
 }
 \examples{
-kmeansParameters<-list(type='kmeans',
-numOfClusters=10,
-nstart=100,
-iter.max=1000)
-class(kmeansParameters)='ModelParameter'
-hierarchicalParameters<-list(type='hierarchical',
-distmethod='euclidean',
-hclustmethod='ward.D2')
-class(hierarchicalParameters)='ModelParameter'
-nbclustParameters<-list(type='nbclust',
-distmethod='euclidean',
-min.nc=2,
-max.nc=10,
-nbmethod='complete',
-nbindex='all')
-class(nbclustParameters)='ModelParameter'
-dianaParameters<-list(type='diana',
-numOfClusters=10,palette='jco')
-class(dianaParameters)='ModelParameter'
-fuzzyParameters<-list(type='fanny',
-metric = 'euclidean',
- stand = FALSE)
-class(fuzzyParameters)='ModelParameter'
+## kmeansParameters<-list(type='kmeans',
+## numOfClusters=10,
+## nstart=100,
+## iter.max=1000)
+## class(kmeansParameters)='ModelParameter'
+## hierarchicalParameters<-list(type='hierarchical',
+## distmethod='euclidean',
+## hclustmethod='ward.D2')
+## class(hierarchicalParameters)='ModelParameter'
+## nbclustParameters<-list(type='nbclust',
+## distmethod='euclidean',
+## min.nc=2,
+## max.nc=10,
+## nbmethod='complete',
+## nbindex='all')
+## class(nbclustParameters)='ModelParameter'
+## dianaParameters<-list(type='diana',
+## numOfClusters=10,palette='jco')
+## class(dianaParameters)='ModelParameter'
+## fuzzyParameters<-list(type='fanny',
+## metric = 'euclidean', stand = FALSE)
+## class(fuzzyParameters)='ModelParameter'
 
-sortedtimeseries<-constructTestGSE2677Data('Your Cel Data folder',
-useGCRMA=FALSE)
-clustered_kmeans<-clusterTimeSeries(sortedtimeseries,
-method='kmeans',
-kmeansParameters)
-clustered_hierarchical<-clusterTimeSeries(sortedtimeseries,
-method='hierarchical',
-hierarchicalParameters)
-clustered_nbclust<-clusterTimeSeries(sortedtimeseries,
-method='nbclust',
-nbclustParameters)
-clustered_diana<-clusterTimeSeries(sortedtimeseries,
-method='diana',
-dianaParameters)
-clusteredFanny<-clusterTimeSeries(sortedtimeseries,
-method='fanny',
-fuzzyParameters)
+## sortedtimeseries<-constructTestGSE2677Data('Your Cel Data folder',
+## useGCRMA=FALSE)
+## clustered_kmeans<-clusterTimeSeries(sortedtimeseries,
+## method='kmeans',
+## kmeansParameters)
+## clustered_hierarchical<-clusterTimeSeries(sortedtimeseries,
+## method='hierarchical',
+## hierarchicalParameters)
+## clustered_nbclust<-clusterTimeSeries(sortedtimeseries,
+## method='nbclust',
+## nbclustParameters)
+## clustered_diana<-clusterTimeSeries(sortedtimeseries,
+## method='diana',
+## dianaParameters)
+## clusteredFanny<-clusterTimeSeries(sortedtimeseries,
+## method='fanny',
+## fuzzyParameters)
 }
