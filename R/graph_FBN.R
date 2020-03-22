@@ -572,7 +572,7 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
                   firstrecord <- nextrecord
                 }
                 
-                if (index == length(timesteps) & united) {
+                if (index == length(timesteps) && united) {
                   onset <- c(onset, firstrecord[[1]])
                   terminus <- c(terminus, firstrecord[[2]])
                   tail <- c(tail, as.numeric(firstrecord[[3]]))
@@ -1036,12 +1036,12 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
 #'                                            initialStates,
 #'                                            43,
 #'                                            type='synchronous')
-#' cube<-constructFBNCube(ExampleNetwork$genes,
-#'                        ExampleNetwork$genes,
-#'                        trainingseries,
-#'                        4,
-#'                        1,
-#'                        TRUE)
+#' cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
+#'                        conditional_genes = ExampleNetwork$genes,
+#'                        timeseriesCube = trainingseries,
+#'                        maxK = 4,
+#'                        temporal = 1,
+#'                        useParallel = FALSE)
 #' NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
 #' attractor<-searchForAttractors(NETWORK2,
 #'                                initialStates,

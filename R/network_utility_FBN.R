@@ -469,20 +469,7 @@ convertToFBNNetwork <- function(network) {
     return(res)
 }
 
-#'convert the mined result to FBNNetwork object
-#'
-#'@param minerresult The mined result from FBNmine.R
-#'@param genes The target genes in the output
-#'@return A object of FBN network
-#'@examples
-#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),3,3, dimnames=list(c('gene1','gene2','gene3'),c('1','2','3')))
-#' listtest<-list(mat1,mat2)
-#' cube<-constructFBNCube(c('gene1','gene2'),c('gene1','gene2','gene3'),listtest,4,1,FALSE)
-#' res<-mineFBNNetworkCore(cube,c('gene1','gene2'))
-#' res<-mineFBNNetworkStage2(res)
-#' finalresult<-outputMinerResultToFBNNetwork(res,c('gene1','gene2'))
-#' @export
+#' @noRd
 convertMinedResultToFBNNetwork <- function(minerresult, genes) {
     futile.logger::flog.info(sprintf("Enter convertMinedResultToFBNNetwork zone"))
     # code

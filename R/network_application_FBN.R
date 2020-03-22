@@ -127,10 +127,10 @@ convertToBooleanNetworkCollection <- function(network) {
 #' @export
 mergeNetwork <- function(network1, network2) {
     # validate network types
-    if (!(inherits(network1, "BooleanNetworkCollection")) & !(inherits(network1, "FundamentalBooleanNetwork"))) 
+    if (!(inherits(network1, "BooleanNetworkCollection")) && !(inherits(network1, "FundamentalBooleanNetwork"))) 
         stop("Network1 must be inherited from FundamentalBooleanNetwork or BooleanNetworkCollection")
     
-    if (!(inherits(network2, "BooleanNetworkCollection")) & !(inherits(network2, "FundamentalBooleanNetwork"))) 
+    if (!(inherits(network2, "BooleanNetworkCollection")) && !(inherits(network2, "FundamentalBooleanNetwork"))) 
         stop("Network2 must be inherited from FundamentalBooleanNetwork or BooleanNetworkCollection")
     genes1 <- network1$genes
     genes2 <- network2$genes
@@ -378,7 +378,10 @@ mergeClusterNetworks <- function(clusteredFBNCube, threshold_error, maxFBNRules)
         network_cores <- combine_cores
         i <- i + 1
     }
-    mineFBNNetworkWithCores(searchFBNNetworkCore = network_cores, genes = genes, threshold_error = threshold_error, maxFBNRules = maxFBNRules)
+    mineFBNNetworkWithCores(searchFBNNetworkCore = network_cores,
+                            genes = genes,
+                            threshold_error = threshold_error, 
+                            maxFBNRules = maxFBNRules)
 }
 
 findAllInputGenes <- function(networkinteractions, genes) {

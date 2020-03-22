@@ -43,12 +43,12 @@ trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
                                            initialStates,
                                            43,
                                            type='synchronous')
-cube <- constructFBNCube(ExampleNetwork$genes,
-                       ExampleNetwork$genes,
-                       trainingseries,
-                       4,
-                       1,
-                       TRUE)
+cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
+                       conditional_genes = ExampleNetwork$genes,
+                       timeseriesCube = trainingseries,
+                       maxK = 4,
+                       temporal = 1,
+                       useParallel = FALSE)
 NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
 NETWORK
 }

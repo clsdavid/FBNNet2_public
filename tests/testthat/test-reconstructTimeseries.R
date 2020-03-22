@@ -1,5 +1,4 @@
 context("reconstructTimeseries")
-require(BoolNet)
 setupdata <- function() {
   with(ExampleNetwork, {
     initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
@@ -7,12 +6,14 @@ setupdata <- function() {
                                                  initialStates,
                                                  43,
                                                  type = "synchronous")
-    
-    cube <- constructFBNCube(ExampleNetwork$genes,
-                             ExampleNetwork$genes,
-                             trainingseries,
-                             5,
-                             1, FALSE)
+
+      
+    cube <- constructFBNCube(target_genes = ExampleNetwork$genes,
+                             conditional_genes = ExampleNetwork$genes,
+                             timeseriesCube = trainingseries,
+                             maxK = 5,
+                             temporal = 1, 
+                             useParallel = FALSE)
     NETWORK2 <- mineFBNNetwork(cube,
                                ExampleNetwork$genes)
     
@@ -52,7 +53,7 @@ describe("run synchronous should succeed", {
                                                          test_info$initialStates,
                                                          type = "synchronous",
                                                          maxTimepoints = 43,
-                                                         useParallel = TRUE), NA)
+                                                         useParallel = FALSE), NA)
 
         similarreport <- expect_error(generateSimilaryReport(test_info$timeseries,
                                                              resultfile), NA)
@@ -86,12 +87,16 @@ describe("run synchronous should succeed", {
         reconstructed_timeseries <- expect_error(reconstructTimeseries(
           test_info$network, 
           test_info$initialStates,
-          type = "synchronous", maxTimepoints = 43, useParallel = TRUE), NA)
+          type = "synchronous", maxTimepoints = 43, useParallel = FALSE), NA)
         
-        cube <- expect_error(constructFBNCube(test_info$network$genes,
-                                              test_info$network$genes,
-                                              reconstructed_timeseries,
-                                              5, 1, FALSE), NA)
+
+        cube <- expect_error(constructFBNCube(target_genes = test_info$network$genes,
+                                              conditional_genes = test_info$network$genes,
+                                              timeseriesCube = reconstructed_timeseries,
+                                              maxK = 5, 
+                                              temporal = 1, 
+                                              useParallel = FALSE),
+                             NA)
         NETWORK2 <- expect_error(mineFBNNetwork(cube, 
                                                 test_info$network$genes),
                                  NA)
@@ -105,7 +110,7 @@ describe("run synchronous should succeed", {
                                                          test_info$initialStates,
                                                          type = "synchronous",
                                                          maxTimepoints = 43,
-                                                         useParallel = TRUE), NA)
+                                                         useParallel = FALSE), NA)
 
         similarreport <- expect_error(generateSimilaryReport(reconstructed_timeseries,
                                                              resultfile), NA)
@@ -124,7 +129,7 @@ describe("run synchronous should succeed", {
                                 test_info$initialStates,
                                 type = "synchronous",
                                 maxTimepoints = 43,
-                                useParallel = TRUE),
+                                useParallel = FALSE),
             NA)
         cube <- expect_error(constructFBNCube(test_info$network$genes,
                                               test_info$network$genes,
@@ -141,7 +146,7 @@ describe("run synchronous should succeed", {
                                                          test_info$initialStates,
                                                          type = "synchronous", 
                                                          maxTimepoints = 43,
-                                                         useParallel = TRUE), NA)
+                                                         useParallel = FALSE), NA)
 
         similarreport <- expect_error(generateSimilaryReport(reconstructed_timeseries,
                                                              resultfile), NA)
@@ -183,12 +188,14 @@ describe("run synchronous with different timestep should succeed", {
                                 test_info$initialStates, 
                                 type = "synchronous", 
                                 maxTimepoints = 43, 
-                                useParallel = TRUE),
+                                useParallel = FALSE),
             NA)
-        cube <- expect_error(constructFBNCube(test_info$network$genes, 
-                                              test_info$network$genes,
-                                              reconstructed_timeseries,
-                                              5, 2, TRUE), NA)
+        cube <- expect_error(constructFBNCube(target_genes = test_info$network$genes,
+                                              conditional_genes = test_info$network$genes,
+                                              timeseriesCube = reconstructed_timeseries,
+                                              maxK = 5, 
+                                              temporal = 2, 
+                                              useParallel = FALSE), NA)
         NETWORK2 <- expect_error(mineFBNNetwork(cube,
                                                 test_info$network$genes), NA)
         expect_error(FBNNetwork.Graph(NETWORK2), NA)
@@ -201,7 +208,7 @@ describe("run synchronous with different timestep should succeed", {
                                                          test_info$initialStates, 
                                                          type = "synchronous",
                                                          maxTimepoints = 43, 
-                                                         useParallel = TRUE), NA)
+                                                         useParallel = FALSE), NA)
 
         similarreport <- expect_error(generateSimilaryReport(reconstructed_timeseries,
                                                              resultfile), NA)
@@ -218,11 +225,11 @@ describe("run synchronous with different timestep should succeed", {
                                 test_info$initialStates,
                                 type = "synchronous", 
                                 maxTimepoints = 43, 
-                                useParallel = TRUE),
+                                useParallel = FALSE),
             NA)
         cube <- expect_error(constructFBNCube(test_info$network$genes,
                                               test_info$network$genes,
-                                              reconstructed_timeseries, 5, 2, TRUE),
+                                              reconstructed_timeseries, 5, 2, FALSE),
                              NA)
         NETWORK2 <- expect_error(mineFBNNetwork(cube,
                                                 test_info$network$genes), NA)
@@ -236,7 +243,7 @@ describe("run synchronous with different timestep should succeed", {
                                                          test_info$initialStates,
                                                          type = "synchronous",
                                                          maxTimepoints = 43, 
-                                                         useParallel = TRUE),
+                                                         useParallel = FALSE),
                                    NA)
 
         similarreport <- expect_error(generateSimilaryReport(reconstructed_timeseries,

@@ -28,5 +28,10 @@ Suggests:
     magrittr,
     BoolNet,
     dplyr,
-    snow
+    snow,
+    NbClust,
+    factoextra,
+    foreach,
+    ggplot2,
+    cluster
 RoxygenNote: 7.1.0

@@ -62,6 +62,14 @@ buildProbabilityTreeOnTargetGene <- function(targetGene, mainParameters, genes, 
     .Call(`_FBNNet_buildProbabilityTreeOnTargetGene`, targetGene, mainParameters, genes, matchedgenes, matchedexpression, maxK, temporal, targetCounts, findPositiveRegulate, findNegativeRegulate)
 }
 
+#' Get the main measurements based on the input data
+#' 
+#' @param target_gene The target gene
+#' @param conditional_genes conditional genes
+#' @param maxK The maximum under ground levels
+#' @param temporal The temporal time steps
+#' @param mainParameters An environment variable holds all input data
+#' 
 process_cube_algorithm <- function(target_gene, conditional_genes, maxK, temporal, mainParameters) {
     .Call(`_FBNNet_process_cube_algorithm`, target_gene, conditional_genes, maxK, temporal, mainParameters)
 }

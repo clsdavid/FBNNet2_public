@@ -22,12 +22,12 @@
 #'                                            initialStates,
 #'                                            43,
 #'                                            type='synchronous')
-#' cube <- constructFBNCube(ExampleNetwork$genes,
-#'                        ExampleNetwork$genes,
-#'                        trainingseries,
-#'                        4,
-#'                        1,
-#'                        TRUE)
+#' cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
+#'                        conditional_genes = ExampleNetwork$genes,
+#'                        timeseriesCube = trainingseries,
+#'                        maxK = 4,
+#'                        temporal = 1,
+#'                        useParallel = FALSE)
 #' NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
 #' NETWORK
 #' @export
@@ -183,14 +183,13 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
             }
             
             # pickTcosine
-            if (!is.null(pickT) & pickTsupport >= threshold_support & pickT_causality_test >= 1 & pickTvalue >= threshold_confidence) {
+            if (!is.null(pickT) && pickTsupport >= threshold_support && pickT_causality_test >= 1 && pickTvalue >= threshold_confidence) {
                 getT <- pickT
             } else {
                 getT <- NULL
             }
             
-            # if(!is.null(pickF) & pickFcons>=1) #original work
-            if (!is.null(pickF) & pickFsupport >= threshold_support & pickF_causality_test >= 1 & pickFvalue >= threshold_confidence) {
+            if (!is.null(pickF) && pickFsupport >= threshold_support && pickF_causality_test >= 1 && pickFvalue >= threshold_confidence) {
                 getF <- pickF
             } else {
                 getF <- NULL
@@ -429,11 +428,11 @@ mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
         inhibitors <- list()
         
         for (e in seq_along(entry)) {
-            if (as.numeric(entry[[e]]["error"]) <= threshold_error & as.numeric(entry[[e]]["type"]) == 1) {
+            if (as.numeric(entry[[e]]["error"]) <= threshold_error && as.numeric(entry[[e]]["type"]) == 1) {
                 activators[[length(activators) + 1]] <- c(entry[[e]], threshold_error = threshold_error)
             }
             
-            if (as.numeric(entry[[e]]["error"]) <= threshold_error & as.numeric(entry[[e]]["type"]) == 0) {
+            if (as.numeric(entry[[e]]["error"]) <= threshold_error && as.numeric(entry[[e]]["type"]) == 0) {
                 inhibitors[[length(inhibitors) + 1]] <- c(entry[[e]], threshold_error = threshold_error)
             }
         }

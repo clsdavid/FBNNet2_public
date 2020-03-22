@@ -15,7 +15,7 @@ setupdata <- function() {
 describe("run synchronous should succeed", {
     test_info <- setup(setupdata())
     it("reconstruct timeseries", {
-        resultfile <- expect_error(reconstructTimeseries(test_info$network, test_info$initialStates, type = "synchronous", maxTimepoints = 43, useParallel = TRUE), 
+        resultfile <- expect_error(reconstructTimeseries(test_info$network, test_info$initialStates, type = "synchronous", maxTimepoints = 43, useParallel = FALSE), 
             NA)
         
         similarreport <- expect_error(generateSimilaryReport(test_info$timeseries, resultfile), NA)

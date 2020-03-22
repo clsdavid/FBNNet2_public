@@ -37,7 +37,12 @@ This method is used to calculate the next state
 require(BoolNet)
 data(ExampleNetwork)
 trainingseries<-FBNDataReduction(generateTimeSeries(ExampleNetwork,2000,43))
-cube<-constructFBNCube(ExampleNetwork$genes,ExampleNetwork$genes,trainingseries,4,1,TRUE)
+cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
+                       conditional_genes = ExampleNetwork$genes,
+                       timeseriesCube = trainingseries,
+                       maxK = 4,
+                       temporal = 1,
+                       useParallel = FALSE)
 NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
 state<-c('0','1','1','0','1')
 names(state)<-c('Gene1','Gene2','Gene3','Gene4','Gene5')

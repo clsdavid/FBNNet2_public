@@ -30,13 +30,13 @@ isSatisfied <- function(geneState, expression) {
             if (identical(expression[index - 1], "!")) {
                 res <- res & !(as.numeric(geneState[[i]]) == 1L)
             } else {
-                if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], 
-                  "(") & !identical(expression[index], ")")) {
+                if (!identical(expression[index], "!") && !identical(expression[index], "&") && !identical(expression[index], 
+                  "(") && !identical(expression[index], ")")) {
                   res <- res & (as.numeric(geneState[[i]]) == 1L)
                 }
             }
         } else {
-            if (!identical(expression[index], "!") & !identical(expression[index], "&") & !identical(expression[index], "(") & 
+            if (!identical(expression[index], "!") && !identical(expression[index], "&") && !identical(expression[index], "(") && 
                 !identical(expression[index], ")")) {
                 res <- res & (as.numeric(geneState[[i]]) == 1L)
             }
@@ -65,31 +65,31 @@ randomSelection <- function(probability) {
 #'@param maxTimepoints The max time points that are going to be constructed
 #'@return A list object that contains reconstructed time series and FBN network
 #'@examples
-#' mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
-#'              3,
-#'              3,
-#'              dimnames=list(c('gene1','gene2','gene3'),
-#'              c('1','2','3')))
-#' mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
-#'              3,
-#'              3, 
-#'              dimnames=list(c('gene1','gene2','gene3'),
-#'              c('1','2','3')))
-#' listtestOriginal<-list(mat1,mat2)
-#' cube<-constructFBNCube(c('gene1','gene2'),
-#'                        c('gene1','gene2','gene3'),
-#'                        listtestOriginal,4,1,FALSE)
-#' network<-mineFBNNetwork(cube,c('gene1','gene2'))
-#' mat1<-matrix(c('1','1','0'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
-#' mat2<-matrix(c('1','1','1'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
-#' listtestInitial<-list(mat1,mat2)
-#' result<-reconstructTimeseries(network,listtestInitial,1,'synchronous')
+#' require(BoolNet)
+#' data("ExampleNetwork")
+#' initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+#' trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+#'                                            initialStates,
+#'                                            43,
+#'                                            type='synchronous')
+#' cube <- constructFBNCube(target_genes = ExampleNetwork$genes,
+#'                        conditional_genes = ExampleNetwork$genes,
+#'                        timeseriesCube = trainingseries,
+#'                        maxK = 4,
+#'                        temporal = 1,
+#'                        useParallel = FALSE)
+#' network <- mineFBNNetwork(cube)
+#' result <- reconstructTimeseries(fbnnetwork = network,
+#'                               initialStates = initialStates,
+#'                               type = 'synchronous',
+#'                               maxTimepoints = 43)
+#' result
 #' @export
 reconstructTimeseries <- function(fbnnetwork,
                                   initialStates,
                                   type = c("synchronous", "asynchronous"),
                                   maxTimepoints = 100, 
-    useParallel = FALSE) {
+                                  useParallel = FALSE) {
     
     
     if (!is.numeric(maxTimepoints) | 
@@ -114,11 +114,11 @@ reconstructTimeseries <- function(fbnnetwork,
                             p_maxTimepoints) {
         initialState <- p_initialStates[[i]]
         res <- list()
-        res[[i]] <- transitionStates(initialState, 
-                                     p_fbnnetwork, 
-                                     p_genes,
-                                     p_type,
-                                     p_maxTimepoints)
+        res[[i]] <- transitionStates(initialState = initialState, 
+                                     fbnNetwork = p_fbnnetwork, 
+                                     genes = p_genes,
+                                     type = p_type,
+                                     maxTimepoints = p_maxTimepoints)
         return(res)
     }
     
@@ -156,7 +156,7 @@ reconstructTimeseries <- function(fbnnetwork,
 
 
 # private method
-
+#' @export
 transitionStates <- function(initialState,
                              fbnNetwork,
                              genes, 
@@ -179,7 +179,6 @@ transitionStates <- function(initialState,
     k <- 2
     premat <- mat[, 1:k - 1]
     decayIndex <- c()
-    timestepTrack <- list()
     while (k <= length(colNames)) {
         nextState <- getFBMSuccessor(fbnNetwork = fbnNetwork,
                                      previous_states = premat,
@@ -211,7 +210,12 @@ transitionStates <- function(initialState,
 #' require(BoolNet)
 #' data(ExampleNetwork)
 #' trainingseries<-FBNDataReduction(generateTimeSeries(ExampleNetwork,2000,43))
-#' cube<-constructFBNCube(ExampleNetwork$genes,ExampleNetwork$genes,trainingseries,4,1,TRUE)
+#' cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
+#'                        conditional_genes = ExampleNetwork$genes,
+#'                        timeseriesCube = trainingseries,
+#'                        maxK = 4,
+#'                        temporal = 1,
+#'                        useParallel = FALSE)
 #' NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)
 #' state<-c('0','1','1','0','1')
 #' names(state)<-c('Gene1','Gene2','Gene3','Gene4','Gene5')
@@ -359,7 +363,7 @@ getFBMSuccessor <- function(fbnNetwork,
     nextState <- c()
     
     # fixed when the value fixed != -1 and fixed ==0
-    fixedgeneIndex <- which(fbnNetwork$fixed != -1 || fbnNetwork$fixed == 0)
+    fixedgeneIndex <- which(fbnNetwork$fixed == 0)
     fixedgenes <- fbnNetwork$genes[fixedgeneIndex]
     
     type <- match.arg(type, c("synchronous", "asynchronous"))

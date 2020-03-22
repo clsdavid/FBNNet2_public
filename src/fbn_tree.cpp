@@ -388,6 +388,14 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
 
 
 
+//' Get the main measurements based on the input data
+//' 
+//' @param target_gene The target gene
+//' @param conditional_genes conditional genes
+//' @param maxK The maximum under ground levels
+//' @param temporal The temporal time steps
+//' @param mainParameters An environment variable holds all input data
+//' 
 // [[Rcpp::export]]
 Rcpp::List process_cube_algorithm(Rcpp::CharacterVector target_gene, 
                                 Rcpp::CharacterVector conditional_genes, 

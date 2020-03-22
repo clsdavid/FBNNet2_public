@@ -28,23 +28,23 @@ A list object that contains reconstructed time series and FBN network
 This method is used to reconstruct time series data
 }
 \examples{
-mat1<-matrix(c('1','0','0','1','0','0','0','1','1'),
-             3,
-             3,
-             dimnames=list(c('gene1','gene2','gene3'),
-             c('1','2','3')))
-mat2<-matrix(c('1','1','0','1','0','1','1','1','0'),
-             3,
-             3, 
-             dimnames=list(c('gene1','gene2','gene3'),
-             c('1','2','3')))
-listtestOriginal<-list(mat1,mat2)
-cube<-constructFBNCube(c('gene1','gene2'),
-                       c('gene1','gene2','gene3'),
-                       listtestOriginal,4,1,FALSE)
-network<-mineFBNNetwork(cube,c('gene1','gene2'))
-mat1<-matrix(c('1','1','0'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
-mat2<-matrix(c('1','1','1'),3,1, dimnames=list(c('gene1','gene2','gene3'),c('1')))
-listtestInitial<-list(mat1,mat2)
-result<-reconstructTimeseries(network,listtestInitial,1,'synchronous')
+require(BoolNet)
+data("ExampleNetwork")
+initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
+                                           initialStates,
+                                           43,
+                                           type='synchronous')
+cube <- constructFBNCube(target_genes = ExampleNetwork$genes,
+                       conditional_genes = ExampleNetwork$genes,
+                       timeseriesCube = trainingseries,
+                       maxK = 4,
+                       temporal = 1,
+                       useParallel = FALSE)
+network <- mineFBNNetwork(cube)
+result <- reconstructTimeseries(fbnnetwork = network,
+                              initialStates = initialStates,
+                              type = 'synchronous',
+                              maxTimepoints = 43)
+result
 }
