@@ -71,7 +71,7 @@ generateFBMNetwork <- function(timeseries_data,
     checkProbabilityTypeData(threshold_error)
     checkProbabilityTypeData(threshold_support)
     checkNumeric(maxFBNRules)
-#~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8    
+  
     futile.logger::flog.info(sprintf("Enter generateFBMNetwork zone: method=%s,
                                       maxK=%s, 
                                       useParallel=%s, 
@@ -98,7 +98,6 @@ generateFBMNetwork <- function(timeseries_data,
             timeseries_data <- discreteTimeSeries(timeseries_data,
                                                   method = "average")
         } else {
-            require(BoolNet)
             timeseries_data <- BoolNet::binarizeTimeSeries(
                 timeseries_data,
                 method = method)$binarizedMeasurements
@@ -177,12 +176,14 @@ generateFBMNetwork <- function(timeseries_data,
     sink(file = "temp/final_network.txt", type = "output")
     final_network
     sink()
-    data("DAVID_gene_list")
+
+    utils::data("DAVID_gene_list", overwrite = TRUE)
     mapped_genes <- with(DAVID_gene_list, {
-        DAVID_gene_list[DAVID_gene_list$Symbol %in% final_network$genes, ]})
+        DAVID_gene_list[DAVID_gene_list$Symbol %in% final_network$genes, ]
+    })
     distic_mapped_genes <- with(mapped_genes, {
         dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)})
-    write.csv(distic_mapped_genes,
+    utils::write.csv(distic_mapped_genes,
               file = "temp/annotated_differencial_genes.csv")
     final_network
 }
@@ -193,11 +194,12 @@ generateFBMNetwork <- function(timeseries_data,
 #' @param  filename The name of the output file such as xx.csv
 #' @export
 output_annotated_genes <- function(genes, filename) {
-    data("DAVID_gene_list")
+    DAVID_gene_list <- NULL
+    utils::data("DAVID_gene_list", overwrite = TRUE)
     mapped_genes <- with(DAVID_gene_list, {
         DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]})
     distic_mapped_genes <- with(mapped_genes, {
         dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)})
-    write.csv(distic_mapped_genes,
+    utils::write.csv(distic_mapped_genes,
               file = paste0("temp/", filename))
 }

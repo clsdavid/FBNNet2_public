@@ -24,7 +24,7 @@ getGenePrababilities_measurements(
 
 \item{temporal}{The temporal time steps}
 
-\item{targetCounts}{}
+\item{targetCounts}{Counts the number of target gene in the data}
 }
 \description{
 Get the main measurements based on the input data

@@ -18,7 +18,7 @@ using namespace Rcpp;
 //' @param genes All conditional genes
 //' @param matchedgenes processed genes
 //' @param temporal The temporal time steps
-//' @param targetCounts 
+//' @param targetCounts  Counts the number of target gene in the data
 //' 
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_measurements(
@@ -112,7 +112,12 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
     bool findNegativeRegulate = false)
 {
  //tree mining stop when 1 or 0
-   Rcpp::List measuements = getGenePrababilities_measurements(targetGene, mainParameters, genes, matchedgenes, temporal, targetCounts);
+   Rcpp::List measuements = getGenePrababilities_measurements(targetGene,
+                                                              mainParameters,
+                                                              genes, 
+                                                              matchedgenes,
+                                                              temporal, 
+                                                              targetCounts);
    CharacterVector new_genes = measuements.names();
    CharacterVector unprocessedGenes = clone(new_genes);
    int len = new_genes.length();
@@ -125,7 +130,8 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
      int pmaxK = (int)maxK[0];
 
     std::string gene = (std::string)new_genes[i];
-    IntegerVector unprocessed_index = a_not_in_b_index(unprocessedGenes,CharacterVector::create(new_genes[i]));
+    IntegerVector unprocessed_index = a_not_in_b_index(unprocessedGenes,
+                                                       CharacterVector::create(new_genes[i]));
     unprocessedGenes = unprocessedGenes[unprocessed_index];
     Rcpp::List newMatchedGenesT;
     Rcpp::List newMatchedGenesF;

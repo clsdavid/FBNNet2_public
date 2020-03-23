@@ -52,7 +52,7 @@ networkFiltering <- function(res) {
 #' @param genes All conditional genes
 #' @param matchedgenes processed genes
 #' @param temporal The temporal time steps
-#' @param targetCounts 
+#' @param targetCounts  Counts the number of target gene in the data
 #' 
 getGenePrababilities_measurements <- function(targetGene, mainParameters, genes, matchedgenes, temporal = 1L, targetCounts = NULL) {
     .Call(`_FBNNet_getGenePrababilities_measurements`, targetGene, mainParameters, genes, matchedgenes, temporal, targetCounts)

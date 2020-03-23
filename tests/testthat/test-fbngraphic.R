@@ -1,5 +1,4 @@
 context("fbngraphic")
-require(BoolNet)
 setupdata <- function() {
   with(ExampleNetwork, {
     initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)

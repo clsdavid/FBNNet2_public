@@ -1,5 +1,4 @@
 context("networkapplication")
-require(BoolNet)
 setupdata <- function() {
   with(ExampleNetwork, {
     initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)

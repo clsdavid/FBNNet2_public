@@ -14,16 +14,22 @@ getStatisticMeasures <- function(featurenames, timeseriesdata) {
     
     res <- lapply(featurenames, function(feature) {
         sampledata <- unlist(lapply(timeseriesdata, function(sample) sample[feature, ]))
-        std_sampledata <- sd(sampledata)  #standard deviation
+        std_sampledata <- stats::sd(sampledata)  #standard deviation
         mean_sampledata <- mean(sampledata)
         length_sampledata <- length(sampledata)
         sem_sampledata <- std_sampledata/sqrt(length(sampledata))  #Standard error of the mean
         max_sampledata <- max(sampledata)
         min_sampledata <- min(sampledata)
-        median_sampledata <- median(sampledata)
+        median_sampledata <- stats::median(sampledata)
         
-        result <- c(id = feature, std = std_sampledata, mean = mean_sampledata, length = length_sampledata, sem = sem_sampledata, 
-            max = max_sampledata, min = min_sampledata, median = median_sampledata)
+        result <- c(id = feature,
+                    std = std_sampledata, 
+                    mean = mean_sampledata, 
+                    length = length_sampledata, 
+                    sem = sem_sampledata, 
+                    max = max_sampledata, 
+                    min = min_sampledata,
+                    median = median_sampledata)
         return(result)
     })
     

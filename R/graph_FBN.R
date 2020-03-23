@@ -615,44 +615,6 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
     return(as.data.frame(dynamicnet))
 }
 
-#' internal method
-#' 
-#' @noRd
-FBNNetwork.Graph.CreateDynamicNetworkObjects <- function(
-    networkobject,
-    timepoints, 
-    dynamicNetworkGraphicObject) {
-    start <- 1
-    end <- length(timepoints)
-    res <- list()
-    while (start <= end) {
-        filterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) <= start & start <= 
-            as.numeric(dynamicNetworkGraphicObject$terminus)), ]
-        
-        if (length(rownames(filterddynamic)) > 0) {
-            newedges <- networkobject$edges[which(rownames(networkobject$edges) %in% filterddynamic$edge.id), ]
-            
-            filterednode <- networkobject$nodes[which(networkobject$nodes$type == "gene"), ]
-            filterednode2 <- networkobject$nodes[which(networkobject$nodes$id %in% newedges$from | networkobject$nodes$id %in% 
-                newedges$to), ]
-            if (length(filterednode2) > 0) {
-                newnodes <- unique(rbind.data.frame(filterednode, filterednode2))
-            } else {
-                newnodes <- filterednode
-            }
-            
-            
-            net <- network(newedges, vertex.attr = newnodes, matrix.type = "edgelist", loops = F, multiple = F, ignore.eval = F)
-            
-            res[[length(res) + 1]] <- net
-        }
-        
-        
-        start <- start + 1
-    }
-    
-    return(res)
-}
 
 #'Display a dynamic network in a slice
 #'
@@ -994,8 +956,8 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
     
     if (length(fbnNetwork$interactions) == 0) 
         return(NULL)
-    
-    data("DAVID_gene_list")
+    DAVID_gene_list <- NULL
+    utils::data("DAVID_gene_list", overwrite = TRUE)
     david_gene_list <- DAVID_gene_list
     
     

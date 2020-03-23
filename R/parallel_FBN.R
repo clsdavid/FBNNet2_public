@@ -91,7 +91,3 @@ doNonParallelWorkDecrease <- function(parallelFuc, listitems, unprocessedListite
     # remove the unwant outer list
     res[cond1][unlist(lapply(res[cond1], length) != 0)]
 }
-unregister <- function() {
-    env <- foreach:::.foreachGlobals
-    rm(list = ls(name = env), pos = env)
-}

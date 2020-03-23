@@ -1,5 +1,4 @@
 context("buildProbabilityTreeOnTargetGene")
-require(BoolNet)
 setupdata <- function() {
     genesInput <- c("CycD", "p27", "CycE", "E2F")
     testseries <- list()
@@ -44,7 +43,6 @@ setupdata <- function() {
 }
 
 generate_test_example_file <- function() {
-    require(BoolNet)
     sink("example.bn")
     cat("targets, factors\n")
     cat("Gene1, Gene1\n")

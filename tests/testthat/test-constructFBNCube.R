@@ -1,5 +1,4 @@
 context("constructFBNCube")
-require(BoolNet)
 setupdata <- function() {
     genesInput <- c("CycD", "p27", "CycE", "E2F")
     testseries <- list()

@@ -186,8 +186,13 @@ convertInteraction <- function(interaction) {
     if (mode(interaction) == "list") {
         res <- interaction
     } else if (mode(interaction) == "pairlist") {
-        res <- list(list(input = interaction$input, expression = interaction$expression, error == interaction$error, type = NA, 
-            probability = (1 - as.numeric(interaction$error)), support = NA, timestep = 1))
+        res <- list(list(input = interaction$input, 
+                         expression = interaction$expression, 
+                         error = interaction$error,
+                         type = NA, 
+                         probability = (1 - as.numeric(interaction$error)),
+                         support = NA,
+                         timestep = 1))
     }
     return(res)
 }

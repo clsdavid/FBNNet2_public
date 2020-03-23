@@ -132,7 +132,7 @@ constructFBNCube <- function(target_genes,
     print(paste("Total cost ",
                 time2 - time1,
                 " seconds to construct gene cube with size of ",
-                ((object.size(res)/1024)/1024), 
+                ((utils::object.size(res)/1024)/1024), 
         sep = "", collapse = ""))
     
     if (useParallel) {

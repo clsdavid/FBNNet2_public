@@ -4,37 +4,25 @@
 discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")) {
     res <- timeSeriesData
     
-    if (is.matrix(timeSeriesData)) 
-        fullData <- timeSeriesData else if (is.list(timeSeriesData)) {
+    if (is.matrix(timeSeriesData)) {
+        fullData <- timeSeriesData 
+    } 
+    else if (is.list(timeSeriesData)) {
         # in case of list, paste all matrices before clustering
         fullData <- do.call(cbind, timeSeriesData)
     } else {
         stop("The type of time seriesdata is not supported")
     }
-    
-    # std_sampledata<-lapply(1:nrow(fullData),function(rowIndex)sd(fullData[rowIndex,])) #standard deviation
-    # names(std_sampledata)<-rownames(fullData)
+
     nrows <- nrow(fullData)
-    mean_sampledata <- lapply(seq_len(nrows), function(rowIndex) mean(fullData[rowIndex, ]))  #average
+    mean_sampledata <- lapply(seq_len(nrows), 
+                              function(rowIndex) mean(fullData[rowIndex, ]))
     names(mean_sampledata) <- rownames(fullData)
-    
-    # length_sampledata<-length(fullData)
-    
-    ## sem_sampledata<-std_sampledata/sqrt(length_sampledata) #Standard error of the mean
-    
-    # max_sampledata<-lapply(1:nrow(fullData),function(rowIndex)max(fullData[rowIndex,]))
-    # names(max_sampledata)<-rownames(fullData)
-    
-    # min_sampledata<-lapply(1:nrow(fullData),function(rowIndex)min(fullData[rowIndex,]))
-    # names(min_sampledata)<-rownames(fullData)
-    
-    
-    
     # use average as a thread to discrete time series
     switch(match.arg(method), average = {
         print("Discretizating data using average")
         nrows <- nrow(fullData)
-        mean_sampledata <- lapply(seq_len(nrows), function(rowIndex) mean(fullData[rowIndex, ]))  #average
+        mean_sampledata <- lapply(seq_len(nrows), function(rowIndex) mean(fullData[rowIndex, ]))
         names(mean_sampledata) <- rownames(fullData)
         mean_sampledata_max <- do.call(cbind, mean_sampledata)
         
@@ -44,7 +32,7 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
             matrixMean <- rep.col(colmean, numofcol)
             colNames <- colnames(fullData)
             rowNames <- rownames(fullData)
-            binarizedTimeSeries <- sapply(as.data.frame(fullData - (fullData%%matrixMean)), function(vr) as.numeric(vr > 0))
+            binarizedTimeSeries <- sapply(as.data.frame(fullData - (fullData %% matrixMean)), function(vr) as.numeric(vr > 0))
             rownames(binarizedTimeSeries) <- rowNames
             colnames(binarizedTimeSeries) <- colNames
         } else if (is.list(res)) {
@@ -55,7 +43,7 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
                 fullData <- abs(m) + 1  #add 1 to avoid 0
                 colNames <- colnames(m)
                 rowNames <- rownames(m)
-                sub_res <- sapply(as.data.frame(fullData - (fullData%%matrixMean)), function(vr) as.numeric(vr > 0))
+                sub_res <- sapply(as.data.frame(fullData - (fullData %% matrixMean)), function(vr) as.numeric(vr > 0))
                 rownames(sub_res) <- rowNames
                 colnames(sub_res) <- colNames
                 return(sub_res)
@@ -70,8 +58,9 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
         
         colmean <- t(mean_sampledata_max)
         nrows <- nrow(fullData)
-        weigthMedian <- lapply(seq_len(nrows), function(rowIndex) median(sort(sqrt((fullData[rowIndex, ] - mean(fullData[rowIndex, 
-            ]))^2))))
+        weigthMedian <- lapply(seq_len(nrows), function(rowIndex) {
+            stats::median(sort(sqrt((fullData[rowIndex, ] - mean(fullData[rowIndex, ]))^2)))
+            })
         names(weigthMedian) <- rownames(fullData)
         weigthMedian_max <- do.call(cbind, weigthMedian)
         

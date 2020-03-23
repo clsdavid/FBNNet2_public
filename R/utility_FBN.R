@@ -7,7 +7,7 @@
 #' mat2<-matrix(c('1','2','3','4','5','6','7','8','9'),3,3)
 #' listtest<-list(mat1,mat2)
 #' FBNDataReduction(listtest)
-#'@noRd
+#'@export
 FBNDataReduction <- function(timeseriescube) {
     duplicateIndexes <- duplicated(timeseriescube)
     timeseriescube[!duplicateIndexes]
@@ -82,7 +82,7 @@ generateSimilarReport <- function(similarityreport) {
 }
 
 
-#'@noRd
+#' @noRd
 dissolve <- function(x) {
     combi = list()
     operator <- function(x, name = NULL) {
@@ -100,7 +100,7 @@ dissolve <- function(x) {
 }
 
 
-#'@noRd
+#' @noRd
 similarityBetweenMatrix <- function(timeseries1, timeseries2, index) {
     if (!identical(dim(timeseries1), dim(timeseries2))) {
         stop("The two matrixes must have the same dimensions")
@@ -134,7 +134,7 @@ similarityBetweenMatrix <- function(timeseries1, timeseries2, index) {
 
 
 
-#'@noRd
+#' @noRd
 CheckRightTypeTimeseriesData <- function(timeseries_data) {
     if (!is.list(timeseries_data)) 
         stop("The type of timeseries_data must be LIST")
@@ -146,7 +146,7 @@ CheckRightTypeTimeseriesData <- function(timeseries_data) {
     NULL
 }
 
-#'@noRd
+#' @noRd
 checkNumeric <- function(x) {
     if (!is.numeric(x)) 
         stop("The input is not a type of numeric")
@@ -154,7 +154,7 @@ checkNumeric <- function(x) {
     NULL
 }
 
-#'@noRd
+#' @noRd
 checkProbabilityTypeData <- function(x) {
     if (!is.numeric(x) && (x > 1 || x < 0)) {
         stop("The input is not a type of probability or a value between 0 and 1")
@@ -162,7 +162,7 @@ checkProbabilityTypeData <- function(x) {
     NULL
 }
 
-#'@noRd
+#' @noRd
 isBooleanTypeTimeseriesData <- function(x) {
     conds <- sapply(x, function(mat) {
         f_mat <- factor(mat)

@@ -72,7 +72,6 @@ clusterTimeSeries <- function(timeSeriesData,
                                          "fanny",
                                          "nbclust"),
                               modelParameters) {
-    # require('cluster') require('factoextra') require('magrittr')
     if (is.matrix(timeSeriesData)) 
         clusterData <- timeSeriesData 
     else 
@@ -94,9 +93,9 @@ clusterTimeSeries <- function(timeSeriesData,
         nstart <- modelParameters$nstart
         iter.max <- modelParameters$iter.max
         
-        thisCluster <- na.omit(clusterData)
+        thisCluster <- stats::na.omit(clusterData)
         thisCluster <- scale(thisCluster)
-        thisCluster <- kmeans(thisCluster,
+        thisCluster <- stats::kmeans(thisCluster,
                               numOfCluster,
                               nstart = nstart,
                               iter.max = iter.max)
@@ -120,27 +119,27 @@ clusterTimeSeries <- function(timeSeriesData,
         distmethod <- modelParameters$distmethod
         hclustmethod <- modelParameters$hclustmethod
         numOfCluster <- modelParameters$numOfClusters
-        if (is.na(numOfCluster) | is.null(numOfCluster)) 
+        if (is.na(numOfCluster) || is.null(numOfCluster)) {
             stop("The parameter numOfCluster is missing")
+        }
         
-        thisCluster <- na.omit(clusterData)
+        thisCluster <- stats::na.omit(clusterData)
         thisCluster <- scale(thisCluster)
-        thisCluster <- dist(thisCluster, method = distmethod)
+        thisCluster <- stats::dist(thisCluster, method = distmethod)
         # Compute hierachical clustering
-        thisCluster <- hclust(thisCluster, 
-                              method = hclustmethod)  
+        thisCluster <- stats::hclust(thisCluster, 
+                                     method = hclustmethod)  
         
-        clusterCut <- cutree(thisCluster, numOfCluster)
+        clusterCut <- stats::cutree(thisCluster, numOfCluster)
         
         # Visualize using factoextra Cut in 4 groups and color by groups
-        library(factoextra)
         # Add rectangle around groups
-        fviz_dend(thisCluster,
-                  k = numOfCluster,
-                  cex = 0.5, 
-                  k_colors = c("#2E9FDF", "#00AFBB", "#E7B800", "#FC4E07"),
-                  color_labels_by_k = TRUE, 
-                  rect = TRUE  )
+        factoextra::fviz_dend(thisCluster,
+                              k = numOfCluster,
+                              cex = 0.5, 
+                              k_colors = c("#2E9FDF", "#00AFBB", "#E7B800", "#FC4E07"),
+                              color_labels_by_k = TRUE, 
+                              rect = TRUE  )
         
         return(list(type = match.arg(method),
                     cluster = thisCluster, 
@@ -162,27 +161,23 @@ clusterTimeSeries <- function(timeSeriesData,
             palette <- "jco"
         }
         # Compute diana()
-        library(cluster)
-        thisCluster <- na.omit(clusterData)
+        thisCluster <- stats::na.omit(clusterData)
         thisCluster <- scale(thisCluster) 
-        thisCluster <- diana(thisCluster,
-                             stand = TRUE)
+        thisCluster <- cluster::diana(thisCluster,
+                                      stand = TRUE)
         
-        clusterCut <- cutree(thisCluster, numOfCluster)
-        
-        # Plot the dendrogram Cut in four groups Color palette
-        library(factoextra)
-        fviz_dend(thisCluster,
-                  cex = 0.5,
-                  k = numOfCluster,
-                  palette = palette)
+        clusterCut <- stats::cutree(thisCluster, numOfCluster)
+
+        factoextra::fviz_dend(thisCluster,
+                              cex = 0.5,
+                              k = numOfCluster,
+                              palette = palette)
         
         return(list(type = match.arg(method), 
                     cluster = thisCluster,
                     clusterCut = clusterCut))
     }, fanny = {
         # fuzzy cluster
-        library(cluster)
         if (!inherits(modelParameters, "ModelParameter")) 
             stop("modelParameters must be inherited from ModelParameter")
         
@@ -194,14 +189,14 @@ clusterTimeSeries <- function(timeSeriesData,
         stand <- modelParameters$stand  #True or false
         membexp <- modelParameters$membexp
         # Remove missing values (NA) Scale the data # standardize variables
-        clusterData <-  na.omit(clusterData)
+        clusterData <-  stats::na.omit(clusterData)
         clusterData <- scale(clusterData)
         # Compute fuzzy clustering with k = 2
-        thisCluster <- fanny(clusterData,
-                             k = numOfCluster,
-                             metric = metric,
-                             stand = stand,
-                             memb.exp = membexp)  
+        thisCluster <- cluster::fanny(clusterData,
+                                      k = numOfCluster,
+                                      metric = metric,
+                                      stand = stand,
+                                      memb.exp = membexp)  
         
         factoextra::fviz_cluster(thisCluster,
                                  ellipse.type = "norm",
@@ -227,14 +222,14 @@ clusterTimeSeries <- function(timeSeriesData,
         nbmethod <- modelParameters$nbmethod
         nbindex <- modelParameters$nbindex
         # Remove missing values (NA) standardize variables
-        thisCluster <- na.omit(clusterData)
+        thisCluster <- stats::na.omit(clusterData)
         thisCluster <- scale(thisCluster)
         thisCluster <- NbClust::NbClust(thisCluster, 
-                               distance = distmethod,
-                               min.nc = min.nc,
-                               max.nc = max.nc, 
-                               method = nbmethod,
-                               index = nbindex)
+                                        distance = distmethod,
+                                        min.nc = min.nc,
+                                        max.nc = max.nc, 
+                                        method = nbmethod,
+                                        index = nbindex)
         
         factoextra::fviz_nbclust(thisCluster, 
                                  ggtheme = ggplot2::theme_minimal())
