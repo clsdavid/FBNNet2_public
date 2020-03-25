@@ -15,7 +15,13 @@ findBackwardRelatedNetworkByGenes(
 \arguments{
 \item{networks}{The Fundamental Boolean Network}
 
-\item{genelist}{The target genes}
+\item{target_gene_list}{The target genes}
+
+\item{regulationType}{The type of regulation either in 1 (Up regulation) or 0 (down regulation)}
+
+\item{maxDeep}{The maximum layous that need to be drilled down.}
+
+\item{next_level_mix_type}{If TRUE, the next level will contain all type of connections.}
 }
 \description{
 Find Backward Network By Genes

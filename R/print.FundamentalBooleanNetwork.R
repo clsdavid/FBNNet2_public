@@ -1,10 +1,13 @@
+#' A S3 method to print the FBM network
+#' 
+#' @param x The network details
+#' @param ... other arguments.
 #'@export
 print.FundamentalBooleanNetwork <- function(x, ...) {
     print.FundamentalBooleanNetwork(x, ...)
 }
 
 # Custom print function for class FundamentalBooleanNetwork
-#'@export
 print.FundamentalBooleanNetwork <- function(x, ...) {
     cat("Fundamental Boolean Network with ", length(x$genes), "genes\n")
     cat("Genes involved:\n", paste(x$genes, collapse = ", ", sep = ", "), "\n", sep = "")

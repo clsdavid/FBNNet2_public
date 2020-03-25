@@ -7,9 +7,11 @@
 checkSimilarity(originalTimeseriesCube, reconstructedTimeSeriesCube)
 }
 \arguments{
-\item{originalTimeseriesCube}{The original data set that contains samples and each sample contains genes and time points}
+\item{originalTimeseriesCube}{The original data set that
+contains samples and each sample contains genes and time points}
 
-\item{reconstructedTimeSeriesCube}{The reconstructed data set that contains samples and each sample contains genes and time points}
+\item{reconstructedTimeSeriesCube}{The reconstructed data set
+that contains samples and each sample contains genes and time points}
 }
 \value{
 similarity report

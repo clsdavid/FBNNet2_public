@@ -7,9 +7,9 @@
 FBNNetwork.Graph.StaticNetwork(networkobject, david_gene_list = NULL)
 }
 \arguments{
-\item{david_gene_list}{the list object of DAVID annotation gene list}
+\item{networkobject}{A FBN network object}
 
-\item{FBNnetwork}{A FBN network object}
+\item{david_gene_list}{the list object of DAVID annotation gene list}
 }
 \value{
 No return

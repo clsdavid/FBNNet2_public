@@ -16,11 +16,9 @@ getProbabilityFromFunctionInput(
 
 \item{FBNExpression}{expression of function}
 
+\item{FBNProbability}{The probability of a FBN connection}
+
 \item{preGeneInputs}{pre input genes' state}
-
-\item{FBNCube}{An object of orchard cube}
-
-\item{targetgene}{The target gene}
 }
 \value{
 A probablity of the target regulatory function

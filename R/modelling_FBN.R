@@ -63,6 +63,7 @@ randomSelection <- function(probability) {
 #'@param initialStates A list of initial states
 #'@param type Specify the type of the Fundamental Boolean model (synchronous or asynchronous)
 #'@param maxTimepoints The max time points that are going to be constructed
+#'@param useParallel Optional, if TRUe then use parallelisation
 #'@return A list object that contains reconstructed time series and FBN network
 #'@examples
 #' require(BoolNet)
@@ -156,6 +157,13 @@ reconstructTimeseries <- function(fbnnetwork,
 
 
 # private method
+#' A function do the state transition
+#' @param initialState The inital state
+#' @param fbnNetwork The FBN network
+#' @param genes The involved genes
+#' @param type The type of Boolean transition
+#' @param maxTimepoints The maximum timepoints need to be 
+#' generated.
 #' @export
 transitionStates <- function(initialState,
                              fbnNetwork,
@@ -197,8 +205,9 @@ transitionStates <- function(initialState,
 
 #' This method is used to calculate the next state
 #'
-#' @param fbnnetwork An object of FBNNetwork
+#' @param fbnNetwork An object of FBNNetwork
 #' @param previous_states A vector of current gene state
+#' @param current_step The index of the current step
 #' @param genes a list of genes which index order must match with the
 #' current state
 #' @param type A type of Boolean network update schema choosen from synchronous,
@@ -435,10 +444,9 @@ getFBMSuccessor <- function(fbnNetwork,
 
 #'An internal method to get the probability of regulatory function from the cube
 #'
-#'@param FBNCube An object of orchard cube
-#'@param targetgene The target gene
 #'@param funcType type of function
 #'@param FBNExpression expression of function
+#'@param FBNProbability The probability of a FBN connection
 #'@param preGeneInputs pre input genes' state
 #'@return A probablity of the target regulatory function
 #'@examples

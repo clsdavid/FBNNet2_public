@@ -1,4 +1,7 @@
 
+#' An internal function to check if an expression is atomic node
+#' @param subExpression A sub Boolean expression
+#' 
 isAtomNode <- function(subExpression) {
     unwantList <- c("|", "&", "(", "[", "{", ")", "]", "}")
     res <- TRUE
@@ -11,6 +14,9 @@ isAtomNode <- function(subExpression) {
     return(res)
 }
 
+#' An internal function to check if an expression is a sub expression
+#' @param subExpression A sub Boolean expression
+#' 
 isSubExpression <- function(subExpression) {
     groupA <- c("(", "[", "{")
     groupB <- c(")", "]", "}")
@@ -42,6 +48,9 @@ isSubExpression <- function(subExpression) {
     return(res)
 }
 
+#' An internal function to remove the first brasket
+#' @param splitedExpression A splited Boolean expression
+#' 
 removeFistLevelBracket <- function(splitedExpression) {
     res <- splitedExpression
     if (isSubExpression(splitedExpression)) {
@@ -52,6 +61,11 @@ removeFistLevelBracket <- function(splitedExpression) {
     return(res)
 }
 
+#' An internal function to check a splited Boolean expression
+#' is applied DeMorganLaw
+#' 
+#' @param splitedExpression A splited Boolean expression
+#' 
 isAppliedDeMorganLaw <- function(splitedExpression) {
     groupA <- c("(", "[", "{")
     groupB <- c(")", "]", "}")
@@ -91,6 +105,11 @@ isAppliedDeMorganLaw <- function(splitedExpression) {
     return(res)
 }
 
+#' An internal function to flat a splited Boolean expression
+#' with DeMorganLaw
+#' 
+#' @param splitedExpression A splited Boolean expression
+#'
 flatDeMorganLaw <- function(splitedExpression) {
     if (!isAppliedDeMorganLaw(splitedExpression)) 
         return(splitedExpression)
@@ -120,16 +139,18 @@ flatDeMorganLaw <- function(splitedExpression) {
     return(res)
 }
 
+#' An internal function to convert a splited Boolean expression
+#' into an expression tree.
+#' 
+#' @param splitedExpression A splited Boolean expression
+#'
 convertIntoExpressionTree <- function(splitedExpression) {
     splitexp <- removeFistLevelBracket(splitedExpression)
     Oprators <- c("|", "&")
     
     groupA <- c("(", "[", "{")
     groupB <- c(")", "]", "}")
-    
-    negation <- "!"
-    
-    isTop <- FALSE
+
     containedBracket <- 0
     res <- list()
     leftCut <- 1L
@@ -189,9 +210,11 @@ convertIntoExpressionTree <- function(splitedExpression) {
     
     return(res)
 }
-
-
-
+#' An internal function to construct the FBN functions
+#' with an expression tree.
+#' 
+#' @param expressionTree A expression tree
+#'
 constructFBNFunctions <- function(expressionTree) {
     stem <- expressionTree
     operators <- c("|", "&")
@@ -280,8 +303,24 @@ generateFBNInteraction <- function(expressionString, genes) {
     return(res)
 }
 
-# internal functions
-regenerateInteractions <- function(name, expressionstring, genes, error, type, probability = NA, support = NA, timestep = 1) {
+#' An internal function to reconstrunct FBN functions
+#' 
+#' @param name The name of the interaction
+#' @param expressionstring The string presentation of an expression.
+#' @param genes The involve genes
+#' @param error The error value
+#' @param type The type of the interaction
+#' @param probability The probability of the interaction
+#' @param support The support threshold.
+#' @param timestep The time step of the interaction to take effectiveness on. 
+regenerateInteractions <- function(name,
+                                   expressionstring,
+                                   genes,
+                                   error, 
+                                   type, 
+                                   probability = NA,
+                                   support = NA,
+                                   timestep = 1) {
     res <- list()
     if (mode(genes) == "list") {
         genelist <- unlist(genes)
@@ -469,7 +508,11 @@ convertToFBNNetwork <- function(network) {
     return(res)
 }
 
-#' @noRd
+#' An internal function to convert the mined result to FBN network
+#' 
+#' @param minerresult The result of mining.
+#' @param genes The genes involved in the mining.
+#' 
 convertMinedResultToFBNNetwork <- function(minerresult, genes) {
     futile.logger::flog.info(sprintf("Enter convertMinedResultToFBNNetwork zone"))
     # code

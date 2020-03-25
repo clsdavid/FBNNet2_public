@@ -98,6 +98,18 @@ Rcpp::List getGenePrababilities_measurements(
 
 
 
+//' build Probability Tree On the targetGene
+//' 
+//' @param targetGene The target gene
+//' @param mainParameters An environment variable holds all input data
+//' @param genes All conditional genes
+//' @param matchedgenes processed genes
+//' @param matchedexpression matched the expression of an interaction 
+//' @param maxK The maximum level that can be drilled in.
+//' @param temporal The temporal time steps
+//' @param targetCounts  Counts the number of target gene in the data
+//' @param findPositiveRegulate Optional if TRUE find positive regulation only
+//' @param findNegativeRegulate Optional if TRUE find negative regulation only
 // [[Rcpp::export]]
 Rcpp::List buildProbabilityTreeOnTargetGene(
     Rcpp::CharacterVector targetGene,

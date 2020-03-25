@@ -7,8 +7,8 @@
 #' @param timeseriesdata the original timeseries data that contains continual values
 #' @return statstic measures
 #' 
-#' @noRd
-getStatisticMeasures <- function(featurenames, timeseriesdata) {
+getStatisticMeasures <- function(featurenames, 
+                                 timeseriesdata) {
     
     # generate data
     
@@ -39,12 +39,19 @@ getStatisticMeasures <- function(featurenames, timeseriesdata) {
     measures
 }
 
-#'This method is used to converts normalized timeseries data into a list of samples
-#'@param normalizedData An output of the method normalizeTimesereisRawData that normalized timeseries data
-#'@param func A function that specified how to split the column names
+#' This method is used to converts normalized
+#' timeseries data into a list of samples
+#' @param normalizedData An output of the method 
+#' normalizeTimesereisRawData that normalized timeseries data
+#' @param func A function that specified how to split the column names
+#' @param splitor Seperator.
 #'
 #'@export
-convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste(x[1], x[2], x[3], sep = "-"), splitor = as.character("-")) {
+convertIntoSampleTimeSeries <- function(
+    normalizedData, 
+    func = function(x) 
+        paste(x[1], x[2], x[3], sep = "-"), 
+        splitor = as.character("-")) {
     
     mat <- normalizedData
     # Obtain the last part of each column names
@@ -59,10 +66,16 @@ convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste
 }
 
 #'This method is used to sort time series order based on columns
-#'@param convertedTimeSeries An output of the method convertIntoSampleTimeSeries that converts normalized timeseries data into a list of samples
+#'@param convertedTimeSeries An output of the method 
+#'convertIntoSampleTimeSeries that converts normalized timeseries data
+#' into a list of samples
 #'@param func A function that specified how to split the column names
+#'@param splitor Separator.
 #'@export
-reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[length(x)], splitor = as.character("-")) {
+reorderSampleTimeSeries <- function(
+    convertedTimeSeries, 
+    func = function(x) x[length(x)], 
+    splitor = as.character("-")) {
     len <- length(convertedTimeSeries)
     res <- lapply(seq_len(len), function(index) {
         result <- convertedTimeSeries[[index]]
@@ -80,12 +93,17 @@ reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[le
 }
 
 
-
+#' An function to divide large data into small groups
 #' @param  discretedTimeSeriesdata discreted timeseries data
-#' @param maxElements the max elements to divide the discreted timeseries data into
-#' @noRd
-dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
-    futile.logger::flog.info(sprintf("Enter dividedDataIntoSubgroups zone: maxElements=%s", maxElements))
+#' @param maxElements the max elements to divide the 
+#' discreted timeseries data into
+#' @param maxK The maximum level that can be drilled into
+dividedDataIntoSubgroups <- function(
+    discretedTimeSeriesdata, 
+    maxElements = 20, 
+    maxK = 4) {
+    futile.logger::flog.info(sprintf("Enter dividedDataIntoSubgroups zone:
+                                     maxElements=%s", maxElements))
     genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
     
     len_genes <- length(genes)
@@ -148,10 +166,16 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements = 20, 
     res
 }
 
-#' @param  discretedTimeSeriesdata discreted timeseries data
+#' An internal function that divides large data into small groups.
+#' @param discretedTimeSeriesdata discreted timeseries data
 #' @param maxElements the max elements to divide the discreted timeseries data into
-#' @noRd
-dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
+#' @param maxK The max levels.
+#' @return A list of data
+#' @export
+dividedDataIntoSmallgroups <- function(
+    discretedTimeSeriesdata,
+    maxElements = 20, 
+    maxK = 4) {
     futile.logger::flog.info(sprintf("Enter dividedDataIntoSmallgroups zone: maxElements=%s", maxElements))
     genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
     
@@ -162,16 +186,20 @@ dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements = 20
     
     futile.logger::flog.info(sprintf("(dividedDataIntoSmallgroups) generates: %sgroups", length(sub_genes)))
     
-    res <- list(clusters = sub_genes, discretedTimeSeriesdata = discretedTimeSeriesdata, conditional_genes = genes)
+    res <- list(clusters = sub_genes, 
+                discretedTimeSeriesdata = discretedTimeSeriesdata, 
+                conditional_genes = genes)
     class(res) <- "ClusteredTimeseriesData"
     res
 }
 
 #'A methiod to reduce the timeseries data based on the gene list
-#'@param timeseries a list of samples that contains genes on row and time steps on columns
+#'@param timeseries a list of samples that contains genes on 
+#'row and time steps on columns
 #'@param genelist An vector of genes
 #' @export
-getRelatedGeneTimeseries <- function(timeseries, genelist = c()) {
+getRelatedGeneTimeseries <- function(timeseries, 
+                                     genelist = c()) {
     lapply(timeseries, function(sheet) sheet[rownames(sheet) %in% genelist, ])
 }
 
@@ -207,7 +235,8 @@ generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
 #'individualgenes<-c('a','b','c')
 #'testdata2<-randomGenerateBinary(individualgenes,maxState = 4)
 #' @export
-randomGenerateBinary <- function(genelist = c(), maxState = 0) {
+randomGenerateBinary <- function(genelist = c(),
+                                 maxState = 0) {
     if (length(genelist) == 0) {
         stop("The genelist is empty")
     }
@@ -233,13 +262,12 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
 
 #'A method to generate BoolNet type of timeseries data
 #'
-#' 
-#' 
 #' @param network A traditional Boolea type of network that can be used for BoolNet
 #' @param initialStates A list of initial states
 #' @param numMeasurements the number of timepoints that need to reconstruct
 #' @param type the type of the network in traditional Boolean modelling
-#' @param geneProbabilities optional if type is probabilistic, and then it is a need to specify the probabilities for each gene
+#' @param geneProbabilities optional if type is probabilistic, and then 
+#' it is a need to specify the probabilities for each gene
 #' @export
 genereateBoolNetTimeseries <- function(network,
                                        initialStates,
@@ -326,7 +354,7 @@ generateSimilaryReport <- function(timeseriesdata1, timeseriesdata2) {
 #' @param x the row value that need to be repeated
 #' @param n the number of repeats
 #' @export
-rep.row <- function(x, n) {
+rep_row <- function(x, n) {
     matrix(rep(x, each = n), nrow = n)
 }
 
@@ -334,7 +362,7 @@ rep.row <- function(x, n) {
 #' @param x the column value that need to be repeated
 #' @param n the number of repeats
 #' @export
-rep.col <- function(x, n) {
+rep_col <- function(x, n) {
     matrix(rep(x, each = n), ncol = n, byrow = TRUE)
 }
 
@@ -342,7 +370,7 @@ rep.col <- function(x, n) {
 #' @param x matrix one
 #' @param y matrix two
 #' @export
-rbind.all.columns <- function(x, y) {
+rbind_all_columns <- function(x, y) {
     
     x.diff <- setdiff(colnames(x), colnames(y))
     y.diff <- setdiff(colnames(y), colnames(x))

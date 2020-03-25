@@ -2,7 +2,7 @@
 % Please edit documentation in R/network_application_FBN.R
 \name{filterNetworkConnectionsByGenes}
 \alias{filterNetworkConnectionsByGenes}
-\title{filtering networks with specific genes}
+\title{Find Backward Network By Genes}
 \usage{
 filterNetworkConnectionsByGenes(
   networks,
@@ -12,11 +12,14 @@ filterNetworkConnectionsByGenes(
 )
 }
 \arguments{
-\item{networks}{The FBN networks that are going to be filtered}
-}
-\value{
-filtered networks
+\item{networks}{The Fundamental Boolean Network internally}
+
+\item{genelist}{A list of genes}
+
+\item{exclusive}{Optional}
+
+\item{expand}{Optional}
 }
 \description{
-filtering networks with specific genes
+Find Backward Network By Genes
 }

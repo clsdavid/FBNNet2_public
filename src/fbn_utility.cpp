@@ -17,7 +17,6 @@ using namespace Rcpp;
 //   CLOSXP: function (closure)
 //   ENVSXP: environment
 
-// [[Rcpp::export]]
 std::string to_string(double val){
   std::ostringstream stm ;
   stm << val ;
@@ -27,7 +26,6 @@ std::string to_string(double val){
 //' @param x The vector
 //' @param sep Seperator
 //' @return A new string
-// [[Rcpp::export]]
 Rcpp::String mpaste(Rcpp::CharacterVector x,
                     std::string sep){
   Rcpp::String res;
@@ -42,7 +40,6 @@ Rcpp::String mpaste(Rcpp::CharacterVector x,
   return (res);
 }
 
-// [[Rcpp::export]]
 Rcpp::CharacterVector concatenator(Rcpp::CharacterVector a,
                                    Rcpp::CharacterVector b) {
   int alen = a.length();
@@ -59,7 +56,6 @@ Rcpp::CharacterVector concatenator(Rcpp::CharacterVector a,
   return(out);
 }
 
-// [[Rcpp::export]]
 Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector a,
                                   Rcpp::IntegerVector b) {
   int alen = a.length();
@@ -76,7 +72,6 @@ Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector a,
   return(out);
 }
 
-// [[Rcpp::export]]
 Rcpp::NumericVector concatenatorN(Rcpp::NumericVector a,
                                   Rcpp::NumericVector b) {
   int alen = a.length();
@@ -93,7 +88,6 @@ Rcpp::NumericVector concatenatorN(Rcpp::NumericVector a,
   return(out);
 }
 
-// [[Rcpp::export]]
 Rcpp::NumericMatrix mcbind(Rcpp::NumericMatrix a,
                            Rcpp::NumericMatrix b) {
   int acoln = a.ncol();
@@ -126,7 +120,6 @@ Rcpp::NumericMatrix mcbind(Rcpp::NumericMatrix a,
   return out;
 }
 
-// [[Rcpp::export]]
 Rcpp::NumericMatrix mrbind(Rcpp::NumericMatrix a,
                            Rcpp::NumericMatrix b) {
   int acoln = a.ncol();
@@ -160,14 +153,12 @@ Rcpp::NumericMatrix mrbind(Rcpp::NumericMatrix a,
   return out;
 }
 
-// [[Rcpp::export]]
 bool isReallyNA(double val) {
   NumericVector val2 = NumericVector::create(val);
   return Rcpp::all(Rcpp::is_na(val2));
 }
 
 
-// [[Rcpp::export]]
 int countZeros(Rcpp::NumericVector v){
   int c = 0;
   for(int i=0; i<v.length(); ++i){
@@ -177,8 +168,6 @@ int countZeros(Rcpp::NumericVector v){
 }
 
 
-//' @title Accessing R's fisher.test function from Rcpp
-// [[Rcpp::export]]
 Rcpp::List fisher_test_cpp(const Rcpp::NumericMatrix& x, 
                            double conf_level){
   
@@ -196,7 +185,6 @@ Rcpp::List fisher_test_cpp(const Rcpp::NumericMatrix& x,
   return test_out;
 }
 
-// [[Rcpp::export]]
 Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix m, 
                                Rcpp::NumericVector v)
 {
@@ -208,7 +196,6 @@ Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix m,
   return(res);
 }
 
-// [[Rcpp::export]]
 int matchCount(Rcpp::NumericMatrix m, Rcpp::NumericVector v){
   // Rcpp::NumericMatrix mid=substractM(m,v);
   // return(countZeros(Rcpp::colSums(mid)));
@@ -217,13 +204,11 @@ int matchCount(Rcpp::NumericMatrix m, Rcpp::NumericVector v){
   return(std::count(col_sumed.begin(),col_sumed.end(),0));
 }
 
-// [[Rcpp::export]]
 double dround(double val, int decimal){
   double dec = pow(10.0,decimal);
   return(round( val * dec) / dec);
 }
 
-// [[Rcpp::export]]
 Rcpp::LogicalVector a_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::LogicalVector res(names1.length());
   for(int i=0;i<names1.length();i++){
@@ -238,7 +223,6 @@ Rcpp::LogicalVector a_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVector n
   return(res);
 }
 
-// [[Rcpp::export]]
 Rcpp::IntegerVector a_in_b_index(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::IntegerVector res;
   for(int i=0;i<names1.length();i++){
@@ -252,7 +236,6 @@ Rcpp::IntegerVector a_in_b_index(Rcpp::CharacterVector names1, Rcpp::CharacterVe
   return(res);
 }
 
-// [[Rcpp::export]]
 Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::LogicalVector res(names1.length());
   for(int i=0;i<names1.length();i++){
@@ -267,7 +250,6 @@ Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVect
   return(res);
 }
 
-// [[Rcpp::export]]
 Rcpp::IntegerVector a_not_in_b_index(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::IntegerVector res;
   for(int i=0;i<names1.length();i++){
@@ -285,7 +267,6 @@ Rcpp::IntegerVector a_not_in_b_index(Rcpp::CharacterVector names1, Rcpp::Charact
   return(res);
 }
 
-// [[Rcpp::export]]
 Rcpp::List resizel( const Rcpp::List& x, int n ){
   int oldsize = x.size() ;
   List y(n) ;
@@ -293,7 +274,7 @@ Rcpp::List resizel( const Rcpp::List& x, int n ){
   return y ;
 }
 
-// [[Rcpp::export]]
+
 Rcpp::List orderByname( const Rcpp::List& x, Rcpp::CharacterVector names){
   int len = names.length() ;
   List y(len) ;
@@ -305,7 +286,7 @@ Rcpp::List orderByname( const Rcpp::List& x, Rcpp::CharacterVector names){
   return y ;
 }
 
-// [[Rcpp::export]]
+
 Rcpp::List removeEmptyElement(Rcpp::List x)
 {
   IntegerVector idx;
@@ -317,28 +298,28 @@ Rcpp::List removeEmptyElement(Rcpp::List x)
   return(x[idx]);
 }
 
-// [[Rcpp::export]]
+
 Rcpp::CharacterVector char_sort(Rcpp::CharacterVector x, bool dsc) {
   Rcpp::CharacterVector res = Rcpp::clone(x);
   res.sort(dsc);
   return res;
 }
 
-// [[Rcpp::export]]
+
 Rcpp::IntegerVector int_sort(Rcpp::IntegerVector x, bool dsc) {
   Rcpp::IntegerVector res = Rcpp::clone(x);
   res.sort(dsc);
   return res;
 }
 
-// [[Rcpp::export]]
+
 Rcpp::NumericVector num_sort(Rcpp::NumericVector x, bool dsc) {
   Rcpp::NumericVector res = Rcpp::clone(x);
   res.sort(dsc);
   return res;
 }
 
-// [[Rcpp::export]]
+
 Rcpp::CharacterVector convertStringIntoVector(std::string value, int outputType, bool lowerCase) {
   int len = value.length();
   Rcpp::CharacterVector res;
@@ -404,7 +385,7 @@ Rcpp::CharacterVector convertStringIntoVector(std::string value, int outputType,
 }
 
 
-// [[Rcpp::export]]
+
 Rcpp::CharacterVector subCPP(Rcpp::CharacterVector pattern, Rcpp::CharacterVector replacement, Rcpp::CharacterVector x) {
   int len = x.size();
   CharacterVector y(len);
@@ -419,8 +400,15 @@ Rcpp::CharacterVector subCPP(Rcpp::CharacterVector pattern, Rcpp::CharacterVecto
   return y;
 } 
 
+//' A function to split an expression into a vector of input
+//' 
+//' @param expression The expression fo a FBN network connection
+//' @param outputType The type of output.
+//' @param lowerCase Optional, if TRUE convert them to lower case.
 // [[Rcpp::export]]
-Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector expression, int outputType, bool lowerCase) {
+Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector expression, 
+                                      int outputType,
+                                      bool lowerCase) {
   std::string strExpression = (std::string)expression[0];
 
   Rcpp::CharacterVector res;

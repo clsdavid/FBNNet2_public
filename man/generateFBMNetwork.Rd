@@ -54,13 +54,12 @@ per gene can be mined, the rest will be discarded}
 \item{maxGenesForSingleCube}{The maximum number of genes for a single
 cube. If there are more than the maximum value, the system will}
 
+\item{runtype}{The type of return object.}
+
 \item{network_only}{optional for Debug purpose, if TRUE, only output the
  networks only, otherwise, output the Orchard cube as well. Warning, 
 turn off this may cause memory leaking if the number of nodes is too large.
  divide them into subgroups.}
-
-\item{usingFunnayCluster}{optional to use Fanny cluster algorithm to 
-divide large nodes into groups.}
 }
 \value{
 An object of a list contains Fundamental Boolean Network, Orchard

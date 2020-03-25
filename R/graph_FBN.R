@@ -2,10 +2,10 @@
 #'
 #'@param FBNnetwork A FBN network object
 #'@param david_gene_list A data frame of DAVID biological annotation
+#'@param show_decay Optional, if TRUE, will draw the connections for decay.
 #'@return An network graphic object
 #'@examples
 #' ##coming later
-#' @noRd
 FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(
     FBNnetwork, 
     david_gene_list = NULL, 
@@ -267,9 +267,14 @@ FBNNetwork.Graph.ConvertToNetworkGraphicObject <- function(
     res
 }
 
-#' internal method
-#'
-#' @noRd
+#' internal method to convert the timeseries data 
+#' into the graphic object.
+#' 
+#' @param timeseries The timeseries data
+#' @param FBNnetwork The fundamental Boolean network.
+#' @param networkobject The fundamental Boolean network
+#' objects.
+#' @return  A dataframe object.
 FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
     timeseries, 
     FBNnetwork, 
@@ -303,7 +308,6 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
     edgeid <- c()
     fromGeneState <- c()
     temporarymat <- list()
-    temporaryInputMat <- list()
     functypes <- c()
     for (i in seq_along(timepoints)) {
         decayIndex <- rep(1L, length(genes))
@@ -325,7 +329,6 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
                 funcOfInhibitors <- genefunctions[condOfInhibitors]
                 
                 prFA <- FALSE
-                probabilityFA <- 0
                 selectedActivationFunctions <- list()
                 
                 if (length(funcOfActivators) > 0) {
@@ -358,7 +361,6 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
                 }
                 
                 prFD <- FALSE
-                probabilityFD <- 0
                 selectedInhibitionFunctions <- list()
                 if (length(funcOfInhibitors) > 0) {
                   for (fd in seq_along(funcOfInhibitors)) {
@@ -536,9 +538,7 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
         tempid <- edgeids[[i]]
         timesteps <- temporarymat[[tempid]]
         firstrecord <- timesteps[[1]]
-        funname <- firstrecord[[6]]
-        functype <- firstrecord[[7]]
-        
+
         if (length(timesteps) == 1) {
             onset <- c(onset, firstrecord[[1]])
             terminus <- c(terminus, firstrecord[[2]])
@@ -625,7 +625,10 @@ FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject <- function(
 #' @examples
 #' ##coming later
 #' @export
-FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dynamicNetworkGraphicObject) {
+FBNNetwork.Graph.StaticNetworkInSlice <- function(
+    networkobject,
+    timepoint, 
+    dynamicNetworkGraphicObject) {
     
     if (is.null(dynamicNetworkGraphicObject)) {
         stop("The dynamicNetworkGraphicObject is required")
@@ -668,13 +671,15 @@ FBNNetwork.Graph.StaticNetworkInSlice <- function(networkobject, timepoint, dyna
 
 #'Display a static network in a slice
 #'
-#'@param FBNnetwork A FBN network object
+#'@param networkobject A FBN network object
 #'@param david_gene_list the list object of DAVID annotation gene list
 #'@return No return
 #'@examples
 #' ##coming later
 #' @export
-FBNNetwork.Graph.StaticNetwork <- function(networkobject, david_gene_list = NULL) {
+FBNNetwork.Graph.StaticNetwork <- function(
+    networkobject, 
+    david_gene_list = NULL) {
     
     if (is.null(networkobject)) {
         stop("The networkobject is required")
@@ -697,8 +702,18 @@ FBNNetwork.Graph.StaticNetwork <- function(networkobject, david_gene_list = NULL
     visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
 }
 
-#' @noRd
-FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, fromtimepoint, totimepoint, dynamicNetworkGraphicObject, 
+#' An Internal method to generate dynamic network graphic objects
+#' 
+#' @param networkobject Fundamental Boolean Network objects.
+#' @param fromtimepoint A start point of the timeseries matrix.
+#' @param totimepoint The end point of the timeseries matrix.
+#' @param dynamicNetworkGraphicObject dynamicNetworkGraphicObject.
+#' @param timeseries The timeseries matrix
+FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(
+    networkobject, 
+    fromtimepoint, 
+    totimepoint,
+    dynamicNetworkGraphicObject, 
     timeseries) {
     
     if (is.null(timeseries) | !is.matrix(timeseries)) {
@@ -787,7 +802,12 @@ FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject <- function(networkobject, 
     visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
 }
 
-#' @noRd
+
+#' An Internal method to draw atractor internally
+#' 
+#' @param networkobject Fundamental Boolean Network objects.
+#' @param dynamicNetworkGraphicObject dynamicNetworkGraphicObject.
+#' @param matrix The timeseries matrix
 FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject, matrix) {
     if (is.null(matrix) | !is.matrix(matrix)) {
         stop("The parameter matrix must be not NULL and is a class of Matrix")
@@ -910,7 +930,6 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetw
             ]$to, "_", nextindex, sep = "")
         filterednodeToTF$id <- paste(filterednodeToTF$id, "_", nextindex, sep = "")
         filterednodeToTF <- cbind(filterednodeToTF, level = rep(startlevel + 1, length(rownames(filterednodeToTF))))
-        # filterednodeFromGene<-rbind.all.columns(filterednodeFromGene,individualnode)
         newnodes <- unique(rbind.data.frame(newnodes, individualfromnode, individualtonode, filterednodeToGene, filterednodeFromGene, 
             filterednodeFromTF, filterednodeToTF))  # nodes data.frame for legend
         # newnodes<-newnodes[order(newnodes$title),]
@@ -948,22 +967,42 @@ FBNNetwork.Graph.DrawingAttractorInternal <- function(networkobject, dynamicNetw
 #'@param timeseriesMatrix A sample timeseries matrix
 #'@param fromTimePoint The time point at the beginning
 #'@param toTimePoint The time point at the end
+#'@param networkobject An object created by the funciton
+#' \code{ConvertToNetworkGraphicObject}.
 #'@return No return
 #'@examples
 #' ##coming later
 #' @export
-FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NULL, fromTimePoint = 1, toTimePoint = 5, networkobject = NULL) {
+FBNNetwork.Graph <- function(fbnNetwork,
+                             type = "static",
+                             timeseriesMatrix = NULL,
+                             fromTimePoint = 1,
+                             toTimePoint = 5, 
+                             networkobject = NULL) {
     
     if (length(fbnNetwork$interactions) == 0) 
         return(NULL)
-    DAVID_gene_list <- NULL
+    
     utils::data("DAVID_gene_list", overwrite = TRUE)
-    david_gene_list <- DAVID_gene_list
+
+    # DAVID_gene_list <- NULL
+    # utils::data("DAVID_gene_list", overwrite = TRUE)
+    # david_gene_list <- DAVID_gene_list
     
     
     if (is.null(networkobject)) {
         if (type == "dynamic") 
-            networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = TRUE) else networkobject <- FBNNetwork.Graph.ConvertToNetworkGraphicObject(fbnNetwork, david_gene_list, show_decay = FALSE)
+            networkobject <- 
+                FBNNetwork.Graph.ConvertToNetworkGraphicObject(
+                    fbnNetwork, 
+                    DAVID_gene_list,
+                    show_decay = TRUE) 
+        else 
+            networkobject <- 
+                FBNNetwork.Graph.ConvertToNetworkGraphicObject(
+                    fbnNetwork, 
+                    DAVID_gene_list, 
+                    show_decay = FALSE)
     }
     
     
@@ -973,14 +1012,29 @@ FBNNetwork.Graph <- function(fbnNetwork, type = "static", timeseriesMatrix = NUL
             stop("The parameter timeseriesMatrix should be a class of matrix!")
         }
         
-        dynamicnetworkobject <- FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject(timeseriesMatrix, fbnNetwork, networkobject)
+        dynamicnetworkobject <- 
+            FBNNetwork.Graph.ConvertToDynamicNetworkGraphicObject(
+                timeseriesMatrix, 
+                fbnNetwork, 
+                networkobject)
     }
     
     # animation=FBNNetwork.Graph.DynamicNetworkInAnimation(timeseriesMatrix,fbnNetwork,orchardCube)
     
-    switch(type, static = FBNNetwork.Graph.StaticNetwork(networkobject, david_gene_list), staticSlice = FBNNetwork.Graph.StaticNetworkInSlice(networkobject, 
-        toTimePoint, dynamicnetworkobject), dynamic = FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject(networkobject, fromTimePoint, 
-        toTimePoint, dynamicnetworkobject, timeseriesMatrix))
+    switch(type, 
+           static = FBNNetwork.Graph.StaticNetwork(
+               networkobject, 
+               DAVID_gene_list), 
+           staticSlice = FBNNetwork.Graph.StaticNetworkInSlice(
+               networkobject, 
+               toTimePoint, 
+               dynamicnetworkobject), 
+           dynamic = FBNNetwork.Graph.GenerateDynamicNetworkGraphicObject(
+               networkobject, 
+               fromTimePoint, 
+               toTimePoint, 
+               dynamicnetworkobject,
+               timeseriesMatrix))
 }
 
 #' A method to draw attractors in the form of dynamic Network

@@ -11,9 +11,13 @@ reorderSampleTimeSeries(
 )
 }
 \arguments{
-\item{convertedTimeSeries}{An output of the method convertIntoSampleTimeSeries that converts normalized timeseries data into a list of samples}
+\item{convertedTimeSeries}{An output of the method 
+convertIntoSampleTimeSeries that converts normalized timeseries data
+into a list of samples}
 
 \item{func}{A function that specified how to split the column names}
+
+\item{splitor}{Separator.}
 }
 \description{
 This method is used to sort time series order based on columns

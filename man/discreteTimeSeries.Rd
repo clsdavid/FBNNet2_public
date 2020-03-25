@@ -8,6 +8,8 @@ discreteTimeSeries(timeSeriesData, method = c("average", "distance"))
 }
 \arguments{
 \item{timeSeriesData}{A list of time series data containing original value}
+
+\item{method}{A method to discrete the timeseries data.}
 }
 \description{
 A method to discrete timeseries data based on the threshod of mean value

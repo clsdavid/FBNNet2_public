@@ -1,7 +1,9 @@
 #'A method to discrete timeseries data based on the threshod of mean value
 #'@param timeSeriesData A list of time series data containing original value
+#'@param method A method to discrete the timeseries data.
 #'@export
-discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")) {
+discreteTimeSeries <- function(timeSeriesData, 
+                               method = c("average", "distance")) {
     res <- timeSeriesData
     
     if (is.matrix(timeSeriesData)) {
@@ -29,7 +31,7 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
         colmean <- t(mean_sampledata_max)
         if (is.matrix(res)) {
             numofcol <- ncol(fullData)
-            matrixMean <- rep.col(colmean, numofcol)
+            matrixMean <- rep_col(colmean, numofcol)
             colNames <- colnames(fullData)
             rowNames <- rownames(fullData)
             binarizedTimeSeries <- sapply(as.data.frame(fullData - (fullData %% matrixMean)), function(vr) as.numeric(vr > 0))
@@ -39,7 +41,7 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
             # in case of list, paste all matrices before clustering all matrixs in the list must have the same dimensions
             binarizedTimeSeries <- lapply(res, function(m) {
                 numofcol <- ncol(m)
-                matrixMean <- rep.col(colmean, numofcol)
+                matrixMean <- rep_col(colmean, numofcol)
                 fullData <- abs(m) + 1  #add 1 to avoid 0
                 colNames <- colnames(m)
                 rowNames <- rownames(m)
@@ -68,8 +70,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
         
         if (is.matrix(res)) {
             numofcol <- ncol(fullData)
-            matrixMean <- rep.col(colmean, numofcol)
-            matrixMedian <- rep.col(colmedian, numofcol)
+            matrixMean <- rep_col(colmean, numofcol)
+            matrixMedian <- rep_col(colmedian, numofcol)
             colNames <- colnames(fullData)
             rowNames <- rownames(fullData)
             binarizedTimeSeries <- sapply(as.data.frame(sqrt((fullData - matrixMean)^2) - matrixMedian), function(vr) as.numeric(vr > 
@@ -80,8 +82,8 @@ discreteTimeSeries <- function(timeSeriesData, method = c("average", "distance")
             # in case of list, paste all matrices before clustering all matrixs in the list must have the same dimensions
             binarizedTimeSeries <- lapply(res, function(m) {
                 numofcol <- ncol(m)
-                matrixMean <- rep.col(colmean, numofcol)
-                matrixMedian <- rep.col(colmedian, numofcol)
+                matrixMean <- rep_col(colmean, numofcol)
+                matrixMedian <- rep_col(colmedian, numofcol)
                 fullData <- abs(m) + 1  #add 1 to avoid 0
                 colNames <- colnames(m)
                 rowNames <- rownames(m)

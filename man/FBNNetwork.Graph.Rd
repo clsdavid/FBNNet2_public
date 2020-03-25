@@ -23,6 +23,9 @@ FBNNetwork.Graph(
 \item{fromTimePoint}{The time point at the beginning}
 
 \item{toTimePoint}{The time point at the end}
+
+\item{networkobject}{An object created by the funciton
+\code{ConvertToNetworkGraphicObject}.}
 }
 \value{
 No return

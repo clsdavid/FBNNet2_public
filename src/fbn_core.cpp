@@ -9,6 +9,9 @@
 #include "fbn_core.h"
 using namespace Rcpp;
 
+//' A function that extract gene states from time series cube
+//' @param timeSeriesCube The time series cube
+//' @param temporal The temporal time step
 // [[Rcpp::export]]
 Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
     Rcpp::List timeSeriesCube, 
@@ -53,7 +56,7 @@ Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
   return (res);
 }
 
-// [[Rcpp::export]]
+
 Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix,
                                       Rcpp::CharacterVector targetgenes)
 {
@@ -68,7 +71,7 @@ Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix,
   return (sub);
 }
 
-// [[Rcpp::export]]
+
 Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
                                       Rcpp::CharacterVector targetgene, 
                                       Rcpp::CharacterVector conditional_genes, 
@@ -157,7 +160,7 @@ Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
    return(result);
 }
 
-// [[Rcpp::export]]
+
 Rcpp::List getBasicMeasures(
     Rcpp::NumericVector stateTCond,
     Rcpp::NumericMatrix m,
@@ -223,6 +226,13 @@ Rcpp::List getBasicMeasures(
 // run after the compilation.
 //
 
+//' A function to get gene probabilities
+//' @param main_parameters_in_ref An environment variable to hold all input data.
+//' @param fixedgenestate A list of pre-processed gene state.
+//' @param target_gene The target gene
+//' @param new_conditional_gene The new conditional gene to be added in.
+//' @param temporal The temporal time step.
+//' @param targetCounts The count of the target count.
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
                                       Rcpp::Nullable<Rcpp::List> fixedgenestate, 
@@ -391,7 +401,7 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   return( resultGroup);
 }
 
-// [[Rcpp::export]]
+
 Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     //extract information
     double cond_T_count  =  basic_measures["cond_T_count"];
@@ -711,9 +721,9 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
        return(result);
 }
 
-
-
-
+//' The main function to main FBN probabilities from time series data
+//' 
+//' @param getGenePrababilities_basic The basic calculations.
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_basic)
 {

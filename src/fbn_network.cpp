@@ -2,7 +2,9 @@
 #include "fbn_utility.h"
 using namespace Rcpp;
 
-
+//' A function to filter networks.
+//' 
+//' @param res A list of named network interactions
 // [[Rcpp::export]]
 Rcpp::List networkFiltering(Rcpp::List res) {
   

@@ -14,7 +14,11 @@ getFBMSuccessor(
 )
 }
 \arguments{
+\item{fbnNetwork}{An object of FBNNetwork}
+
 \item{previous_states}{A vector of current gene state}
+
+\item{current_step}{The index of the current step}
 
 \item{genes}{a list of genes which index order must match with the
 current state}
@@ -24,8 +28,6 @@ asynchronous based. Asynchronous will randomly pick up a gene to process at time
 
 \item{decayIndex}{An value indicates the period of time when to degrade 
 an activated gene if no activators presented. It is usually one time step}
-
-\item{fbnnetwork}{An object of FBNNetwork}
 }
 \value{
 A list object that contains reconstructed time series and FBN network

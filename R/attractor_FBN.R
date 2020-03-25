@@ -199,7 +199,6 @@ searchForAttractors <- function(fbnNetwork,
 #'@param values, a vector of values for genes. 0 means fixing
 #' the gene to inhibition 1 means fixing the gene to activation
 #'  and -1 means no fixing
-#'@noRd
 networkFixUpdate <- function(network, fixIndices, values) {
     if (!(inherits(network, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")

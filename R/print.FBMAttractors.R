@@ -1,10 +1,13 @@
+#' A S3 method to print the FBM attractors
+#' 
+#' @param x The attactor details
+#' @param ... other arguments.
 #'@export
 print.FBMAttractors <- function(x, ...) {
     print.FBMAttractors(x, ...)
 }
 
 # Custom print function for class FBMAttractor
-#'@export
 print.FBMAttractors <- function(x, ...) {
     attractors <- x$Attractors
     genes <- x$Genes

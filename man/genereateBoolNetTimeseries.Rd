@@ -21,7 +21,8 @@ genereateBoolNetTimeseries(
 
 \item{type}{the type of the network in traditional Boolean modelling}
 
-\item{geneProbabilities}{optional if type is probabilistic, and then it is a need to specify the probabilities for each gene}
+\item{geneProbabilities}{optional if type is probabilistic, and then 
+it is a need to specify the probabilities for each gene}
 }
 \description{
 A method to generate BoolNet type of timeseries data

@@ -20,6 +20,8 @@ reconstructTimeseries(
 \item{type}{Specify the type of the Fundamental Boolean model (synchronous or asynchronous)}
 
 \item{maxTimepoints}{The max time points that are going to be constructed}
+
+\item{useParallel}{Optional, if TRUe then use parallelisation}
 }
 \value{
 A list object that contains reconstructed time series and FBN network

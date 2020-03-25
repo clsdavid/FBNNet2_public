@@ -4,10 +4,14 @@
 #'@param fbnGeneCube A pre constructed Orchard cube
 #'@param genes The target genes in the output
 #'@param useParallel An option turns on parallel
-#'@param threshold_confidence A threshod of confidence (between 0 and 1) that used to filter the Fundamental Boolean functions
-#'@param threshold_error A threshod of error rate (between 0 and 1) that used to filter the Fundamental Boolean functions
-#'@param threshold_support A threshod of support (between 0 and 1) that used to filter the Fundamental Boolean functions
-#'@param maxFBNRules The maximum rules per type (Activation and Inhibition) per gene can be mined or filtered, the rest will be discarded
+#'@param threshold_confidence A threshod of confidence (between 0 and 1)
+#' that used to filter the Fundamental Boolean functions
+#'@param threshold_error A threshod of error rate (between 0 and 1) that
+#' used to filter the Fundamental Boolean functions
+#'@param threshold_support A threshod of support (between 0 and 1) that
+#' used to filter the Fundamental Boolean functions
+#'@param maxFBNRules The maximum rules per type (Activation and Inhibition)
+#' per gene can be mined or filtered, the rest will be discarded
 #'@return A object of FBN network
 #'@author Leshi Chen, leshi, chen@lincolnuni.ac.nz
 #'@keywords Fundamental Boolean Network, Boolean Network, Genetic Regulatory Network
@@ -59,8 +63,18 @@ mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, thres
     finalresult
 }
 
-#' @noRd
-mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshold_error, maxFBNRules) {
+#' An internal function
+#' 
+#' @param searchFBNNetworkCore A result of \code{searchFBNNetworkCore}
+#' @param genes Genes that involved.
+#' @param threshold_error A threshod of error rate (between 0 and 1) 
+#' that used to filter the Fundamental Boolean functions
+#' @param maxFBNRules The maximum rules per type (Activation and Inhibition) 
+#' per gene can be mined or filtered, the rest will be discarded
+mineFBNNetworkWithCores <- function(searchFBNNetworkCore,
+                                    genes = NULL,
+                                    threshold_error, 
+                                    maxFBNRules) {
     if (is.null(genes)) {
         genes <- names(searchFBNNetworkCore)
     }
@@ -88,7 +102,9 @@ mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshol
 }
 
 #' Internal method
-#' @noRd
+#' 
+#' @param factors The value that needs to be duplicated.
+#' 
 removeDuplicates <- function(factors) {
     cond1 <- sapply(factors, function(x) x[[4]])
     return(factors[!duplicated(cond1)])
@@ -96,9 +112,24 @@ removeDuplicates <- function(factors) {
 
 
 #' Internal method
-#' @noRd
-searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, threshold_confidence = 1, threshold_error = 0, threshold_support = 1e-04, 
-    maxFBNRules = 5) {
+#'@param fbnGeneCube A pre constructed Orchard cube
+#'@param genes The target genes in the output
+#'@param useParallel An option turns on parallel
+#'@param threshold_confidence A threshod of confidence (between 0 and 1)
+#' that used to filter the Fundamental Boolean functions
+#'@param threshold_error A threshod of error rate (between 0 and 1) that
+#' used to filter the Fundamental Boolean functions
+#'@param threshold_support A threshod of support (between 0 and 1) that
+#' used to filter the Fundamental Boolean functions
+#'@param maxFBNRules The maximum rules per type (Activation and Inhibition)
+#' per gene can be mined or filtered, the rest will be discarded
+searchFBNNetworkCore <- function(fbnGeneCube, 
+                                 genes, 
+                                 useParallel = FALSE, 
+                                 threshold_confidence = 1, 
+                                 threshold_error = 0,
+                                 threshold_support = 1e-04, 
+                                  maxFBNRules = 5) {
     
     if (useParallel) {
         useParallel = FALSE
@@ -383,8 +414,12 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
 
 
 #' Internal method
-#' @noRd
-mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
+#' @param res The stage 1 result
+#' @param threshold_error The error threshold
+#' @param maxFBNRules The maximum FBN rules.
+mineFBNNetworkStage2 <- function(res, 
+                                 threshold_error = 0, 
+                                 maxFBNRules = 5) {
     futile.logger::flog.info(sprintf("Enter mineFBNNetworkStage2 zone"))
     
     if (is.null(res) | length(res) == 0) {

@@ -2,7 +2,8 @@
 % Please edit documentation in R/data_utility_FBN.R
 \name{convertIntoSampleTimeSeries}
 \alias{convertIntoSampleTimeSeries}
-\title{This method is used to converts normalized timeseries data into a list of samples}
+\title{This method is used to converts normalized
+timeseries data into a list of samples}
 \usage{
 convertIntoSampleTimeSeries(
   normalizedData,
@@ -11,10 +12,14 @@ convertIntoSampleTimeSeries(
 )
 }
 \arguments{
-\item{normalizedData}{An output of the method normalizeTimesereisRawData that normalized timeseries data}
+\item{normalizedData}{An output of the method 
+normalizeTimesereisRawData that normalized timeseries data}
 
 \item{func}{A function that specified how to split the column names}
+
+\item{splitor}{Seperator.}
 }
 \description{
-This method is used to converts normalized timeseries data into a list of samples
+This method is used to converts normalized
+timeseries data into a list of samples
 }

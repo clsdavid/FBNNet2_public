@@ -18,26 +18,6 @@ points on columns)}
 \item{method}{Clustering method}
 
 \item{modelParameters}{An object of ModelParameter}
-
-\item{originalTimeSeriesData}{The original timeseries data that contains
-continual values}
-
-\item{discretedTimeSeriesdata}{Discreted timeseries data that contains
-boolean values}
-
-\item{requireddata}{The expression data that are going to be clustered.
-The data must have time steps on colums and genes on rows}
-
-\item{minElements}{Each cluster must have elements more or equal than the
-value specified}
-
-\item{maxElements}{Each cluster must have elements less or equal than the
-value specified}
-
-\item{membexp}{A value for fussy algorithm to specify the degree of fussy.
-Big number, big fussy}
-
-\item{useParallel}{Turned on parallel}
 }
 \value{
 Clustered timeseries data

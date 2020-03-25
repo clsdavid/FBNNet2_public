@@ -21,6 +21,10 @@ findForwardRelatedNetworkByGenes(
 \item{regulationType}{The type of regulation either in 1 (Up regulation) or 0 (down regulation)}
 
 \item{target_type}{The boolean type of target genes either in 1 (Activation) or 0 (Inhibition)}
+
+\item{maxDeep}{The maximum layous that need to be drilled down.}
+
+\item{next_level_mix_type}{If TRUE, the next level will contain all type of connections.}
 }
 \description{
 Find Forward related Network By Genes

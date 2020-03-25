@@ -16,8 +16,10 @@ FBNDataReduction <- function(timeseriescube) {
 
 #'Check the similarity between time series
 #'
-#'@param originalTimeseriesCube The original data set that contains samples and each sample contains genes and time points
-#'@param reconstructedTimeSeriesCube The reconstructed data set that contains samples and each sample contains genes and time points
+#'@param originalTimeseriesCube The original data set that
+#' contains samples and each sample contains genes and time points
+#'@param reconstructedTimeSeriesCube The reconstructed data set
+#' that contains samples and each sample contains genes and time points
 #'@return similarity report
 #'@examples
 #' ##coming later
@@ -32,7 +34,8 @@ checkSimilarity <- function(originalTimeseriesCube, reconstructedTimeSeriesCube)
         if (!identical(dim(originalTimeseriesCube[[i]]), dim(reconstructedTimeSeriesCube[[i]]))) {
             stop("The dimension of each timeseries data must be identical")
         }
-        res[[i]] <- similarityBetweenMatrix(originalTimeseriesCube[[i]], reconstructedTimeSeriesCube[[i]], i)
+        res[[i]] <- similarityBetweenMatrix(originalTimeseriesCube[[i]],
+                                            reconstructedTimeSeriesCube[[i]], i)
     }
     res
 }
@@ -81,8 +84,13 @@ generateSimilarReport <- function(similarityreport) {
     res
 }
 
-
-#' @noRd
+#' A function moves the sub list items to its parrent list
+#' 
+#' This function is used to simplify the complex list
+#' 
+#' @param x A complex list
+#' 
+#' @return A simplified list
 dissolve <- function(x) {
     combi = list()
     operator <- function(x, name = NULL) {
@@ -100,8 +108,16 @@ dissolve <- function(x) {
 }
 
 
-#' @noRd
-similarityBetweenMatrix <- function(timeseries1, timeseries2, index) {
+#' This function is used to compare the similarity of two matrixes 
+#' 
+#' @param timeseries1 A matrix
+#' @param timeseries2 The second matrix to compare with
+#' @param index A label to distinguish the result.
+#' 
+#' @return A vector to show the similarity information about the two matrixes.
+similarityBetweenMatrix <- function(timeseries1, 
+                                    timeseries2, 
+                                    index) {
     if (!identical(dim(timeseries1), dim(timeseries2))) {
         stop("The two matrixes must have the same dimensions")
     }
@@ -134,7 +150,11 @@ similarityBetweenMatrix <- function(timeseries1, timeseries2, index) {
 
 
 
-#' @noRd
+#' This function is used to check whether or not the data 
+#' is the right type for \code{FBNNet}.
+#' 
+#' @param timeseries_data The timeseries data
+#' @return Error or NULL
 CheckRightTypeTimeseriesData <- function(timeseries_data) {
     if (!is.list(timeseries_data)) 
         stop("The type of timeseries_data must be LIST")
@@ -146,23 +166,29 @@ CheckRightTypeTimeseriesData <- function(timeseries_data) {
     NULL
 }
 
-#' @noRd
+#' A simple function to check a value is numeric or not
+#' @param x A value that need to be checked.
+#' @return Error or NULL
 checkNumeric <- function(x) {
     if (!is.numeric(x)) 
         stop("The input is not a type of numeric")
     
     NULL
 }
-
-#' @noRd
+#' A simple function to check a value is probability type
+#' data.
+#' @param x A value that need to be checked.
+#' @return Error or NULL
 checkProbabilityTypeData <- function(x) {
     if (!is.numeric(x) && (x > 1 || x < 0)) {
         stop("The input is not a type of probability or a value between 0 and 1")
     }
     NULL
 }
-
-#' @noRd
+#' A simple function to check a value is boolean type
+#' data.
+#' @param x A value that need to be checked.
+#' @return TRUE or FALSE
 isBooleanTypeTimeseriesData <- function(x) {
     conds <- sapply(x, function(mat) {
         f_mat <- factor(mat)

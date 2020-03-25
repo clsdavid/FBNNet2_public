@@ -7,7 +7,8 @@
 getRelatedGeneTimeseries(timeseries, genelist = c())
 }
 \arguments{
-\item{timeseries}{a list of samples that contains genes on row and time steps on columns}
+\item{timeseries}{a list of samples that contains genes on 
+row and time steps on columns}
 
 \item{genelist}{An vector of genes}
 }

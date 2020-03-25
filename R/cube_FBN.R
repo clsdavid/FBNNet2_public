@@ -14,7 +14,6 @@
 #'  current one can depend on
 #' @param useParallel If it is TRUE, the constructing will run it in parallel,
 #'  otherwise in a singl thread
-#' @param clusteredTimeseriesData clustered timeseries data
 #' @return A Orcahrd cube that contains all precomputed measures
 #' @examples
 #' require(BoolNet)
@@ -143,8 +142,27 @@ constructFBNCube <- function(target_genes,
 }
 
 
-
-#' @export
+#' Create an Orchard cube with small groups
+#'
+#' This is the main function(s) to genereate a sigle Orchard Cube or a group
+#' of cubes.
+#'
+#' @param groupedTimeseriesData A group of time series data (timeseriesCube).
+#' @param maxK The maximum level the cube can dig in.
+#' @param temporal A value that used to be 1 indicates the previous steps the
+#'  current one can depend on.
+#' @param useParallel If it is TRUE, the constructing will run it in parallel,
+#'  otherwise in a singl thread.
+#' @param threshold_confidence A threshold of confidence.
+#' @param threshold_error A threshold of error.
+#' @param threshold_support A threshold of support.
+#' @param maxFBNRules A threshold of maximum rules
+#' @param output_cube Optional, if it is TRUE, the cube and networks will be
+#' returned, otherwise, only networks are returned.
+#' @param parallel_on_group Optional, if it is TRUE, then the parallelisation
+#' will be on cluster groups.
+#' @return A Orcahrd cube that contains all precomputed measures
+#' @export 
 constructFBNCubeAndNetworkInSmallGroups <- function(
     groupedTimeseriesData,
     maxK = 5,
@@ -225,12 +243,56 @@ constructFBNCubeAndNetworkInSmallGroups <- function(
     clusteredFBNCube
 }
 
-
+#' Create an Orchard cube with clusters
+#'
+#' This is the main function(s) to genereate a sigle Orchard Cube or a group
+#' of cubes.
+#'
+#' @param clusteredTimeseriesData clustered timeseries data
+#' @param maxK The maximum level the cube can dig in.
+#' @param temporal A value that used to be 1 indicates the previous steps the
+#'  current one can depend on.
+#' @param useParallel If it is TRUE, the constructing will run it in parallel,
+#'  otherwise in a singl thread.
+#' @param threshold_confidence A threshold of confidence.
+#' @param threshold_error A threshold of error.
+#' @param threshold_support A threshold of support.
+#' @param maxFBNRules A threshold of maximum rules
+#' @param output_cube Optional, if it is TRUE, the cube and networks will be
+#' returned, otherwise, only networks are returned.
+#' @param parallel_on_group Optional, if it is TRUE, then the parallelisation
+#' will be on cluster groups.
+#' @return A Orcahrd cube that contains all precomputed measures
+#' 
 #' @export
-constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, maxK = 5, temporal = 1, useParallel = FALSE, threshold_confidence = 1, 
-    threshold_error = 0, threshold_support = 1e-05, maxFBNRules = 20, output_cube = FALSE, parallel_on_group = FALSE) {
-    futile.logger::flog.info(sprintf("Enter constructFBNCubeAndNetworkInClusters zone: clusteredTimeseriesData=%s, maxK=%s, useParallel=%s, threshold_confidence=%s, threshold_error=%s, threshold_support=%s, maxFBNRules=%s, parallel_on_group=%s", 
-        length(clusteredTimeseriesData), maxK, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, 
+constructFBNCubeAndNetworkInClusters <- function(
+    clusteredTimeseriesData, 
+    maxK = 5, 
+    temporal = 1,
+    useParallel = FALSE,
+    threshold_confidence = 1, 
+    threshold_error = 0,
+    threshold_support = 1e-05, 
+    maxFBNRules = 20, 
+    output_cube = FALSE,
+    parallel_on_group = FALSE) {
+    futile.logger::flog.info(sprintf(
+        "Enter constructFBNCubeAndNetworkInClusters zone: 
+        clusteredTimeseriesData=%s, 
+        maxK=%s, 
+        useParallel=%s, 
+        threshold_confidence=%s, 
+        threshold_error=%s, 
+        threshold_support=%s, 
+        maxFBNRules=%s, 
+        parallel_on_group=%s", 
+        length(clusteredTimeseriesData),
+        maxK, 
+        useParallel,
+        threshold_confidence,
+        threshold_error,
+        threshold_support,
+        maxFBNRules, 
         parallel_on_group))
     
     if (parallel_on_group == TRUE) {
@@ -244,12 +306,34 @@ constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, maxK =
     ## build combination clusters
     print("Starting.....")
     if (parallel_on_group) {
-        clusteredFBNCube <- doParallelWork(internal_constructCubeWithClusters, combined_clusters, target_genes, timeseries_data, 
-            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doParallelWork(
+            internal_constructCubeWithClusters,
+            combined_clusters, 
+            target_genes, 
+            timeseries_data, 
+            maxK, 
+            temporal,
+            useParallel,
+            threshold_confidence,
+            threshold_error, 
+            threshold_support,
+            maxFBNRules,
+            output_cube)
         
     } else {
-        clusteredFBNCube <- doNonParallelWork(internal_constructCubeWithClusters, combined_clusters, target_genes, timeseries_data, 
-            maxK, temporal, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube)
+        clusteredFBNCube <- doNonParallelWork(
+            internal_constructCubeWithClusters,
+            combined_clusters,
+            target_genes, 
+            timeseries_data, 
+            maxK,
+            temporal, 
+            useParallel,
+            threshold_confidence,
+            threshold_error, 
+            threshold_support, 
+            maxFBNRules, 
+            output_cube)
     }
     
     
@@ -259,9 +343,35 @@ constructFBNCubeAndNetworkInClusters <- function(clusteredTimeseriesData, maxK =
     clusteredFBNCube
 }
 
-#' @noRd
-internal_constructCubeWithClusters <- function(index, combined_clusters, target_genes, timeseries_data, maxK, temporal, useParallel, 
-    threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube) {
+#' An internal functions
+#' @param index The current index
+#' @param combined_clusters The combined clusters
+#' @param target_genes The current target genes
+#' @param timeseries_data The time series data.
+#' @param maxK The maximum level that can be drilled into
+#' @param temporal A value that used to be 1 indicates the previous steps the
+#'  current one can depend on.
+#' @param useParallel If it is TRUE, the constructing will run it in parallel,
+#'  otherwise in a singl thread.
+#' @param threshold_confidence A threshold of confidence.
+#' @param threshold_error A threshold of error.
+#' @param threshold_support A threshold of support.
+#' @param maxFBNRules A threshold of maximum rules
+#' @param output_cube Optional, if it is TRUE, the cube and networks will be
+#' returned, otherwise, only networks are returned.
+internal_constructCubeWithClusters <- function(
+    index,
+    combined_clusters, 
+    target_genes, 
+    timeseries_data,
+    maxK, 
+    temporal, 
+    useParallel, 
+    threshold_confidence,
+    threshold_error, 
+    threshold_support, 
+    maxFBNRules,
+    output_cube) {
     res <- list()
     # get row values i.e. genes
     genes <- combined_clusters[[index]]
@@ -293,9 +403,35 @@ internal_constructCubeWithClusters <- function(index, combined_clusters, target_
     list(index = res)
 }
 
-#' @noRd
-internal_constructCubeWithGroups <- function(index, combined_clusters, conditional_genes, timeseries_data, maxK, temporal, 
-    useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules, output_cube) {
+#' An internal functions
+#' @param index The current index
+#' @param combined_clusters The combined clusters
+#' @param conditional_genes The current conditional genes
+#' @param timeseries_data The time series data.
+#' @param maxK The maximum level that can be drilled into
+#' @param temporal A value that used to be 1 indicates the previous steps the
+#'  current one can depend on.
+#' @param useParallel If it is TRUE, the constructing will run it in parallel,
+#'  otherwise in a singl thread.
+#' @param threshold_confidence A threshold of confidence.
+#' @param threshold_error A threshold of error.
+#' @param threshold_support A threshold of support.
+#' @param maxFBNRules A threshold of maximum rules
+#' @param output_cube Optional, if it is TRUE, the cube and networks will be
+#' returned, otherwise, only networks are returned.
+internal_constructCubeWithGroups <- function(
+    index, 
+    combined_clusters,
+    conditional_genes,
+    timeseries_data,
+    maxK,
+    temporal, 
+    useParallel,
+    threshold_confidence,
+    threshold_error, 
+    threshold_support, 
+    maxFBNRules, 
+    output_cube) {
     res <- list()
     # get row values i.e. genes
     genes <- combined_clusters[[index]]

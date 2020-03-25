@@ -1,8 +1,37 @@
-
+#' A function to plot the Fundamental boolean networks
+#' 
+#' @param FBNNetwork The FBN networks
+#' @param target_genes A list of target genes
+#' @param type The visulazation type
+#' @param expand_level The level of expandation
+#' @param output_network Optional, if TRUE, then output the FBN Network
+#' @param timeseries_matrix The timeseries matrix that used to plot dynamic 
+#' networks.
+#' @param start_time_point The start time point
+#' @param end_time_point The end time point
 #' @export
-plotNetwork <- function(FBNNetwork, target_genes = c(), type = c("static", "staticSlice", "dynamic", "forward_1a", "forward_2a", 
-    "forward_3a", "forward_4a", "backward_1a", "backward_2a", "forward_1b", "forward_2b", "forward_3b", "forward_4b", "backward_1b", 
-    "backward_2b"), expand_level = 2, output_network = FALSE, timeseries_matrix = NULL, start_time_point = 1, end_time_point = 1, 
+plotNetwork <- function(FBNNetwork, 
+                        target_genes = c(), 
+                        type = c("static", 
+                                 "staticSlice", 
+                                 "dynamic", 
+                                 "forward_1a",
+                                 "forward_2a", 
+                                  "forward_3a",
+                                 "forward_4a", 
+                                 "backward_1a",
+                                 "backward_2a",
+                                 "forward_1b", 
+                                 "forward_2b", 
+                                 "forward_3b",
+                                 "forward_4b",
+                                 "backward_1b", 
+                                 "backward_2b"), 
+                        expand_level = 2, 
+                        output_network = FALSE,
+                        timeseries_matrix = NULL, 
+                        start_time_point = 1, 
+                        end_time_point = 1, 
     target_time_point = 1) {
     if (!(inherits(FBNNetwork, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")

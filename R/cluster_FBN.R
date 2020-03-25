@@ -1,28 +1,13 @@
 
-#~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
 #'ClusterTimeSeries is a method to cluster timeseries data into small sets of
 #' timeseries data
 #' 
 #' @param timeSeriesData A list of timeseries matrix (genes on row and time
 #'  points on columns)
-#' @param originalTimeSeriesData The original timeseries data that contains
-#'  continual values
-#' @param discretedTimeSeriesdata Discreted timeseries data that contains
-#'  boolean values
 #' @param method Clustering method
 #' @param modelParameters An object of ModelParameter
-#' @param requireddata The expression data that are going to be clustered.
-#'  The data must have time steps on colums and genes on rows
-#' @param minElements Each cluster must have elements more or equal than the
-#'  value specified
-#' @param maxElements Each cluster must have elements less or equal than the
-#'  value specified
-#' @param membexp A value for fussy algorithm to specify the degree of fussy.
-#'  Big number, big fussy
-#' @param useParallel Turned on parallel
-#' 
-#'@return Clustered timeseries data
-#'@examples
+#' @return Clustered timeseries data
+#' @examples
 #' ## kmeansParameters<-list(type='kmeans',
 #' ## numOfClusters=10,
 #' ## nstart=100,
@@ -63,7 +48,6 @@
 #' ## clusteredFanny<-clusterTimeSeries(sortedtimeseries,
 #' ## method='fanny',
 #' ## fuzzyParameters)
-
 #' @export
 clusterTimeSeries <- function(timeSeriesData,
                               method = c("kmeans",
@@ -242,6 +226,15 @@ clusterTimeSeries <- function(timeSeriesData,
     }, stop("'method' must be one of \"kmeans\",\"edgeDetector\",\"scanStatistic\""))
 }
 
+#' An internal function to do the fuzzy tree cluster
+#' 
+#' @param requireddata The original expression timeseries data
+#' @param minElements The minimum elements of a cluster
+#' @param maxElements The maximum elements of a cluster
+#' @param membexp number r strictly larger than 1 specifying the
+#'  membership exponent used in the fit criterion; see the ‘Details’
+#'  below. Default: 2 which used to be hardwired inside FANNY.
+#'  @return cluster data
 fuzzyTreeCluster <- function(requireddata, 
                              minElements,
                              maxElements,
@@ -364,8 +357,15 @@ fuzzyTreeCluster <- function(requireddata,
 }
 
 
-#' internal for calling from the function clusterdDiscreteData
-#' @noRd
+#' An internal function to divide large data in cluster groups
+#' 
+#' @param timeSeriesData The original expression timeseries data
+#' @param minElements The minimum elements of a cluster
+#' @param maxElements The maximum elements of a cluster
+#' @param membexp number r strictly larger than 1 specifying the
+#'  membership exponent used in the fit criterion; see the ‘Details’
+#'  below. Default: 2 which used to be hardwired inside FANNY.
+#'  @return The result of \code{fuzzyTreeCluster}
 dividedintosmallgroups <- function(timeSeriesData, 
                                    minElements = 10,
                                    maxElements = 30, 
@@ -384,7 +384,16 @@ dividedintosmallgroups <- function(timeSeriesData,
     return(fuzzgroups)
 }
 
-
+#' A function to cluster data
+#' 
+#' @param originalTimeSeriesData The original expression timeseries data
+#' @param discretedTimeSeriesdata The discreted timeseries data
+#' @param minElements The minimum elements of a cluster
+#' @param maxElements The maximum elements of a cluster
+#' @param membexp number r strictly larger than 1 specifying the
+#'  membership exponent used in the fit criterion; see the ‘Details’
+#'  below. Default: 2 which used to be hardwired inside FANNY.
+#'  @return A object of ClusteredTimeseriesData
 #' @export
 clusterdDiscreteData <- function(originalTimeSeriesData,
                                  discretedTimeSeriesdata,

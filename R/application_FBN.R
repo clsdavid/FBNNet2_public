@@ -26,12 +26,11 @@
 #'  per gene can be mined, the rest will be discarded
 #' @param maxGenesForSingleCube The maximum number of genes for a single
 #'  cube. If there are more than the maximum value, the system will 
+#' @param runtype The type of return object.
 #' @param network_only optional for Debug purpose, if TRUE, only output the
 #'  networks only, otherwise, output the Orchard cube as well. Warning, 
 #' turn off this may cause memory leaking if the number of nodes is too large.
 #'  divide them into subgroups.
-#' @param usingFunnayCluster optional to use Fanny cluster algorithm to 
-#' divide large nodes into groups.
 #' @return An object of a list contains Fundamental Boolean Network, Orchard
 #'  cube (optional) and discreted timeseries data
 #' @author Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com
@@ -194,7 +193,7 @@ generateFBMNetwork <- function(timeseries_data,
 #' @param  filename The name of the output file such as xx.csv
 #' @export
 output_annotated_genes <- function(genes, filename) {
-    DAVID_gene_list <- NULL
+    ## DAVID_gene_list <- NULL
     utils::data("DAVID_gene_list", overwrite = TRUE)
     mapped_genes <- with(DAVID_gene_list, {
         DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]})

@@ -30,8 +30,6 @@ current one can depend on}
 
 \item{useParallel}{If it is TRUE, the constructing will run it in parallel,
 otherwise in a singl thread}
-
-\item{clusteredTimeseriesData}{clustered timeseries data}
 }
 \value{
 A Orcahrd cube that contains all precomputed measures

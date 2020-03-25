@@ -105,7 +105,10 @@ loadFBNNetwork <- function(file, bodySeparator = ",", lowercaseGenes = FALSE) {
     # return(convertToFBNNetwork(res))
     return(res)
 }
-
+#' A function to convert the traditional Boolean network to
+#' fundamental Boolean network collection.
+#' 
+#' @param network The traditional Boolean network.
 #' @export
 convertToBooleanNetworkCollection <- function(network) {
     # validate network types
@@ -123,7 +126,10 @@ convertToBooleanNetworkCollection <- function(network) {
     return(res)
 }
 
-# need to fix the problem of genes and fixed's order when merge or filter
+#' A function to merge tow networks.
+#' 
+#' @param network1 The first network
+#' @param network2 The second network.
 #' @export
 mergeNetwork <- function(network1, network2) {
     # validate network types
@@ -180,6 +186,10 @@ mergeNetwork <- function(network1, network2) {
     return(res)
 }
 
+#' A function to convert the traditional network interactions
+#' to fundamental Boolean network interactions.
+#' 
+#' @param interaction the traditional network interactions
 #' @export
 convertInteraction <- function(interaction) {
     res <- list()
@@ -197,7 +207,14 @@ convertInteraction <- function(interaction) {
     return(res)
 }
 
-# need to revise this as it produce duliplcates
+#' A function to merge the network interactions
+#' 
+#' @param interactions1 the network interaction 1
+#' @param interactions2 the network interaction 1
+#' @param genes1 The genes involved in the interactions1
+#' @param genes2 The genes involved in the interactions2
+#' @param mergedgenes The merged genes
+#' @export
 mergeInteraction <- function(interactions1, interactions2, genes1, genes2, mergedgenes = NULL) {
     if (is.null(mergedgenes)) 
         mergedgenes <- sort(unique(c(genes1, genes2)))
@@ -345,6 +362,11 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
     res
 }
 
+#' A function to merge the networks from clustered FBN cube.
+#' 
+#' @param clusteredFBNCube The clustered FBN cube
+#' @param threshold_error A threshold of error
+#' @param maxFBNRules the max FBN rules.
 #' @export
 mergeClusterNetworks <- function(clusteredFBNCube, threshold_error, maxFBNRules) {
     network_cores <- list()
@@ -389,6 +411,9 @@ mergeClusterNetworks <- function(clusteredFBNCube, threshold_error, maxFBNRules)
                             maxFBNRules = maxFBNRules)
 }
 
+#' An internal function to find all input genes from a group of genes
+#' @param networkinteractions All network interactions
+#' @param genes The target group genes.
 findAllInputGenes <- function(networkinteractions, genes) {
     # todo, the for has a problem and need to address carefully
     res <- c()
@@ -400,7 +425,11 @@ findAllInputGenes <- function(networkinteractions, genes) {
     unique(genes[res])
 }
 
-
+#' An internal function to find all target genes from a group of 
+#' etwork interactions
+#' 
+#' @param networkinteractions All network interactions
+#' 
 findAllTargetGenes <- function(networkinteractions) {
     # todo, the for has a problem and need to address carefully
     res <- c()
@@ -462,12 +491,16 @@ filterNetworkConnections <- function(networks) {
     return(res)
 }
 
-#'filtering networks with specific genes
-#'
-#'@param networks The FBN networks that are going to be filtered
-#'@return filtered networks
-#' @export
-filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive = TRUE, expand = FALSE) {
+#' Find Backward Network By Genes
+#' 
+#' @param networks The Fundamental Boolean Network internally
+#' @param genelist A list of genes
+#' @param exclusive Optional
+#' @param expand Optional
+filterNetworkConnectionsByGenes <- function(networks, 
+                                            genelist = c(), 
+                                            exclusive = TRUE, 
+                                            expand = FALSE) {
     # individualFilter2<-filterNetworkConnections(individualNetworks[[2]]) FBNNetwork.Graph(individualFilter2)
     # individualFilter2<-filterNetworkConnectionsByGenes(individualFilter2,c('OR7A5','GFOD1','ANGPT2','LCN2','MCTP1','PNMT',
     # 'SLC22A23')) FBNNetwork.Graph(individualFilter2) individualFilter2 originalgenes2<-individualNetworks[[2]]$genes
@@ -528,11 +561,21 @@ filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive 
     filterNetworkConnections(res)
 }
 
-
-
-#'internal
-#' @noRd
-findAllBackwardRelatedGenes <- function(networks, target_gene, regulationType = NULL, target_type = NULL, maxDeep = 1, next_level_mix_type = FALSE) {
+#' Find Backward Network By Genes
+#' 
+#' @param networks The Fundamental Boolean Network
+#' @param target_gene The target gene
+#' @param regulationType The type of regulation either in 1 (Up regulation) or 0 (down regulation)
+#' @param target_type The target connection type
+#' @param maxDeep The maximum layous that need to be drilled down.
+#' @param next_level_mix_type If TRUE, the next level will contain all type of connections.
+#' @export
+findAllBackwardRelatedGenes <- function(networks, 
+                                        target_gene, 
+                                        regulationType = NULL, 
+                                        target_type = NULL, 
+                                        maxDeep = 1, 
+                                        next_level_mix_type = FALSE) {
     
     prepare_network <- filterNetworkConnectionsByGenes(networks, target_gene, exclusive = FALSE, expand = FALSE)
     genes <- names(prepare_network$interactions)
@@ -588,9 +631,16 @@ findAllBackwardRelatedGenes <- function(networks, target_gene, regulationType = 
 #' Find Backward Network By Genes
 #' 
 #' @param networks The Fundamental Boolean Network
-#' @param genelist The target genes
+#' @param target_gene_list The target genes
+#' @param regulationType The type of regulation either in 1 (Up regulation) or 0 (down regulation)
+#' @param maxDeep The maximum layous that need to be drilled down.
+#' @param next_level_mix_type If TRUE, the next level will contain all type of connections.
 #' @export
-findBackwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), regulationType = NULL, maxDeep = 1, next_level_mix_type = FALSE) {
+findBackwardRelatedNetworkByGenes <- function(networks, 
+                                              target_gene_list = c(),
+                                              regulationType = NULL,
+                                              maxDeep = 1, 
+                                              next_level_mix_type = FALSE) {
     
     
     if (length(target_gene_list) == 0) {
@@ -616,10 +666,25 @@ findBackwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), 
     prepare_network
 }
 
-#'internal
-#' @noRd
-findAllForwardRelatedGenes <- function(networks, target_gene, regulationType = NULL, target_type = NULL, main_target_gene = NULL, 
-    main_target_type = NULL, maxDeep = 1, next_level_mix_type = next_level_mix_type) {
+#' Find Forward related Network By Genes internal
+#' 
+#' @param networks The Fundamental Boolean Network
+#' @param target_gene The target gene
+#' @param regulationType The type of regulation either in 1 (Up regulation) or 0 (down regulation)
+#' @param target_type The boolean type of target genes either in 1 (Activation) or 0 (Inhibition)
+#' @param main_target_gene The main target gene.
+#' @param main_target_type The main connection type.
+#' @param maxDeep The maximum layous that need to be drilled down.
+#' @param next_level_mix_type If TRUE, the next level will contain all type of connections.
+findAllForwardRelatedGenes <- function(
+    networks, 
+    target_gene, 
+    regulationType = NULL, 
+    target_type = NULL, 
+    main_target_gene = NULL, 
+    main_target_type = NULL, 
+    maxDeep = 1, 
+    next_level_mix_type = next_level_mix_type) {
     genes <- networks$genes
     prepare_network <- networks
     remove_index_gene <- list()
@@ -720,17 +785,30 @@ findAllForwardRelatedGenes <- function(networks, target_gene, regulationType = N
 #' @param target_gene_list The target genes
 #' @param regulationType The type of regulation either in 1 (Up regulation) or 0 (down regulation)
 #' @param target_type The boolean type of target genes either in 1 (Activation) or 0 (Inhibition)
+#' @param maxDeep The maximum layous that need to be drilled down.
+#' @param next_level_mix_type If TRUE, the next level will contain all type of connections.
 #' @export
-findForwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), regulationType = NULL, target_type = NULL, maxDeep = 1, 
-    next_level_mix_type = FALSE) {
+findForwardRelatedNetworkByGenes <- function(networks, 
+                                             target_gene_list = c(), 
+                                             regulationType = NULL, 
+                                             target_type = NULL,
+                                             maxDeep = 1, 
+                                             next_level_mix_type = FALSE) {
     if (length(target_gene_list) == 0) {
         stop("The genelist is empty")
     }
     
     prepare_network <- NULL
     for (target_gene in target_gene_list) {
-        new_nextwork <- findAllForwardRelatedGenes(networks = networks, target_gene = target_gene, regulationType = regulationType, 
-            target_type = target_type, main_target_gene = target_gene, main_target_type = target_type, maxDeep = maxDeep, next_level_mix_type = next_level_mix_type)
+        new_nextwork <- findAllForwardRelatedGenes(
+            networks = networks, 
+            target_gene = target_gene, 
+            regulationType = regulationType, 
+            target_type = target_type, 
+            main_target_gene = target_gene, 
+            main_target_type = target_type, 
+            maxDeep = maxDeep, 
+            next_level_mix_type = next_level_mix_type)
         if (is.null(prepare_network)) {
             prepare_network <- new_nextwork
         } else {
