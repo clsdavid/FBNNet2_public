@@ -35,6 +35,8 @@ networks.}
 \item{start_time_point}{The start time point}
 
 \item{end_time_point}{The end time point}
+
+\item{target_time_point}{The target time point}
 }
 \description{
 A function to plot the Fundamental boolean networks

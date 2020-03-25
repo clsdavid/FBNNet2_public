@@ -9,6 +9,7 @@
 #' networks.
 #' @param start_time_point The start time point
 #' @param end_time_point The end time point
+#' @param target_time_point The target time point
 #' @export
 plotNetwork <- function(FBNNetwork, 
                         target_genes = c(), 
@@ -32,7 +33,7 @@ plotNetwork <- function(FBNNetwork,
                         timeseries_matrix = NULL, 
                         start_time_point = 1, 
                         end_time_point = 1, 
-    target_time_point = 1) {
+                        target_time_point = 1) {
     if (!(inherits(FBNNetwork, "FundamentalBooleanNetwork"))) 
         stop("Network must be inherited from FundamentalBooleanNetwork")
     
