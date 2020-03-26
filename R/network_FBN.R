@@ -79,7 +79,7 @@ mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshol
   finalresult <- convertMinedResultToFBNNetwork(midle_result, genes)
   
   if (length(finalresult) > 0) {
-    cond1 <- sapply(finalresult, function(entry) !is.null(entry))
+    cond1 <- vapply(finalresult, function(entry) !is.null(entry), logical(1))
     if (length(cond1) > 0) {
       finalresult <- (finalresult[cond1][unlist(lapply(finalresult[cond1], length) != 0)])
     } else {
@@ -256,7 +256,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
           nextgene <- nextgenesT[[j]]
           resTU <- temp_resTU[[j]]
           if (length(resTU) > 0) {
-            condT <- sapply(resTU, function(entry) !is.null(entry))
+            condT <- vapply(resTU, function(entry) !is.null(entry), logical(1))
             resT[[indexT]] <- resTU[unlist(lapply(resTU[condT], length) != 0)]
             indexT <- indexT + 1
           }
@@ -278,7 +278,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
           nextgene <- nextgenesF[[j]]
           resFU <- temp_resFU[[j]]
           if (length(resFU) > 0) {
-            condF <- sapply(resFU, function(entry) !is.null(entry))
+            condF <- vapply(resFU, function(entry) !is.null(entry), logical(1))
             resF[[indexF]] <- resFU[unlist(lapply(resFU[condF], length) != 0)]
             indexF <- indexF + 1
           }
@@ -300,7 +300,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
       res <- dissolve(res)
       
       if (length(res) > 0) {
-        cond1 <- sapply(res, function(entry) !is.null(entry))
+        cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
         res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
       }
       
@@ -339,7 +339,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
       currentGene <- nextgenes[[k]]
       subres <- temp_res[[k]]
       if (length(subres) > 0) {
-        cond1 <- sapply(subres, function(entry) !is.null(entry))
+        cond1 <- vapply(subres, function(entry) !is.null(entry), logical(1))
         subres <- (subres[cond1][unlist(lapply(subres[cond1], length) != 0)])
         if (!is.null(subres)) {
           if (length(subres) > 0) {
@@ -384,7 +384,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
     res <- doNonParallelWork(internalloop, genes, mainParameters)
   }
   
-  cond1 <- sapply(res, function(entry) !is.null(entry))
+  cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
   res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
   
   
@@ -437,7 +437,7 @@ mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
     filteredres[[target]] <- res[[target]][!res[[target]] %in% unique(finalFilteredlist[[i]])]
   }
   
-  cond1 <- sapply(filteredres, function(entry) !is.null(entry))
+  cond1 <- vapply(filteredres, function(entry) !is.null(entry), logical(1))
   filteredres <- (filteredres[cond1][unlist(lapply(filteredres[cond1], length) != 0)])
   
   filteredres <- lapply(filteredres, function(entry) {
@@ -457,13 +457,13 @@ mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
       }
     }
     
-    cond1 <- sapply(activators, function(entry) !is.null(entry))
+    cond1 <- vapply(activators, function(entry) !is.null(entry), logical(1))
     if (length(cond1) > 0) {
       filteredActivators <- lapply(activators[cond1], length)
       activators <- (activators[cond1][unlist(filteredActivators != 0)])
     }
     
-    cond1 <- sapply(inhibitors, function(entry) !is.null(entry))
+    cond1 <- vapply(inhibitors, function(entry) !is.null(entry), logical(1))
     if (length(cond1) > 0) {
       filteredInhibits <- lapply(inhibitors[cond1], length)
       inhibitors <- (inhibitors[cond1][unlist(filteredInhibits != 0)])

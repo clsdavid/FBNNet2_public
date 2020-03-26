@@ -118,7 +118,7 @@ reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchrono
   # doNonParallelWork
   if (!is.null(reconstructed) & length(reconstructed) > 0) {
     # remove null entry
-    cond1 <- sapply(reconstructed, function(entry) !is.null(entry))
+    cond1 <- vapply(reconstructed, function(entry) !is.null(entry), logical(1))
     reconstructed <- (reconstructed[cond1][unlist(lapply(reconstructed[cond1], length) != 0)])
     class(reconstructed) <- c("FBNTimeSeries")
   }
@@ -204,10 +204,10 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
       decay <- 1L
     if (length(genefunctions) > 0) {
       # find all activators' probabilities
-      condOfActivation <- sapply(genefunctions, function(activator) as.numeric(activator$type) == 1L)
+      condOfActivation <- vapply(genefunctions, function(activator) as.numeric(activator$type) == 1L, logical(1))
       funcOfActivators <- genefunctions[condOfActivation]
       # find all inhibitors' probabilities
-      condOfInhibitors <- sapply(genefunctions, function(inhibitor) as.numeric(inhibitor$type) == 0L)
+      condOfInhibitors <- vapply(genefunctions, function(inhibitor) as.numeric(inhibitor$type) == 0L, logical(1))
       funcOfInhibitors <- genefunctions[condOfInhibitors]
     } else {
       funcOfActivators <- list()

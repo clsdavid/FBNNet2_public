@@ -519,10 +519,10 @@ convertMinedResultToFBNNetwork <- function(minerresult, genes) {
     names(res)[[2]] <- "interactions"
     res$interactions <- list()
     
-    res[[3]] <- sapply(genes, function(gene) -1)
+    res[[3]] <- vapply(genes, function(gene) -1, numeric(1))
     names(res)[[3]] <- "fixed"
     
-    res[[4]] <- sapply(genes, function(gene) 1)
+    res[[4]] <- vapply(genes, function(gene) 1, numeric(1))
     names(res)[[4]] <- "timedecay"
     
     # lapply(network$interactions,function(interaction){

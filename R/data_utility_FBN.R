@@ -122,7 +122,7 @@ dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements = 20, 
     for (m in seq_len(maxK - 1)) {
       for (i in seq_along(combined_groups)) {
         group <- combined_groups[[i]]
-        conds <- sapply(sub_genes, function(sub) !all(sub %in% group))
+        conds <- vapply(sub_genes, function(sub) !all(sub %in% group), logical(1))
         filered <- sub_genes[conds]
         for (j in seq_along(filered)) {
           newset <- unique(c(group, filered[[j]]))
@@ -268,11 +268,11 @@ generateSimilaryReport <- function(timeseriesdata1, timeseriesdata2) {
   # validate network types
   similar <- checkSimilarity(timeseriesdata1, timeseriesdata2)
   
-  cond1 <- sapply(similar, function(entry) entry[[1]] == "similar")
-  cond2 <- sapply(similar, function(entry) entry[[1]] == "likely")
-  cond3 <- sapply(similar, function(entry) entry[[1]] == "verysimilar")
-  cond4 <- sapply(similar, function(entry) entry[[1]] == "unlikely")
-  cond5 <- sapply(similar, function(entry) entry[[1]] == "veryunlikely")
+  cond1 <- vapply(similar, function(entry) entry[[1]] == "similar", logical(1))
+  cond2 <- vapply(similar, function(entry) entry[[1]] == "likely", logical(1))
+  cond3 <- vapply(similar, function(entry) entry[[1]] == "verysimilar", logical(1))
+  cond4 <- vapply(similar, function(entry) entry[[1]] == "unlikely", logical(1))
+  cond5 <- vapply(similar, function(entry) entry[[1]] == "veryunlikely", logical(1))
   
   res <- list()
   res[[1]] <- similar
@@ -292,8 +292,8 @@ generateSimilaryReport <- function(timeseriesdata1, timeseriesdata2) {
   names(res)[[6]] <- "veryunlikely"
   
   # benchmark result
-  pmcond <- sapply(similar, function(entry) as.numeric(entry[[2]]) == 1)
-  mmcond <- sapply(similar, function(entry) as.numeric(entry[[2]]) < 1)
+  pmcond <- vapply(similar, function(entry) as.numeric(entry[[2]]) == 1, logical(1))
+  mmcond <- vapply(similar, function(entry) as.numeric(entry[[2]]) < 1, logical(1))
   
   pm <- similar[pmcond]
   mm <- similar[mmcond]

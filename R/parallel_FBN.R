@@ -23,7 +23,7 @@ doParallelWork <- function(parallelFuc, listitems, ...) {
   parallel::stopCluster(cl)
   res <- unlist(res, recursive = FALSE)
   # closeAllConnections()
-  cond1 <- sapply(res, function(entry) !is.null(entry))
+  cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
   res[cond1][unlist(lapply(res[cond1], length) != 0)]
   # on.exit(.C('freeAllMemory', PACKAGE = 'FBNNet'))
   res
@@ -50,7 +50,7 @@ doNonParallelWork <- function(parallelFuc, listitems, ...) {
   len <- length(listitems)
   res <- lapply(seq_len(len), parallelFuc, listitems, ...)
   res <- unlist(res, recursive = FALSE)
-  cond1 <- sapply(res, function(entry) !is.null(entry))
+  cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
   # remove the unwant outer list
   res[cond1][unlist(lapply(res[cond1], length) != 0)]
   res
@@ -87,7 +87,7 @@ doNonParallelWorkDecrease <- function(parallelFuc, listitems, unprocessedListite
   
   res <- unlist(res, recursive = FALSE)
   
-  cond1 <- sapply(res, function(entry) !is.null(entry))
+  cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
   # remove the unwant outer list
   res[cond1][unlist(lapply(res[cond1], length) != 0)]
 }

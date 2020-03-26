@@ -90,7 +90,7 @@ constructFBNCube <- function(target_genes, conditional_genes, timeseriesCube, ma
   }
   
   if (!is.null(res) && length(res) > 0) {
-    cond1 <- sapply(res, function(entry) !is.null(entry))
+    cond1 <- vapply(res, function(entry) !is.null(entry), logical(1))
     res <- (res[cond1][unlist(lapply(res[cond1], length) != 0)])
     class(res) <- c("FBNCube")
   }

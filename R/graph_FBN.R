@@ -318,10 +318,10 @@ ConvertToDynamicNetworkGraphicObject <- function(timeseries, FBNnetwork, network
         decay <- FBNnetwork$timedecay[[gene]]
         genefunctions <- interactions[[gene]]
         # find all activators' probabilities
-        condOfActivation <- sapply(genefunctions, function(activator) activator$type == 1L)
+        condOfActivation <- vapply(genefunctions, function(activator) activator$type == 1L, logical(1))
         funcOfActivators <- genefunctions[condOfActivation]
         # find all inhibitors' probabilities
-        condOfInhibitors <- sapply(genefunctions, function(inhibitor) inhibitor$type == 0L)
+        condOfInhibitors <- vapply(genefunctions, function(inhibitor) inhibitor$type == 0L, logical(1))
         funcOfInhibitors <- genefunctions[condOfInhibitors]
         
         prFA <- FALSE

@@ -59,15 +59,15 @@ loadFBNNetwork <- function(file, bodySeparator = ",", lowercaseGenes = FALSE) {
     return(res)
   }))
   
-  targets <- sapply(tmp, function(rule) trimws(rule[1]))
+  targets <- vapply(tmp, function(rule) trimws(rule[1]), character(1))
   for (target in targets) {
     if (regexec("^[a-zA-Z_][a-zA-Z0-9_]*$", target)[[1]] == -1) 
       stop(paste("Invalid gene name:", target))
   }
   
-  factors <- sapply(tmp, function(rule) trimws(rule[2]))
+  factors <- vapply(tmp, function(rule) trimws(rule[2]), character(1))
   
-  types <- sapply(tmp, function(rule) as.numeric(rule[3]))
+  types <- vapply(tmp, function(rule) as.numeric(rule[3]), numeric(1))
   
   factors.tmp <- lapply(factors, matchNames)
   
@@ -716,7 +716,7 @@ findAllForwardRelatedGenes <- function(networks, target_gene, regulationType = N
   
   prepare_network <- filterNetworkConnections(prepare_network)
   if (maxDeep > 1 && length(prepare_network$interactions) > 0) {
-    cond1 <- sapply(prepare_network$interactions, function(interaction) length(interaction) > 0)
+    cond1 <- vapply(prepare_network$interactions, function(interaction) length(interaction) > 0, logical(1))
     filteredNetworkInteractions <- prepare_network$interactions[cond1]
     # expand_genes <- names(filteredNetworkInteractions) expand_genes <- prepare_network$genes[!prepare_network$genes%in%target_gene]
     expand_genes <- findAllTargetGenes(filteredNetworkInteractions)
