@@ -20,7 +20,7 @@ A method to draw attractors in the form of dynamic Network
 }
 \examples{
 require(BoolNet)
-data("ExampleNetwork")
+data('ExampleNetwork')
 initialStates<-generateAllCombinationBinary(ExampleNetwork$genes)
 trainingseries<-genereateBoolNetTimeseries(ExampleNetwork,
                                            initialStates,

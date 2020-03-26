@@ -1,14 +1,14 @@
-#~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
+# ~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
 #' Generate Fundamental Boolean Model type of Network
 #'
 #' This is the main entry of the package FBNNet that can be used to mine the
 #'  gene regulatory network.
 #' 
 #' @param timeseries_data A list of timeseries data of samples.
-#' @param method an optonal parameter to discrete the data in the range of
-#'  ('average', 'kmeans', 'edgeDetector', 'scanStatistic'). 
-#'  The system applies the function provided by the BoolNet package to convert
-#'   the data from numeric continually value to boolean value.
+#' @param method Specify a method to discrete the data in the range of
+#'  ('kmeans', 'edgeDetector', 'scanStatistic') for the function 
+#'  \code{BoolNet::binarizeTimeSeries} to convert the data from numeric value
+#'   to boolean value.
 #' @param maxK The maximum deep of the Orchard Cube can mine into.
 #' @param useParallel optional, by default it is TRUE to run the network
 #'  inference algorithm in parallel. FALSE without parallel
@@ -48,143 +48,58 @@
 #' network <- generateFBMNetwork(yeastTimeSeries)
 #' network
 #' @export
-generateFBMNetwork <- function(timeseries_data,
-                               method = "kmeans",
-                               maxK = 4, 
-                               useParallel = FALSE,
-                               parallel_on_group = FALSE, 
-                               max_deep_temporal = 7,
-                               threshold_confidence = 1,
-                               threshold_error = 0,
-                               threshold_support = 1e-05,
-                               maxFBNRules = 5,
-                               maxGenesForSingleCube = 20, 
-                               runtype = 0,
-                               network_only = TRUE) {
-    if (is.matrix(timeseries_data)) {
-         timeseries_data <- list(timeseries_data)
-    }
-    
-    CheckRightTypeTimeseriesData(timeseries_data)
-    checkProbabilityTypeData(threshold_confidence)
-    checkProbabilityTypeData(threshold_error)
-    checkProbabilityTypeData(threshold_support)
-    checkNumeric(maxFBNRules)
+generateFBMNetwork <- function(
+  timeseries_data, 
+  method = c("kmeans", "edgeDetector", "scanStatistic"), 
+  maxK = 4, 
+  useParallel = FALSE, 
+  parallel_on_group = FALSE, 
+  max_deep_temporal = 7, 
+  threshold_confidence = 1, 
+  threshold_error = 0, 
+  threshold_support = 1e-05,
+  maxFBNRules = 5, 
+  maxGenesForSingleCube = 20, 
+  runtype = 0, 
+  network_only = TRUE) {
+  if (is.matrix(timeseries_data)) {
+    timeseries_data <- list(timeseries_data)
+  }
   
-    futile.logger::flog.info(sprintf("Enter generateFBMNetwork zone: method=%s,
-                                      maxK=%s, 
-                                      useParallel=%s, 
-                                      parallel_on_group=%s,
-                                      max_deep_temporal=%s,
-                                      threshold_confidence=%s,
-                                      threshold_error=%s,
-                                      threshold_support=%s,
-                                      maxFBNRules=%s,
-                                      maxGenesForSingleCube=%s", 
-                                      method,
-                                     maxK,
-                                     useParallel,
-                                     parallel_on_group,
-                                     max_deep_temporal,
-                                     threshold_confidence,
-                                     threshold_error,
-                                     threshold_support, 
-                                     maxFBNRules,
-                                     maxGenesForSingleCube))
-    raw_timeseries_data <- timeseries_data
-    if (!isBooleanTypeTimeseriesData(timeseries_data)) {
-        if (method == "average") {
-            timeseries_data <- discreteTimeSeries(timeseries_data,
-                                                  method = "average")
-        } else {
-            timeseries_data <- BoolNet::binarizeTimeSeries(
-                timeseries_data,
-                method = method)$binarizedMeasurements
-        }
-    }
-    genes <- rownames(timeseries_data[[1]])
-    if (runtype == 0) {
-        futile.logger::flog.info(
-            sprintf("Run generateFBMNetwork with a single cube"))
-        cube <- constructFBNCube(genes,
-                                 genes,
-                                 timeseries_data,
-                                 maxK = maxK,
-                                 temporal = max_deep_temporal,
-                                 useParallel = useParallel)
-        network <- mineFBNNetwork(cube,
-                                  maxFBNRules = maxFBNRules,
-                                  useParallel = useParallel)
-        return(network)
-    }
-    
-    if (runtype == 1) {
-        futile.logger::flog.info(
-            sprintf("Run generateFBMNetwork with cimbined clustering"))
-        cube_cluster <- clusterdDiscreteData(raw_timeseries_data,
-                                             timeseries_data,
-                                             minElements = 2,
-                                             maxElements = maxGenesForSingleCube)
-        this_cube_cluster <- constructFBNCubeAndNetworkInClusters(
-            cube_cluster, 
-            maxK = maxK,
-            temporal = max_deep_temporal, 
-            useParallel = useParallel,
-            parallel_on_group = parallel_on_group,
-            output_cube = FALSE)
-    } else if (runtype == 2) {
-        futile.logger::flog.info(
-            sprintf("Run generateFBMNetwork with combined sub groups"))
-        cube_cluster <- dividedDataIntoSubgroups(
-            timeseries_data,
-            maxGenesForSingleCube, 
-            maxK = maxK)
-        this_cube_cluster <- constructFBNCubeAndNetworkInClusters(
-            cube_cluster,
-            maxK = maxK,
-            temporal = max_deep_temporal, 
-            useParallel = useParallel,
-            parallel_on_group = parallel_on_group,
-            output_cube = FALSE)
-    } else if (runtype == 3) {
-        futile.logger::flog.info(sprintf(
-            "Run generateFBMNetwork with small target gene groups"))
-        cube_cluster <- dividedDataIntoSmallgroups(
-            timeseries_data,
-            maxGenesForSingleCube,
-            maxK = maxK)
-        this_cube_cluster <- constructFBNCubeAndNetworkInSmallGroups(
-            cube_cluster,
-            maxK = maxK,
-            temporal = max_deep_temporal, 
-            useParallel = useParallel,
-            parallel_on_group = parallel_on_group,
-            output_cube = FALSE)
-    } else {
-        stop("The runtype is not supported")
-    }
-    
-    
-    # merge all networks? seperate by clusters?
-    network <- mergeClusterNetworks(
-        clusteredFBNCube = this_cube_cluster,
-        threshold_error = threshold_error, 
-        maxFBNRules = maxFBNRules)
-    futile.logger::flog.info(sprintf("Leave generateFBMNetwork"))
-    final_network <- filterNetworkConnections(network)
-    sink(file = "temp/final_network.txt", type = "output")
-    final_network
-    sink()
+  CheckRightTypeTimeseriesData(timeseries_data)
+  checkProbabilityTypeData(threshold_confidence)
+  checkProbabilityTypeData(threshold_error)
+  checkProbabilityTypeData(threshold_support)
+  checkNumeric(maxFBNRules)
+  
+  futile.logger::flog.info(sprintf("Enter generateFBMNetwork zone: method=%s,
+          maxK=%s, 
+          useParallel=%s, 
+          parallel_on_group=%s,
+          max_deep_temporal=%s,
+          threshold_confidence=%s,
+          threshold_error=%s,
+          threshold_support=%s,
+          maxFBNRules=%s,
+          maxGenesForSingleCube=%s", 
+    method, 
+    maxK, 
+    useParallel, 
+    parallel_on_group, 
+    max_deep_temporal, 
+    threshold_confidence, 
+    threshold_error, 
+    threshold_support, 
+    maxFBNRules, 
+    maxGenesForSingleCube))
+  if (!isBooleanTypeTimeseriesData(timeseries_data)) {
+    timeseries_data <- BoolNet::binarizeTimeSeries(timeseries_data, method = method)$binarizedMeasurements
+  }
+  genes <- rownames(timeseries_data[[1]])
 
-    utils::data("DAVID_gene_list", overwrite = TRUE)
-    mapped_genes <- with(DAVID_gene_list, {
-        DAVID_gene_list[DAVID_gene_list$Symbol %in% final_network$genes, ]
-    })
-    distic_mapped_genes <- with(mapped_genes, {
-        dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)})
-    utils::write.csv(distic_mapped_genes,
-              file = "temp/annotated_differencial_genes.csv")
-    final_network
+  futile.logger::flog.info(sprintf("Run generateFBMNetwork with a single cube"))
+  cube <- constructFBNCube(genes, genes, timeseries_data, maxK = maxK, temporal = max_deep_temporal, useParallel = useParallel)
+  mineFBNNetwork(cube, maxFBNRules = maxFBNRules, useParallel = useParallel)
 }
 
 #' A method to convert a vector of gene names to annotated gene details
@@ -193,12 +108,13 @@ generateFBMNetwork <- function(timeseries_data,
 #' @param  filename The name of the output file such as xx.csv
 #' @export
 output_annotated_genes <- function(genes, filename) {
-    ## DAVID_gene_list <- NULL
-    utils::data("DAVID_gene_list", overwrite = TRUE)
-    mapped_genes <- with(DAVID_gene_list, {
-        DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]})
-    distic_mapped_genes <- with(mapped_genes, {
-        dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)})
-    utils::write.csv(distic_mapped_genes,
-              file = paste0("temp/", filename))
+  ## DAVID_gene_list <- NULL
+  utils::data("DAVID_gene_list", overwrite = TRUE)
+  mapped_genes <- with(DAVID_gene_list, {
+    DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]
+  })
+  distic_mapped_genes <- with(mapped_genes, {
+    dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)
+  })
+  utils::write.csv(distic_mapped_genes, file = paste0("temp/", filename))
 }

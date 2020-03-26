@@ -160,10 +160,10 @@ describe("run synchronous should succeed", {
     it("getProbabilityFromFunctionInput should succeed", {
         fns <- test_info$network$interactions[[test_info$network$genes[[1]]]]
         # find all activators' probabilities
-        condOfActivation <- sapply(fns, function(activator) activator$type == 1L)
+        condOfActivation <- vapply(fns, function(activator) activator$type == 1L, logical(1))
         funcOfActivators <- fns[condOfActivation]
         # find all inhibitors' probabilities
-        condOfInhibitors <- sapply(fns, function(inhibitor) inhibitor$type == 0L)
+        condOfInhibitors <- vapply(fns, function(inhibitor) inhibitor$type == 0L, logical(1))
         funcOfInhibitors <- fns[condOfInhibitors]
         pregeneInput <- dissolve(lapply(funcOfActivators[[1]]$input,
                                         function(geneindex) {

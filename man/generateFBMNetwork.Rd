@@ -6,7 +6,7 @@
 \usage{
 generateFBMNetwork(
   timeseries_data,
-  method = "kmeans",
+  method = c("kmeans", "edgeDetector", "scanStatistic"),
   maxK = 4,
   useParallel = FALSE,
   parallel_on_group = FALSE,
@@ -23,10 +23,10 @@ generateFBMNetwork(
 \arguments{
 \item{timeseries_data}{A list of timeseries data of samples.}
 
-\item{method}{an optonal parameter to discrete the data in the range of
-('average', 'kmeans', 'edgeDetector', 'scanStatistic'). 
-The system applies the function provided by the BoolNet package to convert
- the data from numeric continually value to boolean value.}
+\item{method}{Specify a method to discrete the data in the range of
+('kmeans', 'edgeDetector', 'scanStatistic') for the function 
+\code{BoolNet::binarizeTimeSeries} to convert the data from numeric value
+ to boolean value.}
 
 \item{maxK}{The maximum deep of the Orchard Cube can mine into.}
 

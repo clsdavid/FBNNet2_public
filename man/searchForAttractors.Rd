@@ -40,7 +40,7 @@ A function to find all possible FBM (Fundamental Boolean models) attractors
 }
 \examples{
 require(BoolNet)
-data("ExampleNetwork")
+data('ExampleNetwork')
 initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
 trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
                                            initialStates,
