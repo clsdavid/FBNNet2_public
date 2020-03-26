@@ -1,3 +1,5 @@
+S3method(print, "FBMAttractors")
+S3method(print, "FundamentalBooleanNetwork")
 useDynLib(FBNNet, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
