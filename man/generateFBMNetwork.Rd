@@ -67,6 +67,9 @@ This is the main entry of the package FBNNet that can be used to mine the
 data('yeastTimeSeries')
 network <- generateFBMNetwork(yeastTimeSeries)
 network
+## draw the general graph
+FBNNetwork.Graph(network)
+
 network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
 network
 network <- generateFBMNetwork(yeastTimeSeries,

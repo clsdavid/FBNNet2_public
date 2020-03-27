@@ -1,104 +1,24 @@
 
-#' get Statistic Measures
-#' 
-#' A method to calculate the statistic measurements based on feature names
-#'
-#' @param featurenames a list of feature names, i.e., the gene name
-#' @param timeseriesdata the original timeseries data that contains continual values
-#' @return statstic measures
-#' 
-getStatisticMeasures <- function(featurenames, timeseriesdata) {
-  
-  # generate data
-  
-  res <- lapply(featurenames, function(feature) {
-    sampledata <- unlist(lapply(timeseriesdata, function(sample) sample[feature, ]))
-    std_sampledata <- stats::sd(sampledata)  #standard deviation
-    mean_sampledata <- mean(sampledata)
-    length_sampledata <- length(sampledata)
-    sem_sampledata <- std_sampledata/sqrt(length(sampledata))  #Standard error of the mean
-    max_sampledata <- max(sampledata)
-    min_sampledata <- min(sampledata)
-    median_sampledata <- stats::median(sampledata)
-    
-    result <- c(id = feature, std = std_sampledata, mean = mean_sampledata, length = length_sampledata, sem = sem_sampledata, max = max_sampledata, 
-      min = min_sampledata, median = median_sampledata)
-    return(result)
-  })
-  
-  measures <- do.call(rbind, res)
-  rownames(measures) <- measures[, 1]
-  measures <- measures[order(rownames(measures)), ]
-  measures
-}
-
-#' This method is used to converts normalized
-#' timeseries data into a list of samples
-#' @param normalizedData An output of the method 
-#' normalizeTimesereisRawData that normalized timeseries data
-#' @param func A function that specified how to split the column names
-#' @param splitor Seperator.
-#'
-#'@export
-convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste(x[1], x[2], x[3], sep = "-"), splitor = as.character("-")) {
-  
-  mat <- normalizedData
-  # Obtain the last part of each column names
-  groups <- sapply(strsplit(x = colnames(mat), split = splitor), func)
-  print(groups)
-  # Go through each unique column name and extract the corresponding columns
-  res <- lapply(unique(groups), function(x) mat[, which(groups == x)])
-  names(res) <- unique(groups)
-  
-  # need to convert column name into numbers str_extract_all(names(df), '[0-9]+')
-  res
-}
-
-#'This method is used to sort time series order based on columns
-#'@param convertedTimeSeries An output of the method 
-#'convertIntoSampleTimeSeries that converts normalized timeseries data
-#' into a list of samples
-#'@param func A function that specified how to split the column names
-#'@param splitor Separator.
-#'@export
-reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[length(x)], splitor = as.character("-")) {
-  len <- length(convertedTimeSeries)
-  res <- lapply(seq_len(len), function(index) {
-    result <- convertedTimeSeries[[index]]
-    ocolnames <- colnames(result)
-    ocolnames <- gsub("\\..*", "", ocolnames)
-    ocolnames <- sapply(strsplit(x = ocolnames, split = splitor), func)
-    ocolnames <- as.integer(stringr::str_extract_all(ocolnames, "[0-9]+"))
-    colnames(result) <- ocolnames
-    result2 <- result[, order(as.numeric(colnames(result)))]
-    result2 <- result2[order(rownames(result2)), ]
-    return(result2)
-  })
-  names(res) <- names(convertedTimeSeries)
-  res
-}
-
-
 #' An internal function that divides large data into small groups.
-#' @param discretedTimeSeriesdata discreted timeseries data
+#' @param vector A vector that need to be splited
 #' @param maxElements the max elements to divide the discreted timeseries data into
-#' @param maxK The max levels.
 #' @return A list of data
 #' @export
-dividedDataIntoSmallgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
-  futile.logger::flog.info(sprintf("Enter dividedDataIntoSmallgroups zone: maxElements=%s", maxElements))
-  genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
+dividedVectorIntoSmallgroups <- function(vector, maxElements = 20) {
+  if (!is.vector(vector)) {
+    stop("The parameter 'vector' must be a vector")
+  }
+  futile.logger::flog.info(sprintf("Enter dividedVectorIntoSmallgroups zone: maxElements=%s", maxElements))
+
+  len_vector <- length(vector)
+  n_subgroup <- ceiling(len_vector/maxElements)
   
-  len_genes <- length(genes)
-  n_subgroup <- ceiling(len_genes/maxElements)
+  sub_vector <- split(vector, rep(1:n_subgroup, each = maxElements)[1:len_vector])
   
-  sub_genes <- split(genes, rep(1:n_subgroup, each = maxElements)[1:len_genes])
+  futile.logger::flog.info(sprintf("(dividedVectorIntoSmallgroups) generates: %sgroups", 
+                                   length(sub_vector)))
   
-  futile.logger::flog.info(sprintf("(dividedDataIntoSmallgroups) generates: %sgroups", length(sub_genes)))
-  
-  res <- list(clusters = sub_genes, discretedTimeSeriesdata = discretedTimeSeriesdata, conditional_genes = genes)
-  class(res) <- "ClusteredTimeseriesData"
-  res
+  list(clusters = sub_vector, original = vector)
 }
 
 #'A methiod to reduce the timeseries data based on the gene list
@@ -110,10 +30,14 @@ getRelatedGeneTimeseries <- function(timeseries, genelist = c()) {
   lapply(timeseries, function(sheet) sheet[rownames(sheet) %in% genelist, ])
 }
 
-#'generate all combaination binary data based on an vector of genes
-#'@param genelist An vector of genes
-#'@param begin return begin index
-#'@param last  return last index
+#' generate all combaination binary data based on an vector of genes
+#' @param genelist An vector of genes
+#' @param begin The begin index
+#' @param last  The last index, the default is 0 means 2^length(genelist)
+#' @examples
+#' individualgenes<-c('a','b','c')
+#' testdata2 <- generateAllCombinationBinary(individualgenes)
+#' testdata2
 #'@export
 generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
   if (length(genelist) == 0) {
@@ -140,7 +64,8 @@ generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
 #'@param maxState that should be less tha 2^length(genelist)
 #'@examples
 #'individualgenes<-c('a','b','c')
-#'testdata2<-randomGenerateBinary(individualgenes,maxState = 4)
+#'testdata2 <- randomGenerateBinary(individualgenes,maxState = 4)
+#'testdata2
 #' @export
 randomGenerateBinary <- function(genelist = c(), maxState = 0) {
   if (length(genelist) == 0) {
@@ -166,7 +91,8 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
   result
 }
 
-#'A method to generate BoolNet type of timeseries data
+#'A method to generate BoolNet type of timeseries data for generating BoolNet type of 
+#'testing timeseries data
 #'
 #' @param network A traditional Boolea type of network that can be used for BoolNet
 #' @param initialStates A list of initial states
@@ -175,8 +101,11 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
 #' @param geneProbabilities optional if type is probabilistic, and then 
 #' it is a need to specify the probabilities for each gene
 #' @export
-genereateBoolNetTimeseries <- function(network, initialStates, numMeasurements, type = c("synchronous", "asynchronous", "probabilistic"), geneProbabilities = NULL) {
-  # initialStates<-initialStates[match(network$genes,rownames(initialStates)),]
+genereateBoolNetTimeseries <- function(network, 
+                                       initialStates, 
+                                       numMeasurements, 
+                                       type = c("synchronous", "asynchronous", "probabilistic"), 
+                                       geneProbabilities = NULL) {
   lapply(initialStates, function(state) {
     res <- state
     startState <- state

@@ -2,7 +2,8 @@
 % Please edit documentation in R/data_utility_FBN.R
 \name{genereateBoolNetTimeseries}
 \alias{genereateBoolNetTimeseries}
-\title{A method to generate BoolNet type of timeseries data}
+\title{A method to generate BoolNet type of timeseries data for generating BoolNet type of 
+testing timeseries data}
 \usage{
 genereateBoolNetTimeseries(
   network,
@@ -25,5 +26,6 @@ genereateBoolNetTimeseries(
 it is a need to specify the probabilities for each gene}
 }
 \description{
-A method to generate BoolNet type of timeseries data
+A method to generate BoolNet type of timeseries data for generating BoolNet type of 
+testing timeseries data
 }

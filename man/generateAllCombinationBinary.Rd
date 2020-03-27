@@ -9,10 +9,15 @@ generateAllCombinationBinary(genelist = c(), begin = 1, last = 0)
 \arguments{
 \item{genelist}{An vector of genes}
 
-\item{begin}{return begin index}
+\item{begin}{The begin index}
 
-\item{last}{return last index}
+\item{last}{The last index, the default is 0 means 2^length(genelist)}
 }
 \description{
 generate all combaination binary data based on an vector of genes
+}
+\examples{
+individualgenes<-c('a','b','c')
+testdata2 <- generateAllCombinationBinary(individualgenes)
+testdata2
 }

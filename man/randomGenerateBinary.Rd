@@ -16,5 +16,6 @@ A method to generate binary data randomly
 }
 \examples{
 individualgenes<-c('a','b','c')
-testdata2<-randomGenerateBinary(individualgenes,maxState = 4)
+testdata2 <- randomGenerateBinary(individualgenes,maxState = 4)
+testdata2
 }

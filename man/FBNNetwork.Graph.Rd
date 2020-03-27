@@ -34,5 +34,9 @@ No return
 Executing a list of processes in parallel with decreasing list
 }
 \examples{
-##coming later
+data('yeastTimeSeries')
+network <- generateFBMNetwork(yeastTimeSeries)
+network
+## draw the general graph
+FBNNetwork.Graph(network)
 }

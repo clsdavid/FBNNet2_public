@@ -29,8 +29,10 @@
 #'                        maxK = 4,
 #'                        temporal = 1,
 #'                        useParallel = FALSE)
-#' NETWORK <- mineFBNNetwork(cube,ExampleNetwork$genes)
-#' NETWORK
+#' network <- mineFBNNetwork(cube,ExampleNetwork$genes)
+#' network
+#' ## draw the general graph
+#' FBNNetwork.Graph(network)
 #' @export
 constructFBNCube <- function(target_genes, 
                              conditional_genes, 

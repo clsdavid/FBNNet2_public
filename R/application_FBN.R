@@ -42,6 +42,9 @@
 #' data('yeastTimeSeries')
 #' network <- generateFBMNetwork(yeastTimeSeries)
 #' network
+#' ## draw the general graph
+#' FBNNetwork.Graph(network)
+#' 
 #' network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
 #' network
 #' network <- generateFBMNetwork(yeastTimeSeries,
