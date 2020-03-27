@@ -83,8 +83,7 @@ describe("test with the sub cube", {
         NETWORK2 <- generateFBMNetwork(timeseries_data = trainingseries, 
                                                   maxK = 4, 
                                                   max_deep_temporal = 1, 
-                                                  useParallel = FALSE,
-                                                  maxGenesForSingleCube = 1)
+                                                  useParallel = FALSE)
         
         print(NETWORK2)
         expect_error(FBNNetwork.Graph(NETWORK2), NA)

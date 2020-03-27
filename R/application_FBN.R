@@ -1,4 +1,3 @@
-# ~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
 #' Generate Fundamental Boolean Model type of Network
 #'
 #' This is the main entry of the package FBNNet that can be used to mine the
@@ -12,8 +11,6 @@
 #' @param maxK The maximum deep of the Orchard Cube can mine into.
 #' @param useParallel optional, by default it is TRUE to run the network
 #'  inference algorithm in parallel. FALSE without parallel
-#' @param parallel_on_group optional, if TRUE will run the parallel on the
-#'  sub gene groups, otherwise on the genes level
 #' @param max_deep_temporal, a setting for Temporal Fundamental Boolean model
 #'  that specifies the maximum temporal space
 #' @param threshold_confidence A threshod of confidence (between 0 and 1) 
@@ -24,13 +21,12 @@
 #'  to filter the Fundamental Boolean functions
 #' @param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #'  per gene can be mined, the rest will be discarded
-#' @param maxGenesForSingleCube The maximum number of genes for a single
-#'  cube. If there are more than the maximum value, the system will 
-#' @param runtype The type of return object.
 #' @param network_only optional for Debug purpose, if TRUE, only output the
 #'  networks only, otherwise, output the Orchard cube as well. Warning, 
 #' turn off this may cause memory leaking if the number of nodes is too large.
 #'  divide them into subgroups.
+#' @param verbose Optional, if it is TRUE, then output the logger information to
+#' the console.
 #' @return An object of a list contains Fundamental Boolean Network, Orchard
 #'  cube (optional) and discreted timeseries data
 #' @author Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com
@@ -47,21 +43,33 @@
 #' data('yeastTimeSeries')
 #' network <- generateFBMNetwork(yeastTimeSeries)
 #' network
+#' network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
+#' network
+#' network <- generateFBMNetwork(yeastTimeSeries,
+#'                               method = "kmeans")
+#' network
+#' network <- generateFBMNetwork(yeastTimeSeries,
+#'                               method = "edgeDetector")
+#' network
+#' network <- generateFBMNetwork(yeastTimeSeries,
+#'                               method = "scanStatistic")
+#' network
+#' 
+#' res <- generateFBMNetwork(yeastTimeSeries, network_only = FALSE)
+#' res
 #' @export
 generateFBMNetwork <- function(
   timeseries_data, 
   method = c("kmeans", "edgeDetector", "scanStatistic"), 
   maxK = 4, 
   useParallel = FALSE, 
-  parallel_on_group = FALSE, 
-  max_deep_temporal = 7, 
+  max_deep_temporal = 1, 
   threshold_confidence = 1, 
   threshold_error = 0, 
   threshold_support = 1e-05,
   maxFBNRules = 5, 
-  maxGenesForSingleCube = 20, 
-  runtype = 0, 
-  network_only = TRUE) {
+  network_only = TRUE,
+  verbose = FALSE) {
   if (is.matrix(timeseries_data)) {
     timeseries_data <- list(timeseries_data)
   }
@@ -71,50 +79,73 @@ generateFBMNetwork <- function(
   checkProbabilityTypeData(threshold_error)
   checkProbabilityTypeData(threshold_support)
   checkNumeric(maxFBNRules)
+  if (!is.logical(network_only)) {
+    network_only <- TRUE
+  }
+  if (!is.logical(verbose)) {
+    verbose <- TRUE
+  }
+  if (verbose) {
+    # The following code now sets the flog threshold to the log_level defined in the 2nd argument of the function above
+    
+    futile.logger::flog.threshold(9)
+    
+    # This could be changed so that every detail is printed (not only errors and warnings). Do this by setting log_level argument to futile.logger::TRACE for full info.
+    
+    # Now, we create an option of printing and storing results from the checks in somewhere other than the console. Below we are saying
+    # that if the log_appender argument is not set to console (and set to a file name) then R will create a file to store the information and outputs from checks. 
+    
+    # if(log_appender != "console")
+    # {
+    #   futile.logger::flog.appender(futile.logger::appender.file(log_appender))
+    # }
+  } else {
+    futile.logger::flog.threshold(1)
+  }
   
-  futile.logger::flog.info(sprintf("Enter generateFBMNetwork zone: method=%s,
-          maxK=%s, 
-          useParallel=%s, 
-          parallel_on_group=%s,
-          max_deep_temporal=%s,
-          threshold_confidence=%s,
-          threshold_error=%s,
-          threshold_support=%s,
-          maxFBNRules=%s,
-          maxGenesForSingleCube=%s", 
+  futile.logger::flog.info(sprintf("Enter generateFBMNetwork zone: 
+          method=%s,
+          maxK = %s, 
+          useParallel = %s, 
+          max_deep_temporal = %s,
+          threshold_confidence = %s,
+          threshold_error = %s,
+          threshold_support = %s,
+          maxFBNRules = %s,
+          network_only = %s", 
     method, 
     maxK, 
     useParallel, 
-    parallel_on_group, 
     max_deep_temporal, 
     threshold_confidence, 
     threshold_error, 
     threshold_support, 
-    maxFBNRules, 
-    maxGenesForSingleCube))
+    maxFBNRules,
+    network_only))
   if (!isBooleanTypeTimeseriesData(timeseries_data)) {
-    timeseries_data <- BoolNet::binarizeTimeSeries(timeseries_data, method = method)$binarizedMeasurements
+    timeseries_data <- BoolNet::binarizeTimeSeries(timeseries_data, 
+                                                   method = method)$binarizedMeasurements
   }
   genes <- rownames(timeseries_data[[1]])
 
   futile.logger::flog.info(sprintf("Run generateFBMNetwork with a single cube"))
-  cube <- constructFBNCube(genes, genes, timeseries_data, maxK = maxK, temporal = max_deep_temporal, useParallel = useParallel)
-  mineFBNNetwork(cube, maxFBNRules = maxFBNRules, useParallel = useParallel)
+  cube <- constructFBNCube(target_genes = genes,
+                           conditional_genes = genes,
+                           timeseriesCube = timeseries_data,
+                           maxK = maxK,
+                           temporal = max_deep_temporal,
+                           useParallel = useParallel)
+  network <- mineFBNNetwork(fbnGeneCube = cube, 
+                 threshold_confidence  = threshold_confidence,
+                 threshold_error = threshold_error,
+                 threshold_support = threshold_support,
+                 maxFBNRules = maxFBNRules, 
+                 useParallel = useParallel)
+  
+  if (network_only) {
+    network
+  } else {
+    list(cube = cube, network = network)
+  }
 }
 
-#' A method to convert a vector of gene names to annotated gene details
-#' 
-#' @param genes A vector of genes
-#' @param  filename The name of the output file such as xx.csv
-#' @export
-output_annotated_genes <- function(genes, filename) {
-  ## DAVID_gene_list <- NULL
-  utils::data("DAVID_gene_list", overwrite = TRUE)
-  mapped_genes <- with(DAVID_gene_list, {
-    DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]
-  })
-  distic_mapped_genes <- with(mapped_genes, {
-    dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)
-  })
-  utils::write.csv(distic_mapped_genes, file = paste0("temp/", filename))
-}

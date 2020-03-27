@@ -9,15 +9,13 @@ generateFBMNetwork(
   method = c("kmeans", "edgeDetector", "scanStatistic"),
   maxK = 4,
   useParallel = FALSE,
-  parallel_on_group = FALSE,
-  max_deep_temporal = 7,
+  max_deep_temporal = 1,
   threshold_confidence = 1,
   threshold_error = 0,
   threshold_support = 1e-05,
   maxFBNRules = 5,
-  maxGenesForSingleCube = 20,
-  runtype = 0,
-  network_only = TRUE
+  network_only = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -32,9 +30,6 @@ generateFBMNetwork(
 
 \item{useParallel}{optional, by default it is TRUE to run the network
 inference algorithm in parallel. FALSE without parallel}
-
-\item{parallel_on_group}{optional, if TRUE will run the parallel on the
-sub gene groups, otherwise on the genes level}
 
 \item{max_deep_temporal, }{a setting for Temporal Fundamental Boolean model
 that specifies the maximum temporal space}
@@ -51,15 +46,13 @@ to filter the Fundamental Boolean functions}
 \item{maxFBNRules}{The maximum rules per type (Activation and Inhibition)
 per gene can be mined, the rest will be discarded}
 
-\item{maxGenesForSingleCube}{The maximum number of genes for a single
-cube. If there are more than the maximum value, the system will}
-
-\item{runtype}{The type of return object.}
-
 \item{network_only}{optional for Debug purpose, if TRUE, only output the
  networks only, otherwise, output the Orchard cube as well. Warning, 
 turn off this may cause memory leaking if the number of nodes is too large.
  divide them into subgroups.}
+
+\item{verbose}{Optional, if it is TRUE, then output the logger information to
+the console.}
 }
 \value{
 An object of a list contains Fundamental Boolean Network, Orchard
@@ -75,6 +68,20 @@ library(BoolNet)
 data('yeastTimeSeries')
 network <- generateFBMNetwork(yeastTimeSeries)
 network
+network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
+network
+network <- generateFBMNetwork(yeastTimeSeries,
+                              method = "kmeans")
+network
+network <- generateFBMNetwork(yeastTimeSeries,
+                              method = "edgeDetector")
+network
+network <- generateFBMNetwork(yeastTimeSeries,
+                              method = "scanStatistic")
+network
+
+res <- generateFBMNetwork(yeastTimeSeries, network_only = FALSE)
+res
 }
 \references{
 Chen et al.(2018), Front. Physiol., 25 September 2018, 

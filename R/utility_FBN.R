@@ -145,8 +145,6 @@ similarityBetweenMatrix <- function(timeseries1, timeseries2, index) {
     return((c("verysimilar", correlation, index)))
 }
 
-
-
 #' This function is used to check whether or not the data 
 #' is the right type for \code{FBNNet}.
 #' 
@@ -158,7 +156,7 @@ CheckRightTypeTimeseriesData <- function(timeseries_data) {
   
   check <- vapply(timeseries_data, is.matrix, logical(1))
   if (any(check) == FALSE) 
-    stop("The element of the data must be matrix or data.frame")
+    stop("The element of the data must be a matrix")
   
   NULL
 }
@@ -177,7 +175,7 @@ checkNumeric <- function(x) {
 #' @param x A value that need to be checked.
 #' @return Error or NULL
 checkProbabilityTypeData <- function(x) {
-  if (!is.numeric(x) && (x > 1 || x < 0)) {
+  if (!is.numeric(x) || x > 1 || x < 0) {
     stop("The input is not a type of probability or a value between 0 and 1")
   }
   NULL
@@ -187,14 +185,33 @@ checkProbabilityTypeData <- function(x) {
 #' @param x A value that need to be checked.
 #' @return TRUE or FALSE
 isBooleanTypeTimeseriesData <- function(x) {
-  conds <- vapply(x, function(mat) {
-    f_mat <- factor(mat)
-    if (all(unique(levels(f_mat)) %in% c(0, 1)) || unique(all(levels(f_mat)) %in% c(FALSE, TRUE))) {
-      TRUE
+  conds <- sapply(x, function(mat) {
+    f_mat <- as.numeric(levels(factor(mat)))
+    if (all(f_mat %in% c(0, 1))) {
+      return(TRUE)
     } else {
-      FALSE
+      return(FALSE)
     }
-  }, logical(1))
+  })
   
   all(conds)
+}
+
+#' A method to convert a vector of gene names to annotated gene details
+#' 
+#' @param genes A vector of genes
+#' @param path The file path
+#' @param  filename The name of the output file such as xx.csv
+#' @export
+output_annotated_genes <- function(genes, path, filename) {
+  ## DAVID_gene_list <- NULL
+  utils::data("DAVID_gene_list", overwrite = TRUE)
+  mapped_genes <- with(DAVID_gene_list, {
+    DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]
+  })
+  distic_mapped_genes <- with(mapped_genes, {
+    dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)
+  })
+  utils::write.csv(distic_mapped_genes, 
+                   file = file.path(path, filename))
 }
