@@ -39,7 +39,6 @@ Attractor objects
 A function to find all possible FBM (Fundamental Boolean models) attractors
 }
 \examples{
-require(BoolNet)
 data('ExampleNetwork')
 initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
 trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
@@ -53,11 +52,22 @@ cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
                        temporal = 1,
                        useParallel = FALSE)
 NETWORK2 <- mineFBNNetwork(cube,ExampleNetwork$genes)
+
+## find attractor with type = synchronous
 attractor <- searchForAttractors(NETWORK2,
                                initialStates,
                                ExampleNetwork$genes)
 print(attractor)
-FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
+FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)
+
+## find attractor with type = asynchronous
+attractor <- searchForAttractors(NETWORK2,
+                               initialStates,
+                               type = "asynchronous",
+                               ExampleNetwork$genes)
+print(attractor)
+FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)
+
 }
 \references{
 Chen et al.(2018), Front. Physiol., 25 September 2018, 

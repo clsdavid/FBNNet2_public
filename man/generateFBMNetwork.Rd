@@ -64,7 +64,6 @@ This is the main entry of the package FBNNet that can be used to mine the
 }
 \examples{
  
-library(BoolNet)
 data('yeastTimeSeries')
 network <- generateFBMNetwork(yeastTimeSeries)
 network

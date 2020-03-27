@@ -1,4 +1,3 @@
-# ~~~~~~~~1~~~~~~~~~2~~~~~~~~~3~~~~~~~~~4~~~~~~~~~5~~~~~~~~~6~~~~~~~~~7~~~~~~~~~8
 #'A function to find all possible FBM (Fundamental Boolean models) attractors
 #'
 #'@param fbnNetwork An object of FBNNetwork
@@ -23,7 +22,6 @@
 #'   Boolean networks
 #' 
 #'@examples
-#' require(BoolNet)
 #' data('ExampleNetwork')
 #' initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
 #' trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
@@ -37,13 +35,29 @@
 #'                        temporal = 1,
 #'                        useParallel = FALSE)
 #' NETWORK2 <- mineFBNNetwork(cube,ExampleNetwork$genes)
+#' 
+#' ## find attractor with type = synchronous
 #' attractor <- searchForAttractors(NETWORK2,
 #'                                initialStates,
 #'                                ExampleNetwork$genes)
 #' print(attractor)
-#' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,2)
+#' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)
+#' 
+#' ## find attractor with type = asynchronous
+#' attractor <- searchForAttractors(NETWORK2,
+#'                                initialStates,
+#'                                type = "asynchronous",
+#'                                ExampleNetwork$genes)
+#' print(attractor)
+#' FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)
+#' 
 #' @export
-searchForAttractors <- function(fbnNetwork, startStates = list(), genes, type = c("synchronous", "asynchronous"), genesOn = c(), genesOff = c(), 
+searchForAttractors <- function(fbnNetwork,
+                                startStates = list(), 
+                                genes, 
+                                type = c("synchronous", "asynchronous"), 
+                                genesOn = c(), 
+                                genesOff = c(), 
   maxSearch = 1000) {
   if (!(inherits(fbnNetwork, "FundamentalBooleanNetwork"))) 
     stop("Network must be inherited from FundamentalBooleanNetwork")
@@ -78,7 +92,11 @@ searchForAttractors <- function(fbnNetwork, startStates = list(), genes, type = 
       
       numrow <- length(iniState)
       
-      mat <- matrix(0, nrow = numrow, ncol = maxSearch, byrow = FALSE, dimnames = list(genes, sequence(maxSearch)))
+      mat <- matrix(0, 
+                    nrow = numrow,
+                    ncol = maxSearch,
+                    byrow = FALSE,
+                    dimnames = list(genes, sequence(maxSearch)))
       # get initial state
       mat[, 1] <- iniState
       premat <- mat[, 1]

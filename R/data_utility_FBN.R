@@ -3,7 +3,7 @@
 #' 
 #' A method to calculate the statistic measurements based on feature names
 #'
-#' @param featurenames a list of feature names
+#' @param featurenames a list of feature names, i.e., the gene name
 #' @param timeseriesdata the original timeseries data that contains continual values
 #' @return statstic measures
 #' 
@@ -78,76 +78,6 @@ reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[le
   res
 }
 
-
-#' An function to divide large data into small groups
-#' @param  discretedTimeSeriesdata discreted timeseries data
-#' @param maxElements the max elements to divide the 
-#' discreted timeseries data into
-#' @param maxK The maximum level that can be drilled into
-dividedDataIntoSubgroups <- function(discretedTimeSeriesdata, maxElements = 20, maxK = 4) {
-  futile.logger::flog.info(sprintf("Enter dividedDataIntoSubgroups zone:
-                   maxElements=%s", maxElements))
-  genes <- unique(unlist(lapply(discretedTimeSeriesdata, rownames)))
-  
-  len_genes <- length(genes)
-  n_subgroup <- ceiling(len_genes/maxElements)
-  
-  sub_genes <- split(genes, rep(1:n_subgroup, each = maxElements)[1:len_genes])
-  sub_matrix <- lapply(sub_genes, function(sub, matx_data) {
-    lapply(matx_data, function(matx, sub) {
-      matx[rownames(matx) %in% sub, ]
-    }, sub)
-  }, discretedTimeSeriesdata)
-  
-  if (maxK > length(sub_genes)) {
-    maxK <- length(sub_genes)
-  }
-  
-  combined_groups <- list()
-  processed <- c()
-  for (i in seq_along(sub_genes)) {
-    processed <- c(processed, i)
-    sub_genes2 <- sub_genes[-processed]
-    for (j in seq_along(sub_genes2)) {
-      if (identical(sub_genes[[i]], sub_genes2[[j]])) 
-        (next)()
-      
-      newset <- unique(c(sub_genes[[i]], sub_genes2[[j]]))
-      newset <- genes[which(genes %in% newset)]
-      combined_groups[[length(combined_groups) + 1]] <- newset
-    }
-  }
-  res_combined_groups <- list()
-  if (maxK > 1) {
-    for (m in seq_len(maxK - 1)) {
-      for (i in seq_along(combined_groups)) {
-        group <- combined_groups[[i]]
-        conds <- vapply(sub_genes, function(sub) !all(sub %in% group), logical(1))
-        filered <- sub_genes[conds]
-        for (j in seq_along(filered)) {
-          newset <- unique(c(group, filered[[j]]))
-          newset <- genes[genes %in% newset]
-          conds2 <- sapply(res_combined_groups, function(sub, check) {
-          all(check %in% sub)
-          }, newset)
-          if (!any(conds2)) {
-          res_combined_groups[[length(res_combined_groups) + 1]] <- newset
-          futile.logger::flog.info(sprintf("dividedDataIntoSubgroups zone: group=%s", paste(newset, sep = ",", collapse = ",")))
-          }
-        }
-      }
-    }
-  } else {
-    res_combined_groups <- combined_groups
-  }
-  
-  futile.logger::flog.info(sprintf("(dividedDataIntoSubgroups) generates: %s combined groups", length(res_combined_groups)))
-  
-  res <- list(clusters = sub_genes, clusters_timeseries = sub_matrix, combined_clusters = res_combined_groups, discretedTimeSeriesdata = discretedTimeSeriesdata, 
-    target_genes = genes)
-  class(res) <- "ClusteredTimeseriesData"
-  res
-}
 
 #' An internal function that divides large data into small groups.
 #' @param discretedTimeSeriesdata discreted timeseries data

@@ -39,7 +39,6 @@
 #'  for generation, reconstruction and analysis of Boolean networks
 #' 
 #' @examples  
-#' library(BoolNet)
 #' data('yeastTimeSeries')
 #' network <- generateFBMNetwork(yeastTimeSeries)
 #' network
