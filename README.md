@@ -1,6 +1,6 @@
 ##Fundamental Boolean Networks###
 **Fundamental Boolean
-Model (FBM)** has been proposed to draw insights into gene activation, inhibition, and protein decay. This
+Fundamental Boolean modelling(FBM) has been proposed to draw insights into gene activation, inhibition, and protein decay. This
 novel Boolean model provides an intuitive definition of activation and inhibition pathways
 and includes mechanisms to handle protein decay issues. To prove the concept of
 the novel model, we implemented a platform using R language, called FBNNet. Our

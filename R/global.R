@@ -1,1 +1,1 @@
-globalVariables(c("DAVID_gene_list"))
+globalVariables(c("DAVID_gene_list", "ExampleNetwork"))
