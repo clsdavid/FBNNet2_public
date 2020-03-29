@@ -13,7 +13,7 @@ transitionStates(
 )
 }
 \arguments{
-\item{initialState}{The inital state}
+\item{initialState}{The initial state}
 
 \item{fbnNetwork}{The FBN network}
 

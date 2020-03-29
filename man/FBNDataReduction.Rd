@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility_FBN.R
 \name{FBNDataReduction}
 \alias{FBNDataReduction}
-\title{Remove duplidate timeseries sample data}
+\title{Remove duplicate timeseries sample data}
 \usage{
 FBNDataReduction(timeseriescube)
 }
@@ -13,7 +13,7 @@ FBNDataReduction(timeseriescube)
 The return a list of time series data
 }
 \description{
-Remove duplidate timeseries sample data
+Remove duplicate timeseries sample data
 }
 \examples{
 mat1<-matrix(c('1','2','3','4','5','6','7','8','9'),3,3)

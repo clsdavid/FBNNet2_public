@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 //' A function to filter networks.
-//' 
+//' @name networkFiltering
 //' @param res A list of named network interactions
 // [[Rcpp::export]]
 Rcpp::List networkFiltering(Rcpp::List res) {

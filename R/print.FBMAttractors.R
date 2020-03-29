@@ -1,6 +1,6 @@
 #' A S3 method to print the FBM attractors
 #' 
-#' @param x The attactor details
+#' @param x The attractor details
 #' @param ... other arguments.
 #'@export
 print.FBMAttractors <- function(x, ...) {

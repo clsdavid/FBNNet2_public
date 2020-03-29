@@ -14,7 +14,7 @@ genereateBoolNetTimeseries(
 )
 }
 \arguments{
-\item{network}{A traditional Boolea type of network that can be used for BoolNet}
+\item{network}{A traditional Boolean type of network that can be used for BoolNet}
 
 \item{initialStates}{A list of initial states}
 

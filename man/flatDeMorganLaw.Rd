@@ -2,15 +2,15 @@
 % Please edit documentation in R/network_utility_FBN.R
 \name{flatDeMorganLaw}
 \alias{flatDeMorganLaw}
-\title{An internal function to flat a splited Boolean expression
+\title{An internal function to flat a splitted Boolean expression
 with DeMorganLaw}
 \usage{
-flatDeMorganLaw(splitedExpression)
+flatDeMorganLaw(splittedExpression)
 }
 \arguments{
-\item{splitedExpression}{A splited Boolean expression}
+\item{splittedExpression}{A splitted Boolean expression}
 }
 \description{
-An internal function to flat a splited Boolean expression
+An internal function to flat a splitted Boolean expression
 with DeMorganLaw
 }

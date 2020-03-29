@@ -9,7 +9,7 @@ randomGenerateBinary(genelist = c(), maxState = 0)
 \arguments{
 \item{genelist}{An vector of genes}
 
-\item{maxState}{that should be less tha 2^length(genelist)}
+\item{maxState}{that should be less that 2^length(genelist)}
 }
 \description{
 A method to generate binary data randomly

@@ -2,15 +2,15 @@
 % Please edit documentation in R/network_utility_FBN.R
 \name{isAppliedDeMorganLaw}
 \alias{isAppliedDeMorganLaw}
-\title{An internal function to check a splited Boolean expression
+\title{An internal function to check a splitted Boolean expression
 is applied DeMorganLaw}
 \usage{
-isAppliedDeMorganLaw(splitedExpression)
+isAppliedDeMorganLaw(splittedExpression)
 }
 \arguments{
-\item{splitedExpression}{A splited Boolean expression}
+\item{splittedExpression}{A splitted Boolean expression}
 }
 \description{
-An internal function to check a splited Boolean expression
+An internal function to check a splitted Boolean expression
 is applied DeMorganLaw
 }

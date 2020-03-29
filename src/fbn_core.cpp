@@ -10,6 +10,7 @@
 using namespace Rcpp;
 
 //' A function that extract gene states from time series cube
+//' @name extractGeneStateFromTimeSeriesCube
 //' @param timeSeriesCube The time series cube
 //' @param temporal The temporal time step
 // [[Rcpp::export]]
@@ -227,6 +228,7 @@ Rcpp::List getBasicMeasures(
 //
 
 //' A function to get gene probabilities
+//' @name getGenePrababilities_basic
 //' @param main_parameters_in_ref An environment variable to hold all input data.
 //' @param fixedgenestate A list of pre-processed gene state.
 //' @param target_gene The target gene
@@ -767,7 +769,7 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
 }
 
 //' The main function to main FBN probabilities from time series data
-//' 
+//' @name getGenePrababilities_advanced
 //' @param getGenePrababilities_basic The basic calculations.
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_basic)
@@ -829,7 +831,7 @@ Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_b
 }
 
 //' The main function to main FBN probabilities from time series data
-//' 
+//' @name getGenePrababilities
 //' @param main_parameters_in_ref The environment that contains the required data.
 //' @param fixedgenestate The up stream fixed gene state.
 //' @param target_gene The target gene.

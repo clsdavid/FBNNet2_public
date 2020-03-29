@@ -1,6 +1,6 @@
 #' Create an Orchard cube
 #'
-#' This is the main function(s) to genereate a sigle Orchard Cube or a group
+#' This is the main function(s) to genereate a single Orchard Cube or a group
 #' of cubes
 #'
 #' @param target_genes A vector of genes that will be treated as target genes
@@ -8,13 +8,13 @@
 #'  cube
 #' @param timeseriesCube A list of samples in which a sample is a matrix that
 #'  contains gene states 
-#'  where genes in rows and time points in columms
+#'  where genes in rows and time points in columns.
 #' @param maxK The maximum level the cube can dig in
 #' @param temporal A value that used to be 1 indicates the previous steps the
 #'  current one can depend on
 #' @param useParallel If it is TRUE, the constructing will run it in parallel,
 #'  otherwise in a singl thread
-#' @return A Orcahrd cube that contains all precomputed measures
+#' @return An Orchard cube that contains all precomputed measures
 #' @examples
 #' require(BoolNet)
 #' data('ExampleNetwork')

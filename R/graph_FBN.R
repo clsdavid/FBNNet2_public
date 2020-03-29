@@ -1,4 +1,4 @@
-#'This method is used to convert the FBN network into a FBN networkobject for graphs
+#'This method is used to convert the FBN network into a FBN network object for graphs
 #'
 #'@param FBNnetwork A FBN network object
 #'@param david_gene_list A data frame of DAVID biological annotation
@@ -860,7 +860,7 @@ GenerateDynamicNetworkGraphicObject <- function(
 }
 
 
-#' An Internal method to draw atractor internally
+#' An Internal method to draw attractor internally
 #' 
 #' @param networkobject Fundamental Boolean Network objects.
 #' @param dynamicNetworkGraphicObject dynamicNetworkGraphicObject.
@@ -1087,7 +1087,7 @@ FBNNetwork.Graph <- function(fbnNetwork,
 #' @param fbnNetwork An object of FBNNetwork
 #' @param FBMAttractors A list of attractors extracted via 
 #' \code{searchForAttractors}.
-#' @param index The indiex of an attractor in the list 
+#' @param index The index of an attractor in the list 
 #' \code{FBMAttractors}.
 #'@examples
 #' require(BoolNet)

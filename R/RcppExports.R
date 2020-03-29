@@ -2,6 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' A function that extract gene states from time series cube
+#' @name extractGeneStateFromTimeSeriesCube
 #' @param timeSeriesCube The time series cube
 #' @param temporal The temporal time step
 extractGeneStateFromTimeSeriesCube <- function(timeSeriesCube, temporal) {
@@ -9,6 +10,7 @@ extractGeneStateFromTimeSeriesCube <- function(timeSeriesCube, temporal) {
 }
 
 #' A function to get gene probabilities
+#' @name getGenePrababilities_basic
 #' @param main_parameters_in_ref An environment variable to hold all input data.
 #' @param fixedgenestate A list of pre-processed gene state.
 #' @param target_gene The target gene
@@ -20,14 +22,14 @@ getGenePrababilities_basic <- function(main_parameters_in_ref, fixedgenestate, t
 }
 
 #' The main function to main FBN probabilities from time series data
-#' 
+#' @name getGenePrababilities_advanced
 #' @param getGenePrababilities_basic The basic calculations.
 getGenePrababilities_advanced <- function(getGenePrababilities_basic) {
     .Call(`_FBNNet_getGenePrababilities_advanced`, getGenePrababilities_basic)
 }
 
 #' The main function to main FBN probabilities from time series data
-#' 
+#' @name getGenePrababilities
 #' @param main_parameters_in_ref The environment that contains the required data.
 #' @param fixedgenestate The up stream fixed gene state.
 #' @param target_gene The target gene.
@@ -39,14 +41,14 @@ getGenePrababilities <- function(main_parameters_in_ref, fixedgenestate, target_
 }
 
 #' A function to filter networks.
-#' 
+#' @name networkFiltering
 #' @param res A list of named network interactions
 networkFiltering <- function(res) {
     .Call(`_FBNNet_networkFiltering`, res)
 }
 
 #' Get the main measurements based on the input data
-#' 
+#' @name getGenePrababilities_measurements
 #' @param targetGene The target gene
 #' @param mainParameters An environment variable holds all input data
 #' @param genes All conditional genes
@@ -59,7 +61,7 @@ getGenePrababilities_measurements <- function(targetGene, mainParameters, genes,
 }
 
 #' build Probability Tree On the targetGene
-#' 
+#' @name buildProbabilityTreeOnTargetGene
 #' @param targetGene The target gene
 #' @param mainParameters An environment variable holds all input data
 #' @param genes All conditional genes
@@ -75,7 +77,7 @@ buildProbabilityTreeOnTargetGene <- function(targetGene, mainParameters, genes, 
 }
 
 #' Get the main measurements based on the input data
-#' 
+#' @name process_cube_algorithm
 #' @param target_gene The target gene
 #' @param conditional_genes conditional genes
 #' @param maxK The maximum under ground levels
@@ -86,14 +88,8 @@ process_cube_algorithm <- function(target_gene, conditional_genes, maxK, tempora
     .Call(`_FBNNet_process_cube_algorithm`, target_gene, conditional_genes, maxK, temporal, mainParameters)
 }
 
-#' A function concate a vector with a sperator
-#' @param x The vector
-#' @param sep Seperator
-#' @return A new string
-NULL
-
 #' A function to split an expression into a vector of input
-#' 
+#' @name splitExpression
 #' @param expression The expression fo a FBN network connection
 #' @param outputType The type of output.
 #' @param lowerCase Optional, if TRUE convert them to lower case.

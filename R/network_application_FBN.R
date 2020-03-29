@@ -417,7 +417,7 @@ findAllInputGenes <- function(networkinteractions, genes) {
 }
 
 #' An internal function to find all target genes from a group of 
-#' etwork interactions
+#' network interactions
 #' 
 #' @param networkinteractions All network interactions
 #' 
@@ -774,4 +774,3 @@ findForwardRelatedNetworkByGenes <- function(networks, target_gene_list = c(), r
   }
   prepare_network
 }
-# use sink to output result to text file sink('analysis-output.txt') attactor7 sink()

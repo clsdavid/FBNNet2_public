@@ -5,7 +5,7 @@
 #' be matched with the genes
 #'@param genes a list of genes which index order must match with the current
 #' state
-#'@param type A type of Boolean network update schema choosen from synchronous,
+#'@param type A type of Boolean network update schema chosen from synchronous,
 #' asynchronous and time step based
 #'@param genesOn It is a vector of genes that are marked as On
 #'@param genesOff It is a vector of genes that are marked as Off

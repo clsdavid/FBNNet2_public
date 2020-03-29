@@ -3,7 +3,7 @@
 \name{findAllTargetGenes}
 \alias{findAllTargetGenes}
 \title{An internal function to find all target genes from a group of 
-etwork interactions}
+network interactions}
 \usage{
 findAllTargetGenes(networkinteractions)
 }
@@ -12,5 +12,5 @@ findAllTargetGenes(networkinteractions)
 }
 \description{
 An internal function to find all target genes from a group of 
-etwork interactions
+network interactions
 }

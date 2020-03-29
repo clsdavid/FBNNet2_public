@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_utility_FBN.R
 \name{generateAllCombinationBinary}
 \alias{generateAllCombinationBinary}
-\title{generate all combaination binary data based on an vector of genes}
+\title{Generate all combination of binary data based on an vector of genes}
 \usage{
 generateAllCombinationBinary(genelist = c(), begin = 1, last = 0)
 }
@@ -14,7 +14,7 @@ generateAllCombinationBinary(genelist = c(), begin = 1, last = 0)
 \item{last}{The last index, the default is 0 means 2^length(genelist)}
 }
 \description{
-generate all combaination binary data based on an vector of genes
+Generate all combination of binary data based on an vector of genes
 }
 \examples{
 individualgenes<-c('a','b','c')

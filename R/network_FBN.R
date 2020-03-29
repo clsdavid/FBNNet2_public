@@ -4,11 +4,11 @@
 #'@param fbnGeneCube A pre constructed Orchard cube
 #'@param genes The target genes in the output
 #'@param useParallel An option turns on parallel
-#'@param threshold_confidence A threshod of confidence (between 0 and 1)
+#'@param threshold_confidence A threshold of confidence (between 0 and 1)
 #' that used to filter the Fundamental Boolean functions
-#'@param threshold_error A threshod of error rate (between 0 and 1) that
+#'@param threshold_error A threshold of error rate (between 0 and 1) that
 #' used to filter the Fundamental Boolean functions
-#'@param threshold_support A threshod of support (between 0 and 1) that
+#'@param threshold_support A threshold of support (between 0 and 1) that
 #' used to filter the Fundamental Boolean functions
 #'@param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #' per gene can be mined or filtered, the rest will be discarded
@@ -49,14 +49,11 @@ mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, thres
   if (is.null(genes)) {
     genes <- names(fbnGeneCube)
   }
-  time1 <- as.numeric(Sys.time())
-  
+
   genes <- genes[genes %in% names(fbnGeneCube)]
   
   midle_result <- searchFBNNetworkCore(fbnGeneCube, genes, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules)
   finalresult <- mineFBNNetworkWithCores(midle_result, genes, threshold_error, maxFBNRules)
-  time2 <- as.numeric(Sys.time())
-  print(paste("Total cost ", time2 - time1, " seconds to mine Fundamental Boolean Functions ", sep = "", collapse = ""))
   futile.logger::flog.info(sprintf("Leave mineFBNNetwork zone"))
   finalresult
 }
@@ -65,7 +62,7 @@ mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, thres
 #' 
 #' @param searchFBNNetworkCore A result of \code{searchFBNNetworkCore}
 #' @param genes Genes that involved.
-#' @param threshold_error A threshod of error rate (between 0 and 1) 
+#' @param threshold_error A threshold of error rate (between 0 and 1) 
 #' that used to filter the Fundamental Boolean functions
 #' @param maxFBNRules The maximum rules per type (Activation and Inhibition) 
 #' per gene can be mined or filtered, the rest will be discarded
@@ -110,11 +107,11 @@ removeDuplicates <- function(factors) {
 #'@param fbnGeneCube A pre constructed Orchard cube
 #'@param genes The target genes in the output
 #'@param useParallel An option turns on parallel
-#'@param threshold_confidence A threshod of confidence (between 0 and 1)
+#'@param threshold_confidence A threshold of confidence (between 0 and 1)
 #' that used to filter the Fundamental Boolean functions
-#'@param threshold_error A threshod of error rate (between 0 and 1) that
+#'@param threshold_error A threshold of error rate (between 0 and 1) that
 #' used to filter the Fundamental Boolean functions
-#'@param threshold_support A threshod of support (between 0 and 1) that
+#'@param threshold_support A threshold of support (between 0 and 1) that
 #' used to filter the Fundamental Boolean functions
 #'@param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #' per gene can be mined or filtered, the rest will be discarded

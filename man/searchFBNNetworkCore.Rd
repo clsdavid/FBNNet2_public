@@ -21,13 +21,13 @@ searchFBNNetworkCore(
 
 \item{useParallel}{An option turns on parallel}
 
-\item{threshold_confidence}{A threshod of confidence (between 0 and 1)
+\item{threshold_confidence}{A threshold of confidence (between 0 and 1)
 that used to filter the Fundamental Boolean functions}
 
-\item{threshold_error}{A threshod of error rate (between 0 and 1) that
+\item{threshold_error}{A threshold of error rate (between 0 and 1) that
 used to filter the Fundamental Boolean functions}
 
-\item{threshold_support}{A threshod of support (between 0 and 1) that
+\item{threshold_support}{A threshold of support (between 0 and 1) that
 used to filter the Fundamental Boolean functions}
 
 \item{maxFBNRules}{The maximum rules per type (Activation and Inhibition)

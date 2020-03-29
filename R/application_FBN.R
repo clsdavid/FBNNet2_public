@@ -13,11 +13,11 @@
 #'  inference algorithm in parallel. FALSE without parallel
 #' @param max_deep_temporal, a setting for Temporal Fundamental Boolean model
 #'  that specifies the maximum temporal space
-#' @param threshold_confidence A threshod of confidence (between 0 and 1) 
+#' @param threshold_confidence A threshold of confidence (between 0 and 1) 
 #' that used to filter the Fundamental Boolean functions
-#' @param threshold_error A threshod of error rate (between 0 and 1) that used
+#' @param threshold_error A threshold of error rate (between 0 and 1) that used
 #'  to filter the Fundamental Boolean functions
-#' @param threshold_support A threshod of support (between 0 and 1) that used
+#' @param threshold_support A threshold of support (between 0 and 1) that used
 #'  to filter the Fundamental Boolean functions
 #' @param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #'  per gene can be mined, the rest will be discarded
@@ -76,6 +76,7 @@ generateFBMNetwork <- function(
     timeseries_data <- list(timeseries_data)
   }
   
+  method <- match.arg(method)
   CheckRightTypeTimeseriesData(timeseries_data)
   checkProbabilityTypeData(threshold_confidence)
   checkProbabilityTypeData(threshold_error)
@@ -114,7 +115,8 @@ generateFBMNetwork <- function(
           threshold_error = %s,
           threshold_support = %s,
           maxFBNRules = %s,
-          network_only = %s", 
+          network_only = %s,
+          verbose = %s", 
     method, 
     maxK, 
     useParallel, 
@@ -123,7 +125,8 @@ generateFBMNetwork <- function(
     threshold_error, 
     threshold_support, 
     maxFBNRules,
-    network_only))
+    network_only,
+    verbose))
   if (!isBooleanTypeTimeseriesData(timeseries_data)) {
     timeseries_data <- BoolNet::binarizeTimeSeries(timeseries_data, 
                                                    method = method)$binarizedMeasurements
@@ -131,18 +134,24 @@ generateFBMNetwork <- function(
   genes <- rownames(timeseries_data[[1]])
 
   futile.logger::flog.info(sprintf("Run generateFBMNetwork with a single cube"))
+  time1 <- as.numeric(Sys.time())
   cube <- constructFBNCube(target_genes = genes,
                            conditional_genes = genes,
                            timeseriesCube = timeseries_data,
                            maxK = maxK,
                            temporal = max_deep_temporal,
                            useParallel = useParallel)
+  time2 <- as.numeric(Sys.time())
+  print(paste("Total cost ", time2 - time1, " seconds to construct a FBN Cube.", sep = "", collapse = ""))
+  time1 <- as.numeric(Sys.time())
   network <- mineFBNNetwork(fbnGeneCube = cube, 
                  threshold_confidence  = threshold_confidence,
                  threshold_error = threshold_error,
                  threshold_support = threshold_support,
                  maxFBNRules = maxFBNRules, 
                  useParallel = useParallel)
+  time2 <- as.numeric(Sys.time())
+  print(paste("Total cost ", time2 - time1, " seconds to mine Fundamental Boolean Functions ", sep = "", collapse = ""))
   
   if (network_only) {
     network

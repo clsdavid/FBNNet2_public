@@ -21,7 +21,7 @@ getProbabilityFromFunctionInput(
 \item{preGeneInputs}{pre input genes' state}
 }
 \value{
-A probablity of the target regulatory function
+A probability of the target regulatory function
 }
 \description{
 An internal method to get the probability of regulatory function from the cube

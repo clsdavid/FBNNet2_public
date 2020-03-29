@@ -7,7 +7,7 @@
 \method{print}{FBMAttractors}(x, ...)
 }
 \arguments{
-\item{x}{The attactor details}
+\item{x}{The attractor details}
 
 \item{...}{other arguments.}
 }

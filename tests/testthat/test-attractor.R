@@ -31,7 +31,7 @@ describe("run synchronous should succeed", {
         
         attractor <- expect_error(searchForAttractors(test_info$network, test_info$initialStates, test_info$network$genes), NA)
         expect_error(print(attractor), NA)
-        # display the dynamic trajectory of the attactor 2
+        # display the dynamic trajectory of the attractor 2
         expect_error(FBNNetwork.Graph.DrawAttractor(test_info$network, attractor, 2), NA)
     })
 })

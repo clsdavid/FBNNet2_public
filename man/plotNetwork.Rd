@@ -23,7 +23,7 @@ plotNetwork(
 
 \item{target_genes}{A list of target genes}
 
-\item{type}{The visulazation type}
+\item{type}{The visualization type}
 
 \item{expand_level}{The level of expandation}
 

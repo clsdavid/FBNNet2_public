@@ -12,7 +12,7 @@ FBNNetwork.Graph.DrawAttractor(fbnNetwork, FBMAttractors, index = 1)
 \item{FBMAttractors}{A list of attractors extracted via 
 \code{searchForAttractors}.}
 
-\item{index}{The indiex of an attractor in the list 
+\item{index}{The index of an attractor in the list 
 \code{FBMAttractors}.}
 }
 \description{

@@ -22,10 +22,7 @@ std::string to_string(double val){
   stm << val ;
   return stm.str() ;
 }
-//' A function concate a vector with a sperator
-//' @param x The vector
-//' @param sep Seperator
-//' @return A new string
+
 Rcpp::String mpaste(Rcpp::CharacterVector x,
                     std::string sep){
   Rcpp::String res;
@@ -197,8 +194,6 @@ Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix m,
 }
 
 int matchCount(Rcpp::NumericMatrix m, Rcpp::NumericVector v){
-  // Rcpp::NumericMatrix mid=substractM(m,v);
-  // return(countZeros(Rcpp::colSums(mid)));
   Rcpp::NumericMatrix mid=substractM(m,v);
   Rcpp::NumericVector col_sumed = Rcpp::colSums(mid);
   return(std::count(col_sumed.begin(),col_sumed.end(),0));
@@ -211,60 +206,65 @@ double dround(double val, int decimal){
 
 Rcpp::LogicalVector a_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::LogicalVector res(names1.length());
-  for(int i=0;i<names1.length();i++){
-    for(int j=0;j<names2.length();j++){
-      res[i]=false;
-      if(names1[i]==names2[j]){
-        res[i]=true;
-        break;
-      }
-    }
+  if(names2.length() == 0) {
+    return(Rcpp::LogicalVector(0));
   }
+  
+
+  if(names1.length() == 0) {
+    return(res);
+  }
+  Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
+  Rcpp::IntegerVector v_matched = match(names1,names2);
+  res[!Rcpp::is_na(v_matched)] = true;
   return(res);
 }
 
+
+
 Rcpp::IntegerVector a_in_b_index(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
-  Rcpp::IntegerVector res;
-  for(int i=0;i<names1.length();i++){
-    for(int j=0;j<names2.length();j++){
-      if(names1[i]==names2[j]){
-        res.push_back(j);
-        break;
-      }
-    }
+  if(names2.length() == 0) {
+    return(Rcpp::IntegerVector(0));
   }
-  return(res);
+
+  Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
+  if(names1.length() == 0) {
+    return(v);
+  }
+
+  Rcpp::IntegerVector v_matched = match(names2,names1);
+  return(v[!Rcpp::is_na(v_matched)]);
 }
 
 Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
   Rcpp::LogicalVector res(names1.length());
-  for(int i=0;i<names1.length();i++){
-    for(int j=0;j<names2.length();j++){
-      res[i]=true;
-      if(names1[i]==names2[j]){
-        res[i]=false;
-        break;
-      }
-    }
+  if(names2.length() == 0) {
+    return(Rcpp::LogicalVector(0));
   }
+  
+  
+  if(names1.length() == 0) {
+    return(res);
+  }
+  Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
+  Rcpp::IntegerVector v_matched = match(names1,names2);
+  res[Rcpp::is_na(v_matched)] = true;
   return(res);
 }
 
+
 Rcpp::IntegerVector a_not_in_b_index(Rcpp::CharacterVector names1, Rcpp::CharacterVector names2){
-  Rcpp::IntegerVector res;
-  for(int i=0;i<names1.length();i++){
-    bool match = false;
-    for(int j=0;j<names2.length();j++){
-      if(names1[i]==names2[j]){
-        match = true;
-        break;
-      }
-    }
-    if(!match){
-      res.push_back(i);
-    }
+  if(names1.length() == 0) {
+    return(Rcpp::IntegerVector(0));
   }
-  return(res);
+
+  Rcpp::IntegerVector v = Rcpp::seq(0, names1.size()-1);
+  if(names2.length() == 0) {
+     return(v);
+  }
+
+  Rcpp::IntegerVector v_matched = match(names1, names2);
+  return(v[Rcpp::is_na(v_matched)]);
 }
 
 Rcpp::List resizel( const Rcpp::List& x, int n ){
@@ -401,7 +401,7 @@ Rcpp::CharacterVector subCPP(Rcpp::CharacterVector pattern, Rcpp::CharacterVecto
 } 
 
 //' A function to split an expression into a vector of input
-//' 
+//' @name splitExpression
 //' @param expression The expression fo a FBN network connection
 //' @param outputType The type of output.
 //' @param lowerCase Optional, if TRUE convert them to lower case.

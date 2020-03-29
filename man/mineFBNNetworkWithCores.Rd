@@ -16,7 +16,7 @@ mineFBNNetworkWithCores(
 
 \item{genes}{Genes that involved.}
 
-\item{threshold_error}{A threshod of error rate (between 0 and 1) 
+\item{threshold_error}{A threshold of error rate (between 0 and 1) 
 that used to filter the Fundamental Boolean functions}
 
 \item{maxFBNRules}{The maximum rules per type (Activation and Inhibition) 

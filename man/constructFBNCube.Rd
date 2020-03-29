@@ -21,7 +21,7 @@ cube}
 
 \item{timeseriesCube}{A list of samples in which a sample is a matrix that
 contains gene states 
-where genes in rows and time points in columms}
+where genes in rows and time points in columns.}
 
 \item{maxK}{The maximum level the cube can dig in}
 
@@ -32,10 +32,10 @@ current one can depend on}
 otherwise in a singl thread}
 }
 \value{
-A Orcahrd cube that contains all precomputed measures
+An Orchard cube that contains all precomputed measures
 }
 \description{
-This is the main function(s) to genereate a sigle Orchard Cube or a group
+This is the main function(s) to genereate a single Orchard Cube or a group
 of cubes
 }
 \examples{

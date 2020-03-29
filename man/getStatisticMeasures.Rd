@@ -12,7 +12,7 @@ getStatisticMeasures(featurenames, timeseriesdata)
 \item{timeseriesdata}{the original timeseries data that contains continual values}
 }
 \value{
-statstic measures
+statistics measures
 }
 \description{
 A method to calculate the statistic measurements based on feature names

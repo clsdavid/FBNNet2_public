@@ -23,7 +23,7 @@ getFBMSuccessor(
 \item{genes}{a list of genes which index order must match with the
 current state}
 
-\item{type}{A type of Boolean network update schema choosen from synchronous,
+\item{type}{A type of Boolean network update schema chosen from synchronous,
 asynchronous based. Asynchronous will randomly pick up a gene to process at time.}
 
 \item{decayIndex}{An value indicates the period of time when to degrade 

@@ -12,7 +12,7 @@
 using namespace Rcpp;
 
 //' Get the main measurements based on the input data
-//' 
+//' @name getGenePrababilities_measurements
 //' @param targetGene The target gene
 //' @param mainParameters An environment variable holds all input data
 //' @param genes All conditional genes
@@ -99,7 +99,7 @@ Rcpp::List getGenePrababilities_measurements(
 
 
 //' build Probability Tree On the targetGene
-//' 
+//' @name buildProbabilityTreeOnTargetGene
 //' @param targetGene The target gene
 //' @param mainParameters An environment variable holds all input data
 //' @param genes All conditional genes
@@ -131,7 +131,8 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
                                                               temporal, 
                                                               targetCounts);
    CharacterVector new_genes = measuements.names();
-   CharacterVector unprocessedGenes = clone(new_genes);
+   //CharacterVector unprocessedGenes = clone(new_genes);
+   CharacterVector unprocessedGenes = new_genes;
    int len = new_genes.length();
 
    CharacterVector processedGenes;
@@ -407,7 +408,7 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
 
 
 //' Get the main measurements based on the input data
-//' 
+//' @name process_cube_algorithm
 //' @param target_gene The target gene
 //' @param conditional_genes conditional genes
 //' @param maxK The maximum under ground levels
@@ -422,7 +423,14 @@ Rcpp::List process_cube_algorithm(Rcpp::CharacterVector target_gene,
                                 Rcpp::Environment mainParameters) {
    List res(1);
    List sub_res(1);
-   sub_res[0] = buildProbabilityTreeOnTargetGene(target_gene, mainParameters, conditional_genes, R_NilValue, R_NilValue, maxK, temporal, R_NilValue);
+   sub_res[0] = buildProbabilityTreeOnTargetGene(target_gene, 
+                                                 mainParameters, 
+                                                 conditional_genes,
+                                                 R_NilValue,
+                                                 R_NilValue, 
+                                                 maxK, 
+                                                 temporal, 
+                                                 R_NilValue);
    sub_res.attr("names") = CharacterVector::create("SubGenes");
    res[0] = sub_res;
    res.attr("names") = target_gene;

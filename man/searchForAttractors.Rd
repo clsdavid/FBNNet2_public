@@ -23,7 +23,7 @@ be matched with the genes}
 \item{genes}{a list of genes which index order must match with the current
 state}
 
-\item{type}{A type of Boolean network update schema choosen from synchronous,
+\item{type}{A type of Boolean network update schema chosen from synchronous,
 asynchronous and time step based}
 
 \item{genesOn}{It is a vector of genes that are marked as On}

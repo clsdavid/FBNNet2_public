@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_utility_FBN.R
 \name{getRelatedGeneTimeseries}
 \alias{getRelatedGeneTimeseries}
-\title{A methiod to reduce the timeseries data based on the gene list}
+\title{A function to reduce the timeseries data based on the gene list}
 \usage{
 getRelatedGeneTimeseries(timeseries, genelist = c())
 }
@@ -13,5 +13,5 @@ row and time steps on columns}
 \item{genelist}{An vector of genes}
 }
 \description{
-A methiod to reduce the timeseries data based on the gene list
+A function to reduce the timeseries data based on the gene list
 }

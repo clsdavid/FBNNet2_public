@@ -21,7 +21,7 @@ dividedVectorIntoSmallgroups <- function(vector, maxElements = 20) {
   list(clusters = sub_vector, original = vector)
 }
 
-#'A methiod to reduce the timeseries data based on the gene list
+#'A function to reduce the timeseries data based on the gene list
 #'@param timeseries a list of samples that contains genes on 
 #'row and time steps on columns
 #'@param genelist An vector of genes
@@ -30,7 +30,7 @@ getRelatedGeneTimeseries <- function(timeseries, genelist = c()) {
   lapply(timeseries, function(sheet) sheet[rownames(sheet) %in% genelist, ])
 }
 
-#' generate all combaination binary data based on an vector of genes
+#' Generate all combination of binary data based on an vector of genes
 #' @param genelist An vector of genes
 #' @param begin The begin index
 #' @param last  The last index, the default is 0 means 2^length(genelist)
@@ -61,7 +61,7 @@ generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
 
 #'A method to generate binary data randomly
 #'@param genelist An vector of genes
-#'@param maxState that should be less tha 2^length(genelist)
+#'@param maxState that should be less that 2^length(genelist)
 #'@examples
 #'individualgenes<-c('a','b','c')
 #'testdata2 <- randomGenerateBinary(individualgenes,maxState = 4)
@@ -94,7 +94,7 @@ randomGenerateBinary <- function(genelist = c(), maxState = 0) {
 #'A method to generate BoolNet type of timeseries data for generating BoolNet type of 
 #'testing timeseries data
 #'
-#' @param network A traditional Boolea type of network that can be used for BoolNet
+#' @param network A traditional Boolean type of network that can be used for BoolNet
 #' @param initialStates A list of initial states
 #' @param numMeasurements the number of timepoints that need to reconstruct
 #' @param type the type of the network in traditional Boolean modelling
@@ -120,8 +120,8 @@ genereateBoolNetTimeseries <- function(network,
 }
 
 #'This method compare two timeseries data and generate similar report
-#'@param timeseriesdata1 the source time series data
-#'@param timeseriesdata2 tge target time series data
+#'@param timeseriesdata1 The source time series data
+#'@param timeseriesdata2 The target time series data
 #' @export
 generateSimilaryReport <- function(timeseriesdata1, timeseriesdata2) {
   # validate network types

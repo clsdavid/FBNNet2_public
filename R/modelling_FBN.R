@@ -59,11 +59,11 @@ randomSelection <- function(probability) {
 
 #'This method is used to reconstruct time series data
 #'
-#'@param fbnnetwork An object of FBNNetwork
+#'@param fbnnetwork An object of FBN network
 #'@param initialStates A list of initial states
 #'@param type Specify the type of the Fundamental Boolean model (synchronous or asynchronous)
 #'@param maxTimepoints The max time points that are going to be constructed
-#'@param useParallel Optional, if TRUe then use parallelisation
+#'@param useParallel Optional, if TRUE then use parallelisation
 #'@return A list object that contains reconstructed time series and FBN network
 #'@examples
 #' require(BoolNet)
@@ -132,7 +132,7 @@ reconstructTimeseries <- function(fbnnetwork, initialStates, type = c("synchrono
 
 # private method
 #' A function do the state transition
-#' @param initialState The inital state
+#' @param initialState The initial state
 #' @param fbnNetwork The FBN network
 #' @param genes The involved genes
 #' @param type The type of Boolean transition
@@ -170,7 +170,7 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
 #' @param current_step The index of the current step
 #' @param genes a list of genes which index order must match with the
 #' current state
-#' @param type A type of Boolean network update schema choosen from synchronous,
+#' @param type A type of Boolean network update schema chosen from synchronous,
 #' asynchronous based. Asynchronous will randomly pick up a gene to process at time.
 #' @param decayIndex An value indicates the period of time when to degrade 
 #' an activated gene if no activators presented. It is usually one time step
@@ -374,7 +374,7 @@ getFBMSuccessor <- function(fbnNetwork, previous_states, current_step, genes, ty
 #'@param FBNExpression expression of function
 #'@param FBNProbability The probability of a FBN connection
 #'@param preGeneInputs pre input genes' state
-#'@return A probablity of the target regulatory function
+#'@return A probability of the target regulatory function
 #'@examples
 #' ##coming later
 getProbabilityFromFunctionInput <- function(funcType, FBNExpression, FBNProbability, preGeneInputs) {

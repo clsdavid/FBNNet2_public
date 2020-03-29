@@ -1,4 +1,4 @@
-#'Remove duplidate timeseries sample data
+#'Remove duplicate timeseries sample data
 #'
 #'@param timeseriescube A list of time series data
 #'@return The return a list of time series data
@@ -83,7 +83,7 @@ generateSimilarReport <- function(similarityreport) {
   res
 }
 
-#' A function moves the sub list items to its parrent list
+#' A function moves the sub list items to its parent list
 #' 
 #' This function is used to simplify the complex list
 #' 

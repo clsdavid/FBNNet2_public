@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph_FBN.R
 \name{DrawingAttractorInternal}
 \alias{DrawingAttractorInternal}
-\title{An Internal method to draw atractor internally}
+\title{An Internal method to draw attractor internally}
 \usage{
 DrawingAttractorInternal(networkobject, dynamicNetworkGraphicObject, matrix)
 }
@@ -14,5 +14,5 @@ DrawingAttractorInternal(networkobject, dynamicNetworkGraphicObject, matrix)
 \item{matrix}{The timeseries matrix}
 }
 \description{
-An Internal method to draw atractor internally
+An Internal method to draw attractor internally
 }

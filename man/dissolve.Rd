@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility_FBN.R
 \name{dissolve}
 \alias{dissolve}
-\title{A function moves the sub list items to its parrent list}
+\title{A function moves the sub list items to its parent list}
 \usage{
 dissolve(x)
 }

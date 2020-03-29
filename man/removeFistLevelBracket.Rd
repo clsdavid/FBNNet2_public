@@ -4,10 +4,10 @@
 \alias{removeFistLevelBracket}
 \title{An internal function to remove the first brasket}
 \usage{
-removeFistLevelBracket(splitedExpression)
+removeFistLevelBracket(splittedExpression)
 }
 \arguments{
-\item{splitedExpression}{A splited Boolean expression}
+\item{splittedExpression}{A splitted Boolean expression}
 }
 \description{
 An internal function to remove the first brasket

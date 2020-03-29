@@ -9,6 +9,7 @@ License: GPL-3 + file LICENSE
 LinkingTo: Rcpp
 Encoding: UTF-8
 LazyData: TRUE
+Language: en-US
 Depends: 
     R (>= 3.5)
 Imports:

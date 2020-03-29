@@ -4,7 +4,7 @@
 #'
 #' @param featurenames a list of feature names, i.e., the gene name
 #' @param timeseriesdata the original timeseries data that contains continual values
-#' @return statstic measures
+#' @return statistics measures
 #' 
 getStatisticMeasures <- function(featurenames, timeseriesdata) {
   
@@ -36,7 +36,7 @@ getStatisticMeasures <- function(featurenames, timeseriesdata) {
 #' @param normalizedData An output of the method 
 #' normalizeTimesereisRawData that normalized timeseries data
 #' @param func A function that specified how to split the column names
-#' @param splitor Seperator.
+#' @param splitor A separator.
 #'
 #'@export
 convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste(x[1], x[2], x[3], sep = "-"), splitor = as.character("-")) {

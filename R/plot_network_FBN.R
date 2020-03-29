@@ -2,7 +2,7 @@
 #' 
 #' @param FBNNetwork The FBN networks
 #' @param target_genes A list of target genes
-#' @param type The visulazation type
+#' @param type The visualization type
 #' @param expand_level The level of expandation
 #' @param output_network Optional, if TRUE, then output the FBN Network
 #' @param timeseries_matrix The timeseries matrix that used to plot dynamic 

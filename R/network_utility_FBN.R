@@ -49,11 +49,11 @@ isSubExpression <- function(subExpression) {
 }
 
 #' An internal function to remove the first brasket
-#' @param splitedExpression A splited Boolean expression
+#' @param splittedExpression A splitted Boolean expression
 #' 
-removeFistLevelBracket <- function(splitedExpression) {
-  res <- splitedExpression
-  if (isSubExpression(splitedExpression)) {
+removeFistLevelBracket <- function(splittedExpression) {
+  res <- splittedExpression
+  if (isSubExpression(splittedExpression)) {
     res <- res[-1]
     res <- res[-length(res)]
   }
@@ -61,21 +61,21 @@ removeFistLevelBracket <- function(splitedExpression) {
   return(res)
 }
 
-#' An internal function to check a splited Boolean expression
+#' An internal function to check a splitted Boolean expression
 #' is applied DeMorganLaw
 #' 
-#' @param splitedExpression A splited Boolean expression
+#' @param splittedExpression A splitted Boolean expression
 #' 
-isAppliedDeMorganLaw <- function(splitedExpression) {
+isAppliedDeMorganLaw <- function(splittedExpression) {
   groupA <- c("(", "[", "{")
   groupB <- c(")", "]", "}")
   startBracket <- 0L
   endBracket <- 0L
   numOfBracket <- 0L
   res <- FALSE
-  subExpression <- splitedExpression
+  subExpression <- splittedExpression
   
-  if (mode(splitedExpression) == "character" && identical(splitedExpression[[1]], "!")) {
+  if (mode(splittedExpression) == "character" && identical(splittedExpression[[1]], "!")) {
     subExpression <- subExpression[-1]
   } else {
     return(FALSE)
@@ -105,16 +105,16 @@ isAppliedDeMorganLaw <- function(splitedExpression) {
   return(res)
 }
 
-#' An internal function to flat a splited Boolean expression
+#' An internal function to flat a splitted Boolean expression
 #' with DeMorganLaw
 #' 
-#' @param splitedExpression A splited Boolean expression
+#' @param splittedExpression A splitted Boolean expression
 #'
-flatDeMorganLaw <- function(splitedExpression) {
-  if (!isAppliedDeMorganLaw(splitedExpression)) 
-    return(splitedExpression)
-  negation <- splitedExpression[1]
-  partOfExpression <- splitedExpression[-1]
+flatDeMorganLaw <- function(splittedExpression) {
+  if (!isAppliedDeMorganLaw(splittedExpression)) 
+    return(splittedExpression)
+  negation <- splittedExpression[1]
+  partOfExpression <- splittedExpression[-1]
   splitexp <- removeFistLevelBracket(partOfExpression)
   res <- convertIntoExpressionTree(splitexp)
   if (is.element("&", splitexp) && !is.element("|", splitexp)) {
@@ -139,13 +139,13 @@ flatDeMorganLaw <- function(splitedExpression) {
   return(res)
 }
 
-#' An internal function to convert a splited Boolean expression
+#' An internal function to convert a splitted Boolean expression
 #' into an expression tree.
 #' 
-#' @param splitedExpression A splited Boolean expression
+#' @param splittedExpression A splitted Boolean expression
 #'
-convertIntoExpressionTree <- function(splitedExpression) {
-  splitexp <- removeFistLevelBracket(splitedExpression)
+convertIntoExpressionTree <- function(splittedExpression) {
+  splitexp <- removeFistLevelBracket(splittedExpression)
   Oprators <- c("|", "&")
   
   groupA <- c("(", "[", "{")
@@ -296,8 +296,8 @@ constructFBNFunctions <- function(expressionTree) {
 #' @export
 generateFBNInteraction <- function(expressionString, genes) {
   res <- list()
-  splitedexpression <- splitExpression(expressionString, 1, FALSE)
-  geneinputs <- which(genes %in% splitedexpression)
+  splittedexpression <- splitExpression(expressionString, 1, FALSE)
+  geneinputs <- which(genes %in% splittedexpression)
   res$input <- geneinputs
   res$expression <- expressionString
   return(res)
@@ -479,3 +479,88 @@ convertMinedResultToFBNNetwork <- function(minerresult, genes) {
   futile.logger::flog.info(sprintf("Leave convertMinedResultToFBNNetwork zone"))
   return(res)
 }
+
+
+#'Convert a boolean network object to fundamental boolean function object
+#'
+#'@param network A boolean network object
+#'@return An object of FBN network
+#'@examples
+#' ##coming later
+#' @export
+convertToFBNNetwork <- function(network) {
+  # validate network types
+  if (!(inherits(network, "BooleanNetworkCollection"))) 
+    stop("Network must be inherited from BooleanNetwork")
+  
+  # code
+  tryCatch({
+    res <- list()
+    entry <- list()
+    res[[1]] <- network$genes
+    names(res)[[1]] <- "genes"
+    
+    res[[2]] <- list()
+    names(res)[[2]] <- "interactions"
+    res$interactions <- list()
+    
+    res[[3]] <- network$fixed
+    names(res)[[3]] <- "fixed"
+    
+    res[[4]] <- sapply(network$genes, function(gene) gene = 1)
+    names(res)[[4]] <- "timedecay"
+    
+    # lapply(network$interactions,function(interaction){
+    
+    for (name in names(network$interactions)) {
+      entry[[length(entry) + 1]] <- list()
+      names(entry)[[length(entry)]] <- name
+      # entry[name][[1]]<-list()
+      interactionItems <- network$interactions[name]
+      if (length(interactionItems) > 1) 
+        stop("duplicate gene list of %s found", name)
+      
+      # entry[name][[length(entry[name])+1]]<-list()
+      item <- interactionItems[[1]]
+      iniIndex <- 0L
+      for (j in seq_along(item)) {
+        expression <- item[[j]]$expression
+        error <- item[[j]]$error
+        probability <- 1
+        timestep <- 1
+        support <- 1
+        if (is.element("type", names(item[[j]]))) {
+          type <- item[[j]]$type
+        } else {
+          type = NULL
+        }
+        
+        if (is.null(error) | length(error) == 0) {
+          error <- 0
+        } else {
+          probability <- 1 - as.numeric(error)
+        }
+        
+        interactions <- regenerateInteractions(paste(c(name, "_", j), collapse = ""), expression, unlist(network$genes), error, type, probability, 
+                                               support, timestep)
+        # if(length(item)==1L) { entry[[name]][[length(entry[[name]])+1]]<-unlist(interactions,recursive=FALSE) }else {
+        for (i in seq_along(interactions)) {
+          iniIndex <- iniIndex + 1
+          entryitem <- interactions[[i]]
+          entry[[name]][[iniIndex]] <- entryitem
+          names(entry[[name]])[[iniIndex]] <- names(interactions[i])[[1]]
+        }
+        # }
+        
+      }
+      
+    }
+    res$interactions <- entry
+    class(res) <- c("FundamentalBooleanNetwork", class(res))
+  }, error = function(e) {
+    stop(sprintf("Error converting to FBN Network \"%s\": %s", expression, e$message))
+  })
+  
+  return(res)
+}
+

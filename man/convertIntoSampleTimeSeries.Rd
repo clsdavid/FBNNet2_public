@@ -17,7 +17,7 @@ normalizeTimesereisRawData that normalized timeseries data}
 
 \item{func}{A function that specified how to split the column names}
 
-\item{splitor}{Seperator.}
+\item{splitor}{A separator.}
 }
 \description{
 This method is used to converts normalized

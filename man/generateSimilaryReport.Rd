@@ -7,9 +7,9 @@
 generateSimilaryReport(timeseriesdata1, timeseriesdata2)
 }
 \arguments{
-\item{timeseriesdata1}{the source time series data}
+\item{timeseriesdata1}{The source time series data}
 
-\item{timeseriesdata2}{tge target time series data}
+\item{timeseriesdata2}{The target time series data}
 }
 \description{
 This method compare two timeseries data and generate similar report
