@@ -30,8 +30,7 @@
 #' @return An object of a list contains Fundamental Boolean Network, Orchard
 #'  cube (optional) and discreted timeseries data
 #' @author Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com
-#' @keywords Fundamental Boolean Network, Boolean Network,
-#'  Genetic Regulatory Network
+#' @keywords Fundamental Boolean Network
 #'
 #' @references Chen et al.(2018), Front. Physiol., 25 September 2018, 
 #' (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})

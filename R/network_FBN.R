@@ -14,7 +14,7 @@
 #' per gene can be mined or filtered, the rest will be discarded
 #'@return A object of FBN network
 #'@author Leshi Chen, leshi, chen@lincolnuni.ac.nz
-#'@keywords Fundamental Boolean Network, Boolean Network, Genetic Regulatory Network
+#'@keywords Fundamental Boolean Network
 #'
 #'@references Chen et al.(2018), Front. Physiol., 25 September 2018, 
 #'(\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
