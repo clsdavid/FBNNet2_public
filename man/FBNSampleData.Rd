@@ -22,8 +22,5 @@ Chen et al.(2018), Front. Physiol., 25 September 2018,
 (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 }
 \keyword{Boolean}
-\keyword{FBM,}
-\keyword{FBN,}
 \keyword{Fundamental}
-\keyword{Modelling,}
-\keyword{Network}
+\keyword{Modelling}

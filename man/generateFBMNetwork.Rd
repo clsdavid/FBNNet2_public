@@ -97,7 +97,4 @@ Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com
 }
 \keyword{Boolean}
 \keyword{Fundamental}
-\keyword{Genetic}
 \keyword{Network}
-\keyword{Network,}
-\keyword{Regulatory}

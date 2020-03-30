@@ -23,6 +23,8 @@ Suggests:
     affy,
     affyPLM,
     seqinr,
+    openssl,
+    httr,
     GEOquery,
     stringr,
     futile.logger,
@@ -33,5 +35,6 @@ Suggests:
     foreach,
     ggplot2,
     knitr,
-    rmarkdown
+    rmarkdown,
+    BiocManager
 RoxygenNote: 7.1.0
