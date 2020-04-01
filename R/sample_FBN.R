@@ -1,35 +1,3 @@
-#' get Statistic Measures
-#' 
-#' A method to calculate the statistic measurements based on feature names
-#'
-#' @param featurenames a list of feature names, i.e., the gene name
-#' @param timeseriesdata the original timeseries data that contains continual values
-#' @return statistics measures
-#' 
-getStatisticMeasures <- function(featurenames, timeseriesdata) {
-  
-  # generate data
-  
-  res <- lapply(featurenames, function(feature) {
-    sampledata <- unlist(lapply(timeseriesdata, function(sample) sample[feature, ]))
-    std_sampledata <- stats::sd(sampledata)  #standard deviation
-    mean_sampledata <- mean(sampledata)
-    length_sampledata <- length(sampledata)
-    sem_sampledata <- std_sampledata/sqrt(length(sampledata))  #Standard error of the mean
-    max_sampledata <- max(sampledata)
-    min_sampledata <- min(sampledata)
-    median_sampledata <- stats::median(sampledata)
-    
-    result <- c(id = feature, std = std_sampledata, mean = mean_sampledata, length = length_sampledata, sem = sem_sampledata, max = max_sampledata, 
-                min = min_sampledata, median = median_sampledata)
-    return(result)
-  })
-  
-  measures <- do.call(rbind, res)
-  rownames(measures) <- measures[, 1]
-  measures <- measures[order(rownames(measures)), ]
-  measures
-}
 
 #' This method is used to converts normalized
 #' timeseries data into a list of samples

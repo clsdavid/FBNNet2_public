@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 #include <iostream>
 #include <vector>
-#include <String.h>
 #include<string>
 #include<limits.h>
 #include <math.h>

@@ -1,0 +1,36 @@
+---
+title: "Fundamental Boolean Network"
+author: "Leshi Chen"
+date: "`r Sys.Date()`"
+url: https://www.frontiersin.org/articles/10.3389/fphys.2018.01328/full
+output: 
+  rmarkdown::pdf_document:
+    citation_package: natbib
+    keep_tex: true
+    fig_caption: true
+always_allow_html: true
+bibliography: master.bib
+biblio-style: apsr
+keywords: "Fundamental Boolean Modelling, FBNNet, FBN, FBM"
+geometry: margin=1in
+fontsize: 11pt
+spacing: double
+endnote: no
+vignette: >
+  %\VignetteIndexEntry{Fundamental Boolean Network}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Fundamental Boolean modelling(FBM) has been proposed to draw insights into gene activation, inhibition, and protein decay. This
+novel Boolean model provides an intuitive definition of activation and inhibition pathways
+and includes mechanisms to handle protein decay issues. To prove the concept of
+the novel model, we implemented a platform using R language, called FBNNet. Our
+experimental results show that the proposed FBM could explicitly display the internal
+connections of the mammalian cell cycle between genes separated into the connection
+types of activation, inhibition and protein decay.
+

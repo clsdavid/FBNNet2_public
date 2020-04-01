@@ -14,27 +14,28 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 Imports:
-    Rcpp (>= 1.0)
-Suggests:
-    testthat,
-    stats,
+    Rcpp (>= 1.0),
     parallel,
     visNetwork,
-    affy,
-    affyPLM,
+    dplyr,
+    tidyr, 
+    foreach,
+    ggplot2,
+    futile.logger
+Suggests:
     seqinr,
     openssl,
     httr,
-    GEOquery,
     stringr,
-    futile.logger,
+    stringi,
     magrittr,
-    BoolNet,
-    dplyr,
-    snow,
-    foreach,
-    ggplot2,
+    readr,
+    testthat,
+    tinytex,
+    isoband,
     knitr,
     rmarkdown,
-    BiocManager
+    BoolNet,
+    GEOquery,
+    here
 RoxygenNote: 7.1.0

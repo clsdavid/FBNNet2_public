@@ -1,8 +1,13 @@
 ^.*\.Rproj$
 ^.*\.Rout$
 ^\.Rproj\.user$
+^README.Rmd$
+^README.tex$
+^README.pdf$
 ^temp$
 ^examples_i386$
 ^examples_x64$
 ^tests_i386$
 ^tests_x64$
+^doc$
+^Meta$

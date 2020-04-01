@@ -65,23 +65,13 @@ This is the main entry of the package FBNNet that can be used to mine the
 \examples{
  
 data('yeastTimeSeries')
-network <- generateFBMNetwork(yeastTimeSeries)
+
+network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
 network
 ## draw the general graph
 FBNNetwork.Graph(network)
 
-network <- generateFBMNetwork(yeastTimeSeries, verbose = TRUE)
-network
-network <- generateFBMNetwork(yeastTimeSeries,
-                              method = "kmeans")
-network
-network <- generateFBMNetwork(yeastTimeSeries,
-                              method = "edgeDetector")
-network
-network <- generateFBMNetwork(yeastTimeSeries,
-                              method = "scanStatistic")
-network
-
+## get the Orchard cube as well as networks
 res <- generateFBMNetwork(yeastTimeSeries, network_only = FALSE)
 res
 }
