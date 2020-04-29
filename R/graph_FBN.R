@@ -1,10 +1,12 @@
-#'This method is used to convert the FBN network into a FBN network object for graphs
+#' @title Convert To Network Graphic Object
+#' @description  This method is used to convert the FBN network 
+#' into a FBN network object for graphs
 #'
-#'@param FBNnetwork A FBN network object
-#'@param david_gene_list A data frame of DAVID biological annotation
-#'@param show_decay Optional, if TRUE, will draw the connections for decay.
-#'@return An network graphic object
-#'@examples
+#' @param FBNnetwork A FBN network object
+#' @param david_gene_list A data frame of DAVID biological annotation
+#' @param show_decay Optional, if TRUE, will draw the connections for decay.
+#' @return An network graphic object
+#' @examples
 #' ##coming later
 ConvertToNetworkGraphicObject <- function(FBNnetwork,
                                           david_gene_list = NULL, 
@@ -266,15 +268,20 @@ ConvertToNetworkGraphicObject <- function(FBNnetwork,
   res
 }
 
-#' internal method to convert the timeseries data 
-#' into the graphic object.
+#' @title Convert To Dynamic Network Graphic Object
+#' @description  internal method to convert the timeseries data 
+#' into the graphic object. 
+#' (ConvertToDynamicNetworkGraphicObject)
 #' 
 #' @param timeseries The timeseries data
 #' @param FBNnetwork The fundamental Boolean network.
 #' @param networkobject The fundamental Boolean network
 #' objects.
 #' @return  A dataframe object.
-ConvertToDynamicNetworkGraphicObject <- function(timeseries, FBNnetwork, networkobject) {
+convert_to_NGO <- function(
+  timeseries, 
+  FBNnetwork, 
+  networkobject) {
   
   if (is.null(timeseries) | !is.matrix(timeseries)) {
     stop("The parameter timeseries must be not NULL and is a class of Matrix")
@@ -536,8 +543,6 @@ ConvertToDynamicNetworkGraphicObject <- function(timeseries, FBNnetwork, network
       }
     }
   }
-  
-  
   edgeids <- names(temporarymat)
   for (i in seq_along(edgeids)) {
     tempid <- edgeids[[i]]
@@ -790,10 +795,10 @@ GenerateDynamicNetworkGraphicObject <- function(
     # from
     filterednodeFrom <- networkobject$nodes[which(networkobject$nodes$id %in% tonewedges$from), ]
     filterednodeFromGene <- filterednodeFrom[which(filterednodeFrom$type == "gene"), ]
-    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color = "pink"
-    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color = "lightblue"
+    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color <- "pink"
+    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color <- "lightblue"
     
-    tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), 
+    tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from <- paste(tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), 
       ]$from, "_", index, sep = "")
     filterednodeFromGene$id <- paste(filterednodeFromGene$id, "_", index, sep = "")
     filterednodeFromGene$label <- paste(filterednodeFromGene$label, "_", index, sep = "")
@@ -801,22 +806,22 @@ GenerateDynamicNetworkGraphicObject <- function(
     # to
     filterednodeTo <- networkobject$nodes[which(networkobject$nodes$id %in% tonewedges$to), ]
     filterednodeToGene <- filterednodeTo[which(filterednodeTo$type == "gene"), ]
-    filterednodeToGene[which(nextstate[filterednodeToGene$id] == 0), ]$color = "pink"
-    filterednodeToGene[which(nextstate[filterednodeToGene$id] == 1), ]$color = "lightblue"
+    filterednodeToGene[which(nextstate[filterednodeToGene$id] == 0), ]$color <- "pink"
+    filterednodeToGene[which(nextstate[filterednodeToGene$id] == 1), ]$color <- "lightblue"
     
-    tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, 
+    tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to <- paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, 
       "_", nextindex, sep = "")
     filterednodeToGene$id <- paste(filterednodeToGene$id, "_", nextindex, sep = "")
     filterednodeToGene$label <- paste(filterednodeToGene$label, "_", nextindex, sep = "")
     
     # TF
     filterednodeFromTF <- filterednodeFrom[which(filterednodeFrom$type == "TF"), ]
-    tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), 
+    tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from <- paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), 
       ]$from, "_", nextindex, sep = "")
     filterednodeFromTF$id <- paste(filterednodeFromTF$id, "_", nextindex, sep = "")
     
     filterednodeToTF <- filterednodeTo[which(filterednodeTo$type == "TF"), ]
-    tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", 
+    tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to <- paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", 
       nextindex, sep = "")
     filterednodeToTF$id <- paste(filterednodeToTF$id, "_", nextindex, sep = "")
     
@@ -889,9 +894,6 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
     nextindex <- index + 1
     nextstate <- matrix[, nextindex]
     
-    # fromfilterddynamic<-dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset)<index &
-    # index<=as.numeric(dynamicNetworkGraphicObject$terminus)),]
-    
     tofilterddynamic <- dynamicNetworkGraphicObject[which(as.numeric(dynamicNetworkGraphicObject$onset) < nextindex & nextindex <= as.numeric(dynamicNetworkGraphicObject$terminus)), 
       ]
     
@@ -901,8 +903,8 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
     # from
     filterednodeFrom <- networkobject$nodes[which(networkobject$nodes$id %in% tonewedges$from), ]
     filterednodeFromGene <- filterednodeFrom[which(filterednodeFrom$type == "gene"), ]
-    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color = "pink"
-    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color = "lightblue"
+    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 0), ]$color <- "pink"
+    filterednodeFromGene[which(curstate[filterednodeFromGene$id] == 1), ]$color <- "lightblue"
     
     tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromGene$id), 
       ]$from, "_", index, sep = "")
@@ -920,22 +922,47 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
         gene <- independeGenes[[k]]
         genestate <- matrix[independeGenes[[k]], index]
         if (as.numeric(genestate == 0)) {
-          makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "pink", type = "gene", value = 4, label = paste(gene, 
-          "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
+          makeupnode <- list(id = paste(gene, "_", index, sep = ""),
+                             shape = "ellipse",
+                             color = "pink",
+                             type = "gene", 
+                             value = 4, 
+                             label = paste(gene, "_", index, sep = ""), 
+                             shadow = TRUE,
+                             group = "Gene",
+                             title = gene,
+                             level = startlevel)
         } else {
-          makeupnode <- list(id = paste(gene, "_", index, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", value = 4, label = paste(gene, 
-          "_", index, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel)
+          makeupnode <- list(id = paste(gene, "_", index, sep = ""),
+                             shape = "ellipse",
+                             color = "lightblue",
+                             type = "gene", 
+                             value = 4, 
+                             label = paste(gene, "_", index, sep = ""), 
+                             shadow = TRUE, 
+                             group = "Gene", 
+                             title = gene, 
+                             level = startlevel)
         }
         
         individualfromnode[[length(individualfromnode) + 1]] <- makeupnode
       }
       individualfromnode <- do.call(rbind.data.frame, individualfromnode)
-      colnames(individualfromnode) <- c("id", "shape", "color", "type", "value", "label", "shadow", "group", "title", "level")
+      colnames(individualfromnode) <- c("id", 
+                                        "shape", 
+                                        "color", 
+                                        "type",
+                                        "value", 
+                                        "label", 
+                                        "shadow", 
+                                        "group", 
+                                        "title", 
+                                        "level")
     }
     
     # TF from
     filterednodeFromTF <- filterednodeFrom[which(filterednodeFrom$type == "TF"), ]
-    tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from = paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), 
+    tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), ]$from <- paste(tonewedges[which(tonewedges$from %in% filterednodeFromTF$id), 
       ]$from, "_", nextindex, sep = "")
     filterednodeFromTF$id <- paste(filterednodeFromTF$id, "_", nextindex, sep = "")
     filterednodeFromTF <- cbind(filterednodeFromTF, level = rep(startlevel + 1, length(rownames(filterednodeFromTF))))
@@ -948,7 +975,7 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
     filterednodeToGene[which(nextstate[filterednodeToGene$id] == 0), ]$color = "pink"
     filterednodeToGene[which(nextstate[filterednodeToGene$id] == 1), ]$color = "lightblue"
     
-    tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, 
+    tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to <- paste(tonewedges[which(tonewedges$to %in% filterednodeToGene$id), ]$to, 
       "_", nextindex, sep = "")
     filterednodeToGene$id <- paste(filterednodeToGene$id, "_", nextindex, sep = "")
     filterednodeToGene$label <- paste(filterednodeToGene$label, "_", nextindex, sep = "")
@@ -964,23 +991,48 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
         gene <- independeGenes[[k]]
         genestate <- matrix[independeGenes[[k]], nextindex]
         if (as.numeric(genestate == 0)) {
-          makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "pink", type = "gene", value = 4, label = paste(gene, 
-          "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel + 2)
+          makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""),
+                             shape = "ellipse",
+                             color = "pink", 
+                             type = "gene",
+                             value = 4, 
+                             label = paste(gene, "_", nextindex, sep = ""), 
+                             shadow = TRUE, 
+                             group = "Gene",
+                             title = gene, 
+                             level = startlevel + 2)
         } else {
-          makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), shape = "ellipse", color = "lightblue", type = "gene", value = 4, 
-          label = paste(gene, "_", nextindex, sep = ""), shadow = TRUE, group = "Gene", title = gene, level = startlevel + 2)
+          makeupnode <- list(id = paste(gene, "_", nextindex, sep = ""), 
+                             shape = "ellipse", 
+                             color = "lightblue", 
+                             type = "gene",
+                             value = 4, 
+                             label = paste(gene, "_", nextindex, sep = ""), 
+                             shadow = TRUE, 
+                             group = "Gene", 
+                             title = gene, 
+                             level = startlevel + 2)
         }
         
         individualtonode[[length(individualtonode) + 1]] <- makeupnode
       }
       individualtonode <- do.call(rbind.data.frame, individualtonode)
-      colnames(individualtonode) <- c("id", "shape", "color", "type", "value", "label", "shadow", "group", "title", "level")
+      colnames(individualtonode) <- c("id", 
+                                      "shape",
+                                      "color", 
+                                      "type", 
+                                      "value",
+                                      "label", 
+                                      "shadow",
+                                      "group", 
+                                      "title", 
+                                      "level")
     }
     
     # to TF
     
     filterednodeToTF <- filterednodeTo[which(filterednodeTo$type == "TF"), ]
-    tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to = paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", 
+    tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to <- paste(tonewedges[which(tonewedges$to %in% filterednodeToTF$id), ]$to, "_", 
       nextindex, sep = "")
     filterednodeToTF$id <- paste(filterednodeToTF$id, "_", nextindex, sep = "")
     filterednodeToTF <- cbind(filterednodeToTF, level = rep(startlevel + 1, length(rownames(filterednodeToTF))))
@@ -993,22 +1045,77 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
   }
   
   
-  lnodes <- data.frame(label = c("Activated Gene", "Inhibited Gene", "Activate Function (+)", "Inhibit Function (-)"), shape = c("ellipse", "ellipse", 
-    "box", "box"), color = c("lightblue", "pink", "lightgreen", "orange"), shadow = c(TRUE, TRUE, FALSE, FALSE))
+  lnodes <- data.frame(label = c("Activated Gene", 
+                                 "Inhibited Gene", 
+                                 "Activate Function (+)",
+                                 "Inhibit Function (-)"),
+                       shape = c("ellipse", 
+                                 "ellipse", 
+                                 "box", 
+                                 "box"), 
+                       color = c("lightblue", 
+                                 "pink",
+                                 "lightgreen", 
+                                 "orange"),
+                       shadow = c(TRUE, 
+                                  TRUE, 
+                                  FALSE, 
+                                  FALSE))
   
   # edges data.frame for legend
-  ledges <- data.frame(color = c("darkblue", "darkred", "grey", "green", "red"), label = c("activate", "inhibit", "decay", "activated input", 
-    "deactivated input"), arrows = c("to", "to", "to", "none", "none"), dashes = c(FALSE, TRUE, TRUE, FALSE, TRUE), shadow = c(TRUE, TRUE, TRUE, 
-    FALSE, FALSE))
+  ledges <- data.frame(color = c("darkblue",
+                                 "darkred", 
+                                 "grey", 
+                                 "green", 
+                                 "red"), 
+                       label = c("activate",
+                                 "inhibit", 
+                                 "decay", 
+                                 "activated input", 
+                                 "deactivated input"), 
+                       arrows = c("to", 
+                                  "to", 
+                                  "to",
+                                  "none",
+                                  "none"), 
+                       dashes = c(FALSE, 
+                                  TRUE, 
+                                  TRUE, 
+                                  FALSE, 
+                                  TRUE), 
+                       shadow = c(TRUE, 
+                                  TRUE, 
+                                  TRUE, 
+                                  FALSE, 
+                                  FALSE))
   
-  
-  
-  graph <- visNetwork::visNetwork(newnodes, newedges, main = paste0("Dynamic Fundamental Boolean Networks from the time point of", " ", 1, " ", 
-    "to ", length(cNames)))
-  graph <- visNetwork::visLegend(graph, addEdges = ledges, addNodes = lnodes, useGroups = FALSE, width = 0.1)
-  graph <- visNetwork::visInteraction(graph, dragNodes = TRUE, dragView = TRUE, zoomView = TRUE)
-  graph <- visNetwork::visEdges(graph, arrows = "from")
-  visNetwork::visHierarchicalLayout(graph, direction = "LR", levelSeparation = 200)
+  graph <- visNetwork::visNetwork(
+    newnodes, 
+    newedges, 
+    main = paste0("Dynamic Fundamental Boolean Networks from the time point of", 
+                  " ", 
+                  1, 
+                  " ", 
+                  "to ", 
+                  length(cNames)))
+  graph <- visNetwork::visLegend(
+    graph, 
+    addEdges = ledges, 
+    addNodes = lnodes, 
+    useGroups = FALSE, 
+    width = 0.1)
+  graph <- visNetwork::visInteraction(
+    graph, 
+    dragNodes = TRUE, 
+    dragView = TRUE, 
+    zoomView = TRUE)
+  graph <- visNetwork::visEdges(
+    graph, 
+    arrows = "from")
+  visNetwork::visHierarchicalLayout(
+    graph, 
+    direction = "LR", 
+    levelSeparation = 200)
 }
 
 
@@ -1061,7 +1168,7 @@ FBNNetwork.Graph <- function(fbnNetwork,
       stop("The parameter timeseriesMatrix should be a class of matrix!")
     }
     
-    dynamicnetworkobject <- ConvertToDynamicNetworkGraphicObject(
+    dynamicnetworkobject <- convert_to_NGO(
       timeseriesMatrix, 
       fbnNetwork, 
       networkobject)
@@ -1121,7 +1228,7 @@ FBNNetwork.Graph.DrawAttractor <- function(fbnNetwork, FBMAttractors, index = 1)
     colnames(matrix) <- c(1:len)
     
     
-    dynamicnetworkobject <- ConvertToDynamicNetworkGraphicObject(matrix,
+    dynamicnetworkobject <- convert_to_NGO(matrix,
                                                                  fbnNetwork,
                                                                  networkobject)
   }

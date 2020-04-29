@@ -1,7 +1,7 @@
 
-#' Example Network data
+#' @title Example Network data
 #'
-#' Data generated for testing purpose.
+#' @description  Data generated for testing purpose.
 #'
 #' @docType data
 #'

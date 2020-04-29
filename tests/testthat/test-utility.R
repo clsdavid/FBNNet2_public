@@ -4,8 +4,9 @@ test_that("run utility should succeed", {
   data('yeastTimeSeries')
   expect_false(isBooleanTypeTimeseriesData(yeastTimeSeries))
   ## discrete the result
-  timeseries_data <- BoolNet::binarizeTimeSeries(yeastTimeSeries,
-                                                 method = "kmean")$binarizedMeasurements
+  timeseries_data <- BoolNet::binarizeTimeSeries(
+    yeastTimeSeries,
+    method = "kmean")$binarizedMeasurements
   expect_true(isBooleanTypeTimeseriesData(timeseries_data))
   
   expect_true(is.null(checkProbabilityTypeData(0.6)))

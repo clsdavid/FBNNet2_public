@@ -45,7 +45,7 @@ generateAllCombinationBinary <- function(genelist = c(), begin = 1, last = 0) {
   }
   
   if (last == 0) {
-    last = 2^(length(genelist))
+    last <- 2^(length(genelist))
   }
   res <- list()
   for (gene in genelist) {

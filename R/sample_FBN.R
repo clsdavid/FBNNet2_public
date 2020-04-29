@@ -11,7 +11,7 @@ convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste
   
   mat <- normalizedData
   # Obtain the last part of each column names
-  groups <- sapply(strsplit(x = colnames(mat), split = splitor), func)
+  groups <- vapply(strsplit(x = colnames(mat), split = splitor), func, character(1))
   print(groups)
   # Go through each unique column name and extract the corresponding columns
   res <- lapply(unique(groups), function(x) mat[, which(groups == x)])
@@ -28,13 +28,16 @@ convertIntoSampleTimeSeries <- function(normalizedData, func = function(x) paste
 #'@param func A function that specified how to split the column names
 #'@param splitor Separator.
 #'@export
-reorderSampleTimeSeries <- function(convertedTimeSeries, func = function(x) x[length(x)], splitor = as.character("-")) {
+reorderSampleTimeSeries <- function(
+  convertedTimeSeries, 
+  func = function(x) x[length(x)], splitor = as.character("-")) {
+  
   len <- length(convertedTimeSeries)
   res <- lapply(seq_len(len), function(index) {
     result <- convertedTimeSeries[[index]]
     ocolnames <- colnames(result)
     ocolnames <- gsub("\\..*", "", ocolnames)
-    ocolnames <- sapply(strsplit(x = ocolnames, split = splitor), func)
+    ocolnames <- vapply(strsplit(x = ocolnames, split = splitor), func, character(1))
     ocolnames <- as.integer(stringr::str_extract_all(ocolnames, "[0-9]+"))
     colnames(result) <- ocolnames
     result2 <- result[, order(as.numeric(colnames(result)))]

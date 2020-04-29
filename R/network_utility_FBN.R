@@ -507,7 +507,7 @@ convertToFBNNetwork <- function(network) {
     res[[3]] <- network$fixed
     names(res)[[3]] <- "fixed"
     
-    res[[4]] <- sapply(network$genes, function(gene) gene = 1)
+    res[[4]] <- vapply(network$genes, function(gene) gene = 1, numeric(1))
     names(res)[[4]] <- "timedecay"
     
     # lapply(network$interactions,function(interaction){

@@ -52,7 +52,7 @@ mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, thres
 
   genes <- genes[genes %in% names(fbnGeneCube)]
   
-  midle_result <- searchFBNNetworkCore(fbnGeneCube, genes, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules)
+  midle_result <- search_FBN_core(fbnGeneCube, genes, useParallel, threshold_confidence, threshold_error, threshold_support, maxFBNRules)
   finalresult <- mineFBNNetworkWithCores(midle_result, genes, threshold_error, maxFBNRules)
   futile.logger::flog.info(sprintf("Leave mineFBNNetwork zone"))
   finalresult
@@ -60,19 +60,19 @@ mineFBNNetwork <- function(fbnGeneCube, genes = NULL, useParallel = FALSE, thres
 
 #' An internal function
 #' 
-#' @param searchFBNNetworkCore A result of \code{searchFBNNetworkCore}
+#' @param search_FBN_core A result of \code{search_FBN_core}
 #' @param genes Genes that involved.
 #' @param threshold_error A threshold of error rate (between 0 and 1) 
 #' that used to filter the Fundamental Boolean functions
 #' @param maxFBNRules The maximum rules per type (Activation and Inhibition) 
 #' per gene can be mined or filtered, the rest will be discarded
-mineFBNNetworkWithCores <- function(searchFBNNetworkCore, genes = NULL, threshold_error, maxFBNRules) {
+mineFBNNetworkWithCores <- function(search_FBN_core, genes = NULL, threshold_error, maxFBNRules) {
   if (is.null(genes)) {
-    genes <- names(searchFBNNetworkCore)
+    genes <- names(search_FBN_core)
   }
   
   futile.logger::flog.info(sprintf("Enter mineFBNNetworkWithCores zone"))
-  midle_result <- mineFBNNetworkStage2(searchFBNNetworkCore, threshold_error, maxFBNRules)
+  midle_result <- mineFBNNetworkStage2(search_FBN_core, threshold_error, maxFBNRules)
   finalresult <- convertMinedResultToFBNNetwork(midle_result, genes)
   
   if (length(finalresult) > 0) {
@@ -115,14 +115,20 @@ removeDuplicates <- function(factors) {
 #' used to filter the Fundamental Boolean functions
 #'@param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #' per gene can be mined or filtered, the rest will be discarded
-searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, threshold_confidence = 1, threshold_error = 0, threshold_support = 1e-04, 
+search_FBN_core <- function(
+  fbnGeneCube, 
+  genes, 
+  useParallel = FALSE, 
+  threshold_confidence = 1, 
+  threshold_error = 0, 
+  threshold_support = 1e-04, 
   maxFBNRules = 5) {
   
   if (useParallel) {
     useParallel = FALSE
     futile.logger::flog.info(sprintf("The parallel for network is not support"))
   }
-  futile.logger::flog.info(sprintf("Enter searchFBNNetworkCore zone: useParallel=%s", useParallel))
+  futile.logger::flog.info(sprintf("Enter search_FBN_core zone: useParallel=%s", useParallel))
   
   
   network_configs <- new.env(hash = TRUE)
@@ -390,7 +396,7 @@ searchFBNNetworkCore <- function(fbnGeneCube, genes, useParallel = FALSE, thresh
     closeAllConnections()
   }
   
-  futile.logger::flog.info(sprintf("Leave searchFBNNetworkCore zone"))
+  futile.logger::flog.info(sprintf("Leave search_FBN_core zone"))
   rm(network_configs)
   res
   ## wrap result
@@ -485,7 +491,7 @@ mineFBNNetworkStage2 <- function(res, threshold_error = 0, maxFBNRules = 5) {
     # futher remove based on maximum activators and maximum inhibitors
     return(finalRes)
   })
-  cond1 <- sapply(filteredres, function(entry) !is.null(entry))
+  cond1 <- vapply(filteredres, function(entry) !is.null(entry), logical(1))
   filteredres <- (filteredres[cond1][unlist(lapply(filteredres[cond1], length) != 0)])
   
   class(filteredres) <- c("FBNTrueCubeMiner")

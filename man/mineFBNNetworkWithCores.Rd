@@ -5,14 +5,14 @@
 \title{An internal function}
 \usage{
 mineFBNNetworkWithCores(
-  searchFBNNetworkCore,
+  search_FBN_core,
   genes = NULL,
   threshold_error,
   maxFBNRules
 )
 }
 \arguments{
-\item{searchFBNNetworkCore}{A result of \code{searchFBNNetworkCore}}
+\item{search_FBN_core}{A result of \code{search_FBN_core}}
 
 \item{genes}{Genes that involved.}
 

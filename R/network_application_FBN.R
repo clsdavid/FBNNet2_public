@@ -399,7 +399,7 @@ mergeClusterNetworks <- function(clusteredFBNCube, threshold_error, maxFBNRules)
     network_cores <- combine_cores
     i <- i + 1
   }
-  mineFBNNetworkWithCores(searchFBNNetworkCore = network_cores, genes = genes, threshold_error = threshold_error, maxFBNRules = maxFBNRules)
+  mineFBNNetworkWithCores(search_FBN_core = network_cores, genes = genes, threshold_error = threshold_error, maxFBNRules = maxFBNRules)
 }
 
 #' An internal function to find all input genes from a group of genes

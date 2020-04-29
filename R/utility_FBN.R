@@ -185,14 +185,14 @@ checkProbabilityTypeData <- function(x) {
 #' @param x A value that need to be checked.
 #' @return TRUE or FALSE
 isBooleanTypeTimeseriesData <- function(x) {
-  conds <- sapply(x, function(mat) {
+  conds <- vapply(x, function(mat) {
     f_mat <- as.numeric(levels(factor(mat)))
     if (all(f_mat %in% c(0, 1))) {
       return(TRUE)
     } else {
       return(FALSE)
     }
-  })
+  }, logical(1))
   
   all(conds)
 }

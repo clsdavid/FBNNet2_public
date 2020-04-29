@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph_FBN.R
 \name{ConvertToNetworkGraphicObject}
 \alias{ConvertToNetworkGraphicObject}
-\title{This method is used to convert the FBN network into a FBN network object for graphs}
+\title{Convert To Network Graphic Object}
 \usage{
 ConvertToNetworkGraphicObject(
   FBNnetwork,
@@ -21,7 +21,8 @@ ConvertToNetworkGraphicObject(
 An network graphic object
 }
 \description{
-This method is used to convert the FBN network into a FBN network object for graphs
+This method is used to convert the FBN network 
+into a FBN network object for graphs
 }
 \examples{
 ##coming later
