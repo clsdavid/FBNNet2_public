@@ -31,7 +31,7 @@ https://clsdavid.github.io/FBNNet2_public/
 
 ---
 __Citation__
-Please cite: Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
+Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
 
 __Copyright and Licensing__
 This package and related novel concepts were originally proposed and developed by Leshi Chen <https://doi.org/10.3389/fphys.2018.01328>, under the supervision of Don Kulasiri and Sandhya Samarasinghe during the PHD study at Lincoln University, New Zealand. Currently, the package is licensed under the MIT License for public.
