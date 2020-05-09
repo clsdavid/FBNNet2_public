@@ -216,7 +216,7 @@ the console.</p></td>
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'yeastTimeSeries'</span>)
 
-<span class='no'>network</span> <span class='kw'>&lt;-</span> <span class='fu'>generateFBMNetwork</span>(<span class='no'>yeastTimeSeries</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; INFO [2020-05-09 22:34:58] Enter generateFBMNetwork zone: 
+<span class='no'>network</span> <span class='kw'>&lt;-</span> <span class='fu'>generateFBMNetwork</span>(<span class='no'>yeastTimeSeries</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; INFO [2020-05-09 23:02:37] Enter generateFBMNetwork zone: 
 #&gt;           method=kmeans,
 #&gt;           maxK = 4, 
 #&gt;           useParallel = FALSE, 
@@ -227,27 +227,27 @@ the console.</p></td>
 #&gt;           maxFBNRules = 5,
 #&gt;           network_only = TRUE,
 #&gt;           verbose = TRUE
-#&gt; INFO [2020-05-09 22:34:58] Run generateFBMNetwork with a single cube
-#&gt; INFO [2020-05-09 22:34:58] Enter constructFBNCube zone: 
+#&gt; INFO [2020-05-09 23:02:37] Run generateFBMNetwork with a single cube
+#&gt; INFO [2020-05-09 23:02:37] Enter constructFBNCube zone: 
 #&gt;         target_genes=4 genes and they are Fkh2, Swi5, Sic1, Clb1,
 #&gt;         conditional_genes=4 genes and they are Fkh2, Swi5, Sic1, Clb1,
 #&gt;         data_length=1,
 #&gt;         maxK=4, 
 #&gt;         temporal=1,
 #&gt;         useParallel=FALSE
-#&gt; INFO [2020-05-09 22:34:58] Leave constructFBNCube zone.
-#&gt; [1] "Total cost 0.0279240608215332 seconds to construct a FBN Cube."
-#&gt; INFO [2020-05-09 22:34:58] Enter mineFBNNetwork zone: genes=, useParallel=FALSE
-#&gt; INFO [2020-05-09 22:34:58] Enter search_FBN_core zone: useParallel=FALSE
-#&gt; INFO [2020-05-09 22:34:58] Leave search_FBN_core zone
-#&gt; INFO [2020-05-09 22:34:58] Enter mineFBNNetworkWithCores zone
-#&gt; INFO [2020-05-09 22:34:58] Enter mineFBNNetworkStage2 zone
-#&gt; INFO [2020-05-09 22:34:58] Leave mineFBNNetworkStage2 zone
-#&gt; INFO [2020-05-09 22:34:58] Enter convertMinedResultToFBNNetwork zone
-#&gt; INFO [2020-05-09 22:34:58] Leave convertMinedResultToFBNNetwork zone
-#&gt; INFO [2020-05-09 22:34:58] Leave mineFBNNetworkWithCores zone
-#&gt; INFO [2020-05-09 22:34:58] Leave mineFBNNetwork zone
-#&gt; [1] "Total cost 0.0558171272277832 seconds to mine Fundamental Boolean Functions "</div><div class='input'><span class='no'>network</span></div><div class='output co'>#&gt; Fundamental Boolean Network with  3 genes
+#&gt; INFO [2020-05-09 23:02:37] Leave constructFBNCube zone.
+#&gt; [1] "Total cost 0.0199811458587646 seconds to construct a FBN Cube."
+#&gt; INFO [2020-05-09 23:02:37] Enter mineFBNNetwork zone: genes=, useParallel=FALSE
+#&gt; INFO [2020-05-09 23:02:37] Enter search_FBN_core zone: useParallel=FALSE
+#&gt; INFO [2020-05-09 23:02:37] Leave search_FBN_core zone
+#&gt; INFO [2020-05-09 23:02:37] Enter mineFBNNetworkWithCores zone
+#&gt; INFO [2020-05-09 23:02:37] Enter mineFBNNetworkStage2 zone
+#&gt; INFO [2020-05-09 23:02:37] Leave mineFBNNetworkStage2 zone
+#&gt; INFO [2020-05-09 23:02:37] Enter convertMinedResultToFBNNetwork zone
+#&gt; INFO [2020-05-09 23:02:37] Leave convertMinedResultToFBNNetwork zone
+#&gt; INFO [2020-05-09 23:02:37] Leave mineFBNNetworkWithCores zone
+#&gt; INFO [2020-05-09 23:02:37] Leave mineFBNNetwork zone
+#&gt; [1] "Total cost 0.0454409122467041 seconds to mine Fundamental Boolean Functions "</div><div class='input'><span class='no'>network</span></div><div class='output co'>#&gt; Fundamental Boolean Network with  3 genes
 #&gt; Genes involved:
 #&gt; Fkh2, Swi5, Clb1
 #&gt; 
@@ -266,8 +266,8 @@ the console.</p></td>
 <span class='fu'><a href='FBNNetwork.Graph.html'>FBNNetwork.Graph</a></span>(<span class='no'>network</span>)
 
 <span class='co'>## get the Orchard cube as well as networks</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>generateFBMNetwork</span>(<span class='no'>yeastTimeSeries</span>, <span class='kw'>network_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; [1] "Total cost 0.0245459079742432 seconds to construct a FBN Cube."
-#&gt; [1] "Total cost 0.0169658660888672 seconds to mine Fundamental Boolean Functions "</div><div class='input'><span class='no'>res</span></div><div class='output co'>#&gt; $cube
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>generateFBMNetwork</span>(<span class='no'>yeastTimeSeries</span>, <span class='kw'>network_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; [1] "Total cost 0.0258979797363281 seconds to construct a FBN Cube."
+#&gt; [1] "Total cost 0.0179519653320312 seconds to mine Fundamental Boolean Functions "</div><div class='input'><span class='no'>res</span></div><div class='output co'>#&gt; $cube
 #&gt; $Fkh2
 #&gt; $Fkh2$SubGenes
 #&gt; $Fkh2$SubGenes$Fkh2

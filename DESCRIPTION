@@ -26,7 +26,7 @@ Encoding: UTF-8
 LazyData: TRUE
 Language: en-US
 VignetteBuilder: knitr
-URL: https://github.com/clsdavid/FBNNet2_public
+URL: https://github.com/clsdavid/FBNNet2_public, https://clsdavid.github.io/FBNNet2_public
 BugReports: https://github.com/clsdavid/FBNNet2_public/issues
 Depends: 
     R (>= 3.5)

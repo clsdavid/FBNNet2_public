@@ -19,8 +19,7 @@ This package adopted the concepts of fundamental Boolean modelling and networks 
 devtools::install_github("clsdavid/FBNNet2_public")
 
 #### Documentation
-coming soon
-
+https://clsdavid.github.io/FBNNet2_public/
 
 ---
 
