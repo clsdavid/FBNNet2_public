@@ -21,3 +21,5 @@
 ^tests_x64$
 ^doc$
 ^Meta$
+^docs$
+^pkgdown$

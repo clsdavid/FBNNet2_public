@@ -1148,16 +1148,16 @@ FBNNetwork.Graph <- function(fbnNetwork,
   if (length(fbnNetwork$interactions) == 0) 
     return(NULL)
   
-  utils::data("DAVID_gene_list", overwrite = TRUE)
+  utils::data("DAVID_Gene_List", overwrite = TRUE)
   
   if (is.null(networkobject)) {
     if (type == "dynamic") 
       networkobject <- ConvertToNetworkGraphicObject(fbnNetwork,
-                                                     DAVID_gene_list,
+                                                     DAVID_Gene_List,
                                                      show_decay = TRUE) 
     else 
       networkobject <- ConvertToNetworkGraphicObject(fbnNetwork, 
-                                                     DAVID_gene_list, 
+                                                     DAVID_Gene_List, 
                                                      show_decay = FALSE)
   }
   
@@ -1177,7 +1177,7 @@ FBNNetwork.Graph <- function(fbnNetwork,
   switch(type, 
          static = StaticNetwork(
            networkobject, 
-           DAVID_gene_list), 
+           DAVID_Gene_List), 
          staticSlice = StaticNetworkInSlice(
            networkobject, 
            toTimePoint, 

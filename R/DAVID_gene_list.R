@@ -4,7 +4,7 @@
 #'
 #' @docType data
 #'
-#' @usage data(DAVID_gene_list)
+#' @usage data(DAVID_Gene_List)
 #'
 #' @format A table of gene list mapping probeset with gene names extracted from DAVID tools.
 #'
@@ -16,6 +16,6 @@
 #' @source \href{https://david.ncifcrf.gov/}{DAVID Bioinformatic Database}
 #'
 #' @examples
-#' data(DAVID_gene_list)
-#' DAVID_gene_list
-"DAVID_gene_list"
+#' data(DAVID_Gene_List)
+#' DAVID_Gene_List
+"DAVID_Gene_List"

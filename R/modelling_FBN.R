@@ -182,7 +182,7 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
 #' cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
 #'                        conditional_genes = ExampleNetwork$genes,
 #'                        timeseriesCube = trainingseries,
-#'                        maxK = 4,
+#'                        maxK = 3,
 #'                        temporal = 1,
 #'                        useParallel = FALSE)
 #' NETWORK2<-mineFBNNetwork(cube,ExampleNetwork$genes)

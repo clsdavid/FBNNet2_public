@@ -204,10 +204,10 @@ isBooleanTypeTimeseriesData <- function(x) {
 #' @param  filename The name of the output file such as xx.csv
 #' @export
 output_annotated_genes <- function(genes, path, filename) {
-  ## DAVID_gene_list <- NULL
-  utils::data("DAVID_gene_list", overwrite = TRUE)
-  mapped_genes <- with(DAVID_gene_list, {
-    DAVID_gene_list[DAVID_gene_list$Symbol %in% genes, ]
+  ## DAVID_Gene_List <- NULL
+  utils::data("DAVID_Gene_List", overwrite = TRUE)
+  mapped_genes <- with(DAVID_Gene_List, {
+    DAVID_Gene_List[DAVID_Gene_List$Symbol %in% genes, ]
   })
   distic_mapped_genes <- with(mapped_genes, {
     dplyr::distinct(mapped_genes, Symbol, .keep_all = TRUE)

@@ -10,7 +10,7 @@ output:
     citation_package: natbib
     fig_caption: true
 #output: rmarkdown::pdf_document
-bibliography: master
+bibliography: master.bib
 header-includes:
   -  \usepackage{hyperref}
 always_allow_html: true
