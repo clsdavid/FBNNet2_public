@@ -5,7 +5,7 @@
 #'
 #' @docType data
 #'
-#' @usage data(FBNSampleData)
+#' @usage data(ExampleTimeseriesData)
 #'
 #' @format An object of class \code{'list'};
 #'
@@ -15,6 +15,6 @@
 #' (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 #'
 #' @examples
-#' data(FBNSampleData)
-#' FBNSampleData
-"FBNSampleData"
+#' data(ExampleTimeseriesData)
+#' ExampleTimeseriesData
+"ExampleTimeseriesData"

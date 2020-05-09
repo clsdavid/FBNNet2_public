@@ -1,3 +1,4 @@
+# new feature to plot all type of networks in one go, not finish yet.
 #' A function to plot the Fundamental boolean networks
 #' 
 #' @param FBNNetwork The FBN networks

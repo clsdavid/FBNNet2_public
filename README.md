@@ -9,10 +9,18 @@ This package adopted the concepts of fundamental Boolean modelling and networks 
 * `generateFBMNetwork`: is the main entry of the package FBNNet that can be used to mine the gene regulatory network.
 * `plotNetwork`: plot the Fundamental boolean networks
 
-### Main Example Data
+### Data
+
+#### Main Example Data
 * `BoolNet_CellCycle_Network`: Data generated via BoolNet::BoolNet::loadNetwork
 * `ExampleNetwork`: Data generated for testing purpose using the traditional Boolean network via BoolNet::BoolNet::loadNetwork. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
-* `FBNSampleData`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `ExampleTimeseriesData`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `FBNExampleNetworks`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+
+#### Experiment Data
+* `Common_Genes_Leukeamia`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `Leukeamia_Timeseries`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `Leukeamia_Networks`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
 
 ### Installation
 #### Install development version `FBNNet` from GitHub:
@@ -22,8 +30,10 @@ devtools::install_github("clsdavid/FBNNet2_public")
 https://clsdavid.github.io/FBNNet2_public/
 
 ---
+__Citation__
+Please cite: Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
 
 __Copyright and Licensing__
-This package and related novel concepts were originally proposed and implemented by Leshi Chen <https://doi.org/10.3389/fphys.2018.01328>, under the supervision of Don Kulasiri and Sandhya Samarasinghe during the PHD study at Lincoln University, New Zealand. Currently the package is licensed under the MIT License for public.
+This package and related novel concepts were originally proposed and developed by Leshi Chen <https://doi.org/10.3389/fphys.2018.01328>, under the supervision of Don Kulasiri and Sandhya Samarasinghe during the PHD study at Lincoln University, New Zealand. Currently, the package is licensed under the MIT License for public.
 
 
