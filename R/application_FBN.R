@@ -1,15 +1,13 @@
-#' Generate Fundamental Boolean Model type of Network
-#'
-#' This is the main entry of the package FBNNet that can be used to mine the
-#'  gene regulatory network.
-#' 
+#' @title Generate Fundamental Boolean Model type of Network
+#' @description This is the main entry of the package FBNNet that can be used to mine the
+#' gene regulatory network.
 #' @param timeseries_data A list of timeseries data of samples.
 #' @param method Specify a method to discrete the data in the range of
 #'  ('kmeans', 'edgeDetector', 'scanStatistic') for the function 
 #'  \code{BoolNet::binarizeTimeSeries} to convert the data from numeric value
 #'   to boolean value.
 #' @param maxK The maximum deep of the Orchard Cube can mine into.
-#' @param useParallel optional, by default it is TRUE to run the network
+#' @param useParallel Optional, by default it is FALSE not to run the network
 #'  inference algorithm in parallel. FALSE without parallel
 #' @param max_deep_temporal, a setting for Temporal Fundamental Boolean model
 #'  that specifies the maximum temporal space
@@ -21,10 +19,9 @@
 #'  to filter the Fundamental Boolean functions
 #' @param maxFBNRules The maximum rules per type (Activation and Inhibition)
 #'  per gene can be mined, the rest will be discarded
-#' @param network_only optional for Debug purpose, if TRUE, only output the
+#' @param network_only Optional for Debug purpose, if TRUE, only output the
 #'  networks only, otherwise, output the Orchard cube as well. Warning, 
 #' turn off this may cause memory leaking if the number of nodes is too large.
-#'  divide them into subgroups.
 #' @param verbose Optional, if it is TRUE, then output the logger information to
 #' the console.
 #' @return An object of a list contains Fundamental Boolean Network, Orchard
@@ -36,7 +33,6 @@
 #' (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 #' @references Mussel, Hopfensitz et al. 2010, BoolNet - an R package
 #'  for generation, reconstruction and analysis of Boolean networks
-#' 
 #' @examples  
 #' data('yeastTimeSeries')
 #' 

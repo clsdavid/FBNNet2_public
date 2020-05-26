@@ -28,7 +28,7 @@ generateFBMNetwork(
 
 \item{maxK}{The maximum deep of the Orchard Cube can mine into.}
 
-\item{useParallel}{optional, by default it is TRUE to run the network
+\item{useParallel}{Optional, by default it is FALSE not to run the network
 inference algorithm in parallel. FALSE without parallel}
 
 \item{max_deep_temporal, }{a setting for Temporal Fundamental Boolean model
@@ -46,10 +46,9 @@ to filter the Fundamental Boolean functions}
 \item{maxFBNRules}{The maximum rules per type (Activation and Inhibition)
 per gene can be mined, the rest will be discarded}
 
-\item{network_only}{optional for Debug purpose, if TRUE, only output the
+\item{network_only}{Optional for Debug purpose, if TRUE, only output the
  networks only, otherwise, output the Orchard cube as well. Warning, 
-turn off this may cause memory leaking if the number of nodes is too large.
- divide them into subgroups.}
+turn off this may cause memory leaking if the number of nodes is too large.}
 
 \item{verbose}{Optional, if it is TRUE, then output the logger information to
 the console.}
@@ -60,7 +59,7 @@ An object of a list contains Fundamental Boolean Network, Orchard
 }
 \description{
 This is the main entry of the package FBNNet that can be used to mine the
- gene regulatory network.
+gene regulatory network.
 }
 \examples{
  

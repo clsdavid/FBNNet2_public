@@ -18,9 +18,10 @@ This package adopted the concepts of fundamental Boolean modelling and networks 
 * `FBNExampleNetworks`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
 
 #### Experiment Data
-* `Common_Genes_Leukeamia`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
-* `Leukeamia_Timeseries`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
-* `Leukeamia_Networks`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `Common_Genes_Leukeamia`: Data contains the 286 common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
+* `Leukeamia_Timeseries`: Data contains the timeseries data for the common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
+* `Leukeamia_Networks`: The fundamental Boolean networks mined from the Leukeamia_Timeseries data via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
+* `DAVID_Gene_List`: Data extracted from DAVID tools for mapping probeset ids with gene names
 
 ### Installation
 #### Install development version `FBNNet` from GitHub:

@@ -25,6 +25,7 @@ Imports:
     parallel,
     visNetwork,
     dplyr,
+    BoolNet,
     futile.logger
 Suggests:
     seqinr,
@@ -34,6 +35,5 @@ Suggests:
     tinytex,
     knitr,
     rmarkdown,
-    BoolNet,
     GEOquery
 RoxygenNote: 7.1.0
