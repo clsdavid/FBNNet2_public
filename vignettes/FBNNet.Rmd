@@ -6,7 +6,7 @@ affiliation: Lincoln University, New Zealand
 date: "`r Sys.Date()`"
 url: https://www.frontiersin.org/articles/10.3389/fphys.2018.01328/full
 output:
-  rmarkdown::pdf_document:
+  rmarkdown::html_document:
     citation_package: natbib
     fig_caption: true
 #output: rmarkdown::pdf_document

@@ -1,14 +1,14 @@
 context("fbngraphic")
 setupdata <- function() {
-  with(ExampleNetwork, {
-    initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
-    trainingseries <- genereateBoolNetTimeseries(ExampleNetwork, initialStates, 43, type = "synchronous")
-
-    cube <- constructFBNCube(ExampleNetwork$genes, ExampleNetwork$genes, trainingseries, 5, 1, FALSE)
-    NETWORK2 <- mineFBNNetwork(cube, ExampleNetwork$genes)
-
-    return(list(network = NETWORK2, initialStates = initialStates, timeseries = trainingseries))
-  })
+    with(ExampleNetwork, {
+        initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
+        trainingseries <- genereateBoolNetTimeseries(ExampleNetwork, initialStates, 43, type = "synchronous")
+        
+        cube <- constructFBNCube(ExampleNetwork$genes, ExampleNetwork$genes, trainingseries, 5, 1, FALSE)
+        NETWORK2 <- mineFBNNetwork(cube, ExampleNetwork$genes)
+        
+        return(list(network = NETWORK2, initialStates = initialStates, timeseries = trainingseries))
+    })
 }
 
 describe("run synchronous should succeed", {

@@ -25,8 +25,7 @@ setupdata <- function() {
         index <- index - 1
     }
     
-    total_timepoints <- sum(vapply(testseries, function(timeshet) ncol(timeshet),
-                                   integer(1)))
+    total_timepoints <- sum(vapply(testseries, function(timeshet) ncol(timeshet), integer(1)))
     total_samples <- length(testseries)
     all_gene_names <- rownames(testseries[[1]])
     
@@ -71,8 +70,7 @@ generate_test_example_file <- function() {
         index <- index - 1
     }
     
-    total_timepoints <- sum(vapply(trainingseries, function(timeshet) ncol(timeshet),
-                                   integer(1)))
+    total_timepoints <- sum(vapply(trainingseries, function(timeshet) ncol(timeshet), integer(1)))
     total_samples <- length(trainingseries)
     all_gene_names <- rownames(trainingseries[[1]])
     
@@ -105,7 +103,7 @@ describe("Test with example genes", {
 describe("CycD Successful", {
     mainParameters <- setup(setupdata())
     genesInput <- c("CycD", "p27", "CycE", "E2F")
-
+    
     it("Run with temporal =1 with optimizedTemoral=T, successful", {
         cube <- expect_error(buildProbabilityTreeOnTargetGene("CycD", mainParameters, genesInput, NULL, NULL, 4, 1), NA)
     })
@@ -157,7 +155,7 @@ describe("CycE Successful", {
 describe("E2F Successful", {
     mainParameters <- setup(setupdata())
     genesInput <- c("CycD", "p27", "CycE", "E2F")
-
+    
     it("Run with temporal =1 with optimizedTemoral=T, successful", {
         cube <- expect_error(buildProbabilityTreeOnTargetGene("E2F", mainParameters, genesInput, NULL, NULL, 4, 1), NA)
     })

@@ -25,8 +25,7 @@ setupdata <- function() {
         index <- index - 1
     }
     
-    total_timepoints <- sum(vapply(testseries, function(timeshet) ncol(timeshet),
-                                   integer(1)))
+    total_timepoints <- sum(vapply(testseries, function(timeshet) ncol(timeshet), integer(1)))
     total_samples <- length(testseries)
     all_gene_names <- rownames(testseries[[1]])
     

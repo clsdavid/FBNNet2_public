@@ -31,10 +31,7 @@ describe("test with the sub cube", {
     initialStates <- generateAllCombinationBinary(network$genes)
     trainingseries <- genereateBoolNetTimeseries(network, initialStates, 43, type = "synchronous")
     it("Test", {
-        NETWORK2 <- generateFBMNetwork(timeseries_data = trainingseries, 
-                                                  maxK = 4, 
-                                                  max_deep_temporal = 1, 
-                                                  useParallel = FALSE)
+        NETWORK2 <- generateFBMNetwork(timeseries_data = trainingseries, maxK = 4, max_deep_temporal = 1, useParallel = FALSE)
         
         print(NETWORK2)
         expect_error(FBNNetwork.Graph(NETWORK2), NA)
