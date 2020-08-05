@@ -3,7 +3,7 @@ title: "Fundamental Boolean Network"
 pagetitle: "Fundamental Boolean Network"
 author: "Leshi Chen"
 affiliation: Lincoln University, New Zealand
-date: "`r Sys.Date()`"
+date: "2020-08-05"
 url: https://www.frontiersin.org/articles/10.3389/fphys.2018.01328/full
 output:
   rmarkdown::html_document:
@@ -29,18 +29,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
- options(tinytex.verbose = TRUE)
- options(width = 150)
- knitr::opts_chunk$set(
-   cache = FALSE,
-   message = FALSE,
-   warning = FALSE,
-   collapse = TRUE,
-   comment = "#>",
-   fig.width = 12, fig.height = 8
- )
-```
+
 ## Introduction
 Fundamental Boolean modelling(FBM) has been proposed to draw insights into gene activation, inhibition, and protein decay. This novel Boolean model provides an intuitive definition of activation and inhibition pathways and includes mechanisms to handle protein decay issues. To prove the concept of the novel model, we implemented a platform using R language, called FBNNet. Our experimental results show that the proposed FBM could explicitly display the internal
 connections of the mammalian cell cycle between genes separated into the connection
@@ -49,14 +38,18 @@ types of activation, inhibition and protein decay [@fbnnet-2018].
 ## Experiment
 The experiments conducted and described here intend to prove the concept of the new Boolean Model, i.e., the FBM. To verify the results, we apply the general processes described in Figure 1 as a benchmark to compare the results generated via BoolNet [@boolnet-2010], with these consequencely reconstructed from the new R package, FBNNet.
 
-```{r, out.width = "100%"}
+
+```r
 knitr::include_graphics("IMAGES/evaluation.jpg")
 ```
+
+<img src="IMAGES/evaluation.jpg" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" width="100%" />
 ```
 Figure 1 Evaluation assessment of Fundamental Boolean network inference using BoolNet. The blue arrows represent the processes using BoolNet and brown arrows represent the processes using our FBNNet R package. The green arrows represent the evaluation process. (A) We use the BoolNet script loadNetwork.R to load pre-defined networks from files and then generate the time series and networks; (B) We use the time series generated from BoolNet and the new R package, FBNNet, to generate FBNs; (C) We reconstruct the time series via the FBM; this process can be used to expand the short time series data; (D) To evaluate the FBM, we rebuild the BoolNet type network based on the reconstructed time series; and (E) We evaluate the FBN inference methods by comparing the generated time series and the generated BoolNet type of network with the original time series and network that were generated in step A.
 ```
 ## Data
-```{r, out.width = "100%"}
+
+```r
 library(knitr)
 library(BoolNet)
 library(utils)
@@ -64,10 +57,22 @@ library(FBNNet)
 library(visNetwork)
 data("ExampleNetwork")
 ExampleNetwork
+#> Boolean network with 5 genes
+#> 
+#> Involved genes:
+#> Gene1 Gene2 Gene3 Gene4 Gene5
+#> 
+#> Transition functions:
+#> Gene1 = Gene1
+#> Gene2 = Gene1 & Gene5 & !Gene4
+#> Gene3 = Gene3
+#> Gene4 = Gene3 & !(Gene1 & Gene5)
+#> Gene5 = !Gene2
 ```
 
 ## Extract the Fundamental Boolean Network
-```{r, out.width = "100%"}
+
+```r
    initialStates <- generateAllCombinationBinary(ExampleNetwork$genes)
    trainingseries <- genereateBoolNetTimeseries(ExampleNetwork,
                                              initialStates,43,
@@ -78,28 +83,34 @@ ExampleNetwork
                                  useParallel = FALSE,
                                  verbose = FALSE)
    print(FBNcellcyclenetwork)
+#> Fundamental Boolean Network with  5 genes
+#> Genes involved:
+#> Gene1, Gene2, Gene3, Gene4, Gene5
+#> 
+#> Networks:
+#> Multiple Transition Functions for Gene1 with decay value = 1:
+#> Gene1_1_Activator: Gene1 = Gene1 (Confidence: 1, TimeStep: 1)
+#> Gene1_1_Inhibitor: Gene1 = !Gene1 (Confidence: 1, TimeStep: 1)
+#> 
+#> Multiple Transition Functions for Gene2 with decay value = 1:
+#> Gene2_1_Activator: Gene2 = Gene1&!Gene4&Gene5 (Confidence: 1, TimeStep: 1)
+#> Gene2_1_Inhibitor: Gene2 = !Gene1 (Confidence: 1, TimeStep: 1)
+#> Gene2_2_Inhibitor: Gene2 = Gene4 (Confidence: 1, TimeStep: 1)
+#> Gene2_3_Inhibitor: Gene2 = !Gene5 (Confidence: 1, TimeStep: 1)
+#> 
+#> Multiple Transition Functions for Gene3 with decay value = 1:
+#> Gene3_1_Activator: Gene3 = Gene3 (Confidence: 1, TimeStep: 1)
+#> Gene3_1_Inhibitor: Gene3 = !Gene3 (Confidence: 1, TimeStep: 1)
+#> 
+#> Multiple Transition Functions for Gene4 with decay value = 1:
+#> Gene4_1_Activator: Gene4 = !Gene1&Gene3 (Confidence: 1, TimeStep: 1)
+#> Gene4_2_Activator: Gene4 = Gene3&!Gene5 (Confidence: 1, TimeStep: 1)
+#> Gene4_1_Inhibitor: Gene4 = !Gene3 (Confidence: 1, TimeStep: 1)
+#> Gene4_2_Inhibitor: Gene4 = Gene1&Gene5 (Confidence: 1, TimeStep: 1)
+#> 
+#> Multiple Transition Functions for Gene5 with decay value = 1:
+#> Gene5_1_Activator: Gene5 = !Gene2 (Confidence: 1, TimeStep: 1)
+#> Gene5_1_Inhibitor: Gene5 = Gene2 (Confidence: 1, TimeStep: 1)
 ```
-```{r}
-   FBNNet::FBNNetwork.Graph(FBNcellcyclenetwork)
-```
-```{r, out.width = "100%"}
-   resultfile <- reconstructTimeseries(FBNcellcyclenetwork,
-                                    initialStates,
-                                    type = "synchronous",
-                                    maxTimepoints = 43,
-                                    useParallel = FALSE)
 
-   similarreport <- generateSimilaryReport(trainingseries,resultfile)
-   print(paste("ErrorRate=",similarreport$ErrorRate,sep = "",collapse = ""))
-   print(paste("AccurateRate=",similarreport$AccurateRate,sep = "",collapse = ""))
-   print(paste("MissMatchedRate=",similarreport$MissMatchedRate,sep = "",collapse = ""))
-   print(paste("PerfectMatchedRate=",similarreport$PerfectMatchedRate,sep = "",collapse = ""))
 
-   #get attractors
-   genes <- rownames(trainingseries[[1]])
-
-   attractor <- searchForAttractors(FBNcellcyclenetwork,initialStates,genes)
-   print(attractor)
-   #display the dynamic trajectory of the attactor 2
-   FBNNetwork.Graph.DrawAttractor(FBNcellcyclenetwork,attractor,2)
-```

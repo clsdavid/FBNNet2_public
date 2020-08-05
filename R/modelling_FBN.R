@@ -180,9 +180,9 @@ transitionStates <- function(initialState, fbnNetwork, genes, type = c("synchron
 #' an activated gene if no activators presented. It is usually one time step
 #' @return A list object that contains reconstructed time series and FBN network
 #' @examples
-#' require(BoolNet)
 #' data(ExampleNetwork)
-#' trainingseries<-FBNDataReduction(generateTimeSeries(ExampleNetwork,2000,43))
+#' trainingseries<-FBNDataReduction(BoolNet::generateTimeSeries(ExampleNetwork,
+#'     32,10))
 #' cube<-constructFBNCube(target_genes = ExampleNetwork$genes,
 #'                        conditional_genes = ExampleNetwork$genes,
 #'                        timeseriesCube = trainingseries,

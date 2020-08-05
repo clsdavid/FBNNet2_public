@@ -63,7 +63,7 @@ FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)
 ## find attractor with type = asynchronous
 attractor <- searchForAttractors(NETWORK2,
                                initialStates,
-                               type = "asynchronous",
+                               type = 'asynchronous',
                                ExampleNetwork$genes)
 print(attractor)
 FBNNetwork.Graph.DrawAttractor(NETWORK2,attractor,3)

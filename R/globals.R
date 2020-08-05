@@ -1,0 +1,9 @@
+utils::globalVariables(c("DAVID_Gene_List",
+                         "BoolNet_CellCycle_Network",
+                         "Common_Genes_Leukeamia",
+                         "ExampleNetwork",
+                         "ExampleTimeseriesData",
+                         "FBNExampleNetworks",
+                         "Leukeamia_Networks",
+                         "Leukeamia_Timeseries",
+                         "yeastTimeSeries"))

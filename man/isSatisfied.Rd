@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelling_FBN.R
 \name{isSatisfied}
 \alias{isSatisfied}
-\title{An utility function to verify whether or not the input expression and the required gene input are marched}
+\title{Is the Gene State Satisfied}
 \usage{
 isSatisfied(geneState, expression)
 }
@@ -15,7 +15,8 @@ isSatisfied(geneState, expression)
 TRUE or FALSE
 }
 \description{
-An utility function to verify whether or not the input expression and the required gene input are marched
+An utility function to verify whether or not the input expression
+ and the required gene input are marched
 }
 \examples{
 ##coming later

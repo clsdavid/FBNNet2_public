@@ -158,23 +158,23 @@
                        <span class='kw'>timeseriesCube</span> <span class='kw'>=</span> <span class='no'>trainingseries</span>,
                        <span class='kw'>maxK</span> <span class='kw'>=</span> <span class='fl'>4</span>,
                        <span class='kw'>temporal</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                       <span class='kw'>useParallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; INFO [2020-05-27 10:12:35] Enter constructFBNCube zone: 
+                       <span class='kw'>useParallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; INFO [2020-08-05 21:45:17] Enter constructFBNCube zone: 
 #&gt;         target_genes=5 genes and they are Gene1, Gene2, Gene3, Gene4, Gene5,
 #&gt;         conditional_genes=5 genes and they are Gene1, Gene2, Gene3, Gene4, Gene5,
 #&gt;         data_length=32,
 #&gt;         maxK=4, 
 #&gt;         temporal=1,
 #&gt;         useParallel=FALSE
-#&gt; INFO [2020-05-27 10:12:35] Leave constructFBNCube zone.</div><div class='input'><span class='no'>NETWORK2</span><span class='kw'>&lt;-</span><span class='fu'><a href='mineFBNNetwork.html'>mineFBNNetwork</a></span>(<span class='no'>cube</span>,<span class='no'>ExampleNetwork</span>$<span class='no'>genes</span>)</div><div class='output co'>#&gt; INFO [2020-05-27 10:12:35] Enter mineFBNNetwork zone: genes=Gene1, Gene2, Gene3, Gene4, Gene5, useParallel=FALSE
-#&gt; INFO [2020-05-27 10:12:35] Enter search_FBN_core zone: useParallel=FALSE
-#&gt; INFO [2020-05-27 10:12:35] Leave search_FBN_core zone
-#&gt; INFO [2020-05-27 10:12:35] Enter mineFBNNetworkWithCores zone
-#&gt; INFO [2020-05-27 10:12:35] Enter mineFBNNetworkStage2 zone
-#&gt; INFO [2020-05-27 10:12:35] Leave mineFBNNetworkStage2 zone
-#&gt; INFO [2020-05-27 10:12:35] Enter convertMinedResultToFBNNetwork zone
-#&gt; INFO [2020-05-27 10:12:35] Leave convertMinedResultToFBNNetwork zone
-#&gt; INFO [2020-05-27 10:12:35] Leave mineFBNNetworkWithCores zone
-#&gt; INFO [2020-05-27 10:12:35] Leave mineFBNNetwork zone</div><div class='input'><span class='no'>attractor</span><span class='kw'>&lt;-</span><span class='fu'><a href='searchForAttractors.html'>searchForAttractors</a></span>(<span class='no'>NETWORK2</span>,
+#&gt; INFO [2020-08-05 21:45:18] Leave constructFBNCube zone.</div><div class='input'><span class='no'>NETWORK2</span><span class='kw'>&lt;-</span><span class='fu'><a href='mineFBNNetwork.html'>mineFBNNetwork</a></span>(<span class='no'>cube</span>,<span class='no'>ExampleNetwork</span>$<span class='no'>genes</span>)</div><div class='output co'>#&gt; INFO [2020-08-05 21:45:18] Enter mineFBNNetwork zone: genes=Gene1, Gene2, Gene3, Gene4, Gene5, useParallel=FALSE
+#&gt; INFO [2020-08-05 21:45:18] Enter search_FBN_core zone: useParallel=FALSE
+#&gt; INFO [2020-08-05 21:45:18] Leave search_FBN_core zone
+#&gt; INFO [2020-08-05 21:45:18] Enter mineFBNNetworkWithCores zone
+#&gt; INFO [2020-08-05 21:45:18] Enter mineFBNNetworkStage2 zone
+#&gt; INFO [2020-08-05 21:45:18] Leave mineFBNNetworkStage2 zone
+#&gt; INFO [2020-08-05 21:45:18] Enter convertMinedResultToFBNNetwork zone
+#&gt; INFO [2020-08-05 21:45:18] Leave convertMinedResultToFBNNetwork zone
+#&gt; INFO [2020-08-05 21:45:18] Leave mineFBNNetworkWithCores zone
+#&gt; INFO [2020-08-05 21:45:18] Leave mineFBNNetwork zone</div><div class='input'><span class='no'>attractor</span><span class='kw'>&lt;-</span><span class='fu'><a href='searchForAttractors.html'>searchForAttractors</a></span>(<span class='no'>NETWORK2</span>,
                                <span class='no'>initialStates</span>,
                                <span class='no'>ExampleNetwork</span>$<span class='no'>genes</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>attractor</span>)</div><div class='output co'>#&gt; Discovered Attractors via Fundamental Boolean Model :

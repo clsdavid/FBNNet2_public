@@ -16,6 +16,8 @@ This package adopted the concepts of fundamental Boolean modelling and networks 
 * `ExampleNetwork`: Data generated for testing purpose using the traditional Boolean network via BoolNet::BoolNet::loadNetwork. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
 * `ExampleTimeseriesData`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
 * `FBNExampleNetworks`: Data generated via this package and is in the concept of FBM. This Example described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+* `FBNcellcycleNetwork`: Data generated via this package and is in the concept of FBM. This Cell Cycle Network of FBN described in the paper 'A Novel Data-Driven Boolean Model for Genetic Regulatory Networks' (Chen, L., etc., 2018)
+
 
 #### Experiment Data
 * `Common_Genes_Leukeamia`: Data contains the 286 common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.

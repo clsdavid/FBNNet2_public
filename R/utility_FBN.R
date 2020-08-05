@@ -205,7 +205,6 @@ isBooleanTypeTimeseriesData <- function(x) {
 #' @export
 output_annotated_genes <- function(genes, path, filename) {
     ## DAVID_Gene_List <- NULL
-    utils::data("DAVID_Gene_List", overwrite = TRUE)
     mapped_genes <- with(DAVID_Gene_List, {
         DAVID_Gene_List[DAVID_Gene_List$Symbol %in% genes, ]
     })

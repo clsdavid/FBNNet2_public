@@ -50,16 +50,16 @@ per gene can be mined, the rest will be discarded}
  networks only, otherwise, output the Orchard cube as well. Warning, 
 turn off this may cause memory leaking if the number of nodes is too large.}
 
-\item{verbose}{Optional, if it is TRUE, then output the logger information to
-the console.}
+\item{verbose}{Optional, if it is TRUE, then output the logger 
+information to the console.}
 }
 \value{
-An object of a list contains Fundamental Boolean Network, Orchard
- cube (optional) and discreted timeseries data
+An object of a list contains Fundamental Boolean Network and Orchard
+ cube (optional) if network_only set to FALSE.
 }
 \description{
-This is the main entry of the package FBNNet that can be used to mine the
-gene regulatory network.
+This is the main entry of the package FBNNet that can be used
+ to mine the gene regulatory network.
 }
 \examples{
  
@@ -73,6 +73,7 @@ FBNNetwork.Graph(network)
 ## get the Orchard cube as well as networks
 res <- generateFBMNetwork(yeastTimeSeries, network_only = FALSE)
 res
+
 }
 \references{
 Chen et al.(2018), Front. Physiol., 25 September 2018, 

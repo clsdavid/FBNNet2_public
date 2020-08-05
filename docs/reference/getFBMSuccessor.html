@@ -169,9 +169,9 @@ an activated gene if no activators presented. It is usually one time step</p></t
     <p>A list object that contains reconstructed time series and FBN network</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>BoolNet</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>ExampleNetwork</span>)
-<span class='no'>trainingseries</span><span class='kw'>&lt;-</span><span class='fu'><a href='FBNDataReduction.html'>FBNDataReduction</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/BoolNet/man/generateTimeSeries.html'>generateTimeSeries</a></span>(<span class='no'>ExampleNetwork</span>,<span class='fl'>2000</span>,<span class='fl'>43</span>))
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>ExampleNetwork</span>)
+<span class='no'>trainingseries</span><span class='kw'>&lt;-</span><span class='fu'><a href='FBNDataReduction.html'>FBNDataReduction</a></span>(<span class='kw pkg'>BoolNet</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/BoolNet/man/generateTimeSeries.html'>generateTimeSeries</a></span>(<span class='no'>ExampleNetwork</span>,
+    <span class='fl'>32</span>,<span class='fl'>10</span>))
 <span class='no'>cube</span><span class='kw'>&lt;-</span><span class='fu'><a href='constructFBNCube.html'>constructFBNCube</a></span>(<span class='kw'>target_genes</span> <span class='kw'>=</span> <span class='no'>ExampleNetwork</span>$<span class='no'>genes</span>,
                        <span class='kw'>conditional_genes</span> <span class='kw'>=</span> <span class='no'>ExampleNetwork</span>$<span class='no'>genes</span>,
                        <span class='kw'>timeseriesCube</span> <span class='kw'>=</span> <span class='no'>trainingseries</span>,
