@@ -32,6 +32,23 @@ devtools::install_github("clsdavid/FBNNet2_public")
 #### Documentation
 https://clsdavid.github.io/FBNNet2_public/
 
+### SAMPLE CODE
+#### find forward related genes with FAA
+FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+
+#### find forward related genes with FAI
+FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+
+#### find forward related genes with FAI with 2 levels
+FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 2, next_level_mix_type = TRUE)
+FBNNetwork.Graph(FAI_CDC42EP3_Networks_2)
+
+#### find backward related genes with BA
+FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+
 ---
 __Citation__
 Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.

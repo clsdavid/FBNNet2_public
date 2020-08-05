@@ -556,7 +556,6 @@ filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive 
 #' @param target_type The target connection type
 #' @param maxDeep The maximum layous that need to be drilled down.
 #' @param next_level_mix_type If TRUE, the next level will contain all type of connections.
-#' @export
 findAllBackwardRelatedGenes <- function(networks, target_gene, regulationType = NULL, target_type = NULL, maxDeep = 1, next_level_mix_type = FALSE) {
     
     prepare_network <- filterNetworkConnectionsByGenes(networks, target_gene, exclusive = FALSE, expand = FALSE)
