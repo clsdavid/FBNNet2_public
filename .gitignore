@@ -117,5 +117,6 @@ temp/
 src-i386
 doc
 Meta
+study_data
 *.tex
 *.log
