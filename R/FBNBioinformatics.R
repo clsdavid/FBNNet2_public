@@ -40,7 +40,8 @@ NULL
 #' @export
 convertAffyRawDataIntoNormalizedStructureData <- function(files, 
                                                           useGCRMA = FALSE, 
-                                                          cdfname = "HG-U133_Plus_2") {
+                                                          cdfname = "HG-U133_Plus_2",
+                                                          isNew = TRUE) {
   futile.logger::flog.info(sprintf("Enter convertAffyRawDataIntoNormalizedStructureData zone: 
                                    files=%s, 
                                    useGCRMA=%s, 
@@ -53,18 +54,22 @@ convertAffyRawDataIntoNormalizedStructureData <- function(files,
     typeOfRMA = "GCRMA"
   }
   
+  dir.create(file.path(getwd(), "output"), showWarnings = FALSE)
+  
   combinedTimeseries <- list()
   for (filename in files) {
     futile.logger::flog.info(paste0("Processing file: "), filename)
     output_normalized_file <- paste("output\\NormalizedEValue", "_", typeOfRMA, ".csv")
-    if (!file.exists(output_normalized_file)) {
+    if (!file.exists(output_normalized_file) || isNew) {
       rawdata <- getRelatedAffyRawData(filename, cdfname)
       ## normalize data either using GCRMA or RMA 
-      ## nrawdata<-2^(normalizeTimesereisRawData(rawdata,useGCRMA)$NormalizedExpData)
       nrawdata <- normalizeTimesereisRawData(rawdata, typeOfRMA)$NormalizedExpData
       write.csv(nrawdata, file = output_normalized_file)
     } else {
-      nrawdata <- read.csv(file = output_normalized_file, header = TRUE, sep = ",", check.names = FALSE)
+      nrawdata <- read.csv(file = output_normalized_file, 
+                           header = TRUE, 
+                           sep = ",", 
+                           check.names = FALSE)
       nrawdata2 <- nrawdata[, -1]
       rownames(nrawdata2) <- nrawdata[, 1]
       nrawdata <- as.matrix(nrawdata2)
@@ -96,6 +101,7 @@ getRelatedAffyRawData <- function(cellDirectory,
                                    cellDirectory,
                                    cdfname,
                                    outPutEvalue))
+  dir.create(file.path(getwd(), "output"), showWarnings = FALSE)
   # 1 Read in probe level data The affy package will automatically download the appropriate array annotation when you require it. However, if you wish you may
   # download and install the cdf environment you need from http://www.bioconductor.org/packages/release/data/annotation/ manually. If there is no cdf
   # environment currently built for your particular chip and you have access to the CDF file then you may use the makecdfenv package to create one yourself.
@@ -150,7 +156,7 @@ normalizeTimesereisRawData <- function(rawData,
   #- gcrma() - A bias-corrected RMA
   # GCRMA is good but takes significantly longer than RMA, so RMA is the most commonly used cat('test') rawData <- as.numeric(as.character(rawData[[1]]))
   # nvals <- rma(rawData) bydefault all normalized data has been log2 processed
-  
+  dir.create(file.path(getwd(), "output"), showWarnings = FALSE)
   if (method == "GCRMA") {
     nvals <- gcrma::gcrma(rawData$AffyBatchObject)
     ned <- Biobase::exprs(nvals)
@@ -330,7 +336,8 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
   if (is.null(probesetGeneNameMappings)) {
     probesetGeneNameMappings <- mapProbesetNames(rownamelist)
   }
-  
+  dir.create(file.path(getwd(), "output"), showWarnings = FALSE)
+  dir.create(file.path(getwd(), "output", "differential"), showWarnings = FALSE)
   ## mats <- list()
   for (i in seq_along(colnamelist)) {
     tempMat <- do.call(cbind, lapply(folddata, function(subList) subList[, i]))
@@ -381,6 +388,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
         return(NULL)
       }
     }, cutOffInduction, totalSamples, majority))
+    
     # rownames(newMatInduced)<-newRownames
     
     # repressed
@@ -404,23 +412,23 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
     diffExpressed[[diffindex]] <- list()
     diffExpressed[[diffindex]][[1]] <- newMatInduced[, -1]
     diffExpressed[[diffindex]][[2]] <- newMatRepressed[, -1]
-    diffExpressed[[diffindex]][[3]] <- newMatInduced[, 1]
-    diffExpressed[[diffindex]][[4]] <- newMatRepressed[, 1]
+    diffExpressed[[diffindex]][[3]] <- as.vector(newMatInduced[, 1])
+    diffExpressed[[diffindex]][[4]] <- as.vector(newMatRepressed[, 1])
     diffExpressed[[diffindex]][[5]] <- probesetGeneNameMappings[newMatInduced[, 1]]
     diffExpressed[[diffindex]][[6]] <- probesetGeneNameMappings[newMatRepressed[, 1]]
     
     names(diffExpressed[[diffindex]])[[1]] <- "Induced_M_Value"
     names(diffExpressed[[diffindex]])[[2]] <- "Repressed_M_Value"
     names(diffExpressed[[diffindex]])[[3]] <- "Induced_ProbeID"
-    names(diffExpressed[[diffindex]])[[4]] <- "Repressed__ProbeID"
+    names(diffExpressed[[diffindex]])[[4]] <- "Repressed_ProbeID"
     names(diffExpressed[[diffindex]])[[5]] <- "Induced_Genes"
-    names(diffExpressed[[diffindex]])[[6]] <- "Repressed__Genes"
+    names(diffExpressed[[diffindex]])[[6]] <- "Repressed_Genes"
     
     names(diffExpressed)[[diffindex]] <- colnamelist[i]
   }
   
   # find all common genes in the result, the result should be
-  commonNames <- unique(unlist(lapply(diffExpressed, function(subdata) c(unlist(subdata[["Induced_ProbeID"]]), unlist(subdata[["Repressed__ProbeID"]])))))
+  commonNames <- unique(unlist(lapply(diffExpressed, function(subdata) c(unlist(subdata[["Induced_ProbeID"]]), unlist(subdata[["Repressed_ProbeID"]])))))
   
   filteredData <- list()
   filteredData[[1]] <- diffExpressed
@@ -574,10 +582,9 @@ mapToGeneNameWithhgu133plus2Db <- function(probesets) {
   ## remove RNA type of non genes' probeset
   ## could be none
   ## 59211 after removed NA 
-  getGeneNames <- getGeneNames[!is.na(getGeneNames$UNIGENE) & 
-                           !is.na(getGeneNames$SYMBOL) & 
-                           !is.na(getGeneNames$ENTREZID) & 
-                           !is.na(getGeneNames$GENENAME), ] 
+  getGeneNames <- getGeneNames[!is.na(getGeneNames$SYMBOL) & 
+                                 !is.na(getGeneNames$ENTREZID) & 
+                                 !is.na(getGeneNames$GENENAME), ] 
 
   ## remove duplicate records based on probeid 44109/59211, duplicates 15867
   mapped <- getGeneNames[!duplicated(getGeneNames[, "PROBEID"]), ]  #de-duplicated by PROBEID

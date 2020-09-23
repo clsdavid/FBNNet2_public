@@ -49,11 +49,11 @@ differentiallyExpressionStudy <- function(cellDirectory,
                                                         majority = majority)
   
   commonGeneSet1i <- diffgenes_RMA$DifferentialExpression[[1]]$Induced_ProbeID ##6to0
-  commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed__ProbeID##6to0
+  commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed_ProbeID##6to0
   commonGeneSet2i <- diffgenes_RMA$DifferentialExpression[[2]]$Induced_ProbeID ##24to0
-  commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed__ProbeID##24to0
+  commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed_ProbeID##24to0
   commonGeneSet3i <- diffgenes_RMA$DifferentialExpression[[3]]$Induced_ProbeID##24to6
-  commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed__ProbeID##24to6
+  commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed_ProbeID##24to6
   
   print("############################")
   print("6To0 induced via FBNNET bioinformatics:")
@@ -514,11 +514,11 @@ leukeamia_study_cluster <- function(cellDirectory,
         majority = majority, probesetGeneNameMappings = probesetGeneNameMappings)
     
     commonGeneSet1i <- diffgenes_RMA$DifferentialExpression[[1]]$Induced_ProbeID
-    commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed__ProbeID
+    commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed_ProbeID
     commonGeneSet2i <- diffgenes_RMA$DifferentialExpression[[2]]$Induced_ProbeID
-    commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed__ProbeID
+    commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed_ProbeID
     commonGeneSet3i <- diffgenes_RMA$DifferentialExpression[[3]]$Induced_ProbeID
-    commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed__ProbeID
+    commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed_ProbeID
     
     finalSet <- unique(c(commonGeneSet1i, commonGeneSet1r, commonGeneSet2i, commonGeneSet2r, commonGeneSet3i, commonGeneSet3r))
     print(finalSet)
@@ -583,11 +583,11 @@ leukeamia_study_cluster <- function(cellDirectory,
 #'         majority = majority, probesetGeneNameMappings = probesetGeneNameMappings)
 #'     
 #'     commonGeneSet1i <- diffgenes_RMA$DifferentialExpression[[1]]$Induced_ProbeID
-#'     commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed__ProbeID
+#'     commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed_ProbeID
 #'     commonGeneSet2i <- diffgenes_RMA$DifferentialExpression[[2]]$Induced_ProbeID
-#'     commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed__ProbeID
+#'     commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed_ProbeID
 #'     commonGeneSet3i <- diffgenes_RMA$DifferentialExpression[[3]]$Induced_ProbeID
-#'     commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed__ProbeID
+#'     commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed_ProbeID
 #'     
 #'     finalSet <- unique(c(commonGeneSet1i, commonGeneSet1r, commonGeneSet2i, commonGeneSet2r, commonGeneSet3i, commonGeneSet3r))
 #'     print(finalSet)

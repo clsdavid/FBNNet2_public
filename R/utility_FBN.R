@@ -213,3 +213,17 @@ output_annotated_genes <- function(genes, path, filename) {
     })
     utils::write.csv(distic_mapped_genes, file = file.path(path, filename))
 }
+
+#' A method to output a vector of gene names separated by comma
+#' 
+#' @param genes A vector of genes
+#' @param path The file path
+#' @param  filename The name of the output file such as xx.csv
+#' @export
+output_genes <- function(genes, path, filename) {
+    vectStr=paste(as.character(genes), sep="' '", collapse=", ")
+    sink(file.path(path, filename))
+    cat(vectStr)
+    cat("\n")
+    sink()
+}
