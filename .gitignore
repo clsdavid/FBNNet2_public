@@ -120,3 +120,4 @@ Meta
 study_data
 *.tex
 *.log
+.RDataTmp

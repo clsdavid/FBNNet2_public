@@ -28,6 +28,9 @@ Imports:
     BoolNet,
     futile.logger
 Suggests:
+    AnnotationDbi,
+    affy,
+    gcrma,
     seqinr,
     stringr,
     readr,
