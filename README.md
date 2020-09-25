@@ -46,7 +46,7 @@ FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = Leukeamia
 FBNNetwork.Graph(FAI_CDC42EP3_Networks_2)
 
 #### find backward related genes with BA
-FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(FAA_CDC42EP3_Networks)
 
 ---

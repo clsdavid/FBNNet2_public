@@ -436,7 +436,6 @@ findAllTargetGenes <- function(networkinteractions) {
 #'
 #'@param networks The FBN networks that are going to be filtered
 #'@return filtered networks
-#' @export
 filterNetworkConnections <- function(networks) {
     # need to check the index for all inputs
     res <- networks
@@ -487,6 +486,7 @@ filterNetworkConnections <- function(networks) {
 #' @param genelist A list of genes
 #' @param exclusive Optional
 #' @param expand Optional
+#' @export
 filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive = TRUE, expand = FALSE) {
     # individualFilter2<-filterNetworkConnections(individualNetworks[[2]]) FBNNetwork.Graph(individualFilter2)
     # individualFilter2<-filterNetworkConnectionsByGenes(individualFilter2,c('OR7A5','GFOD1','ANGPT2','LCN2','MCTP1','PNMT', 'SLC22A23'))

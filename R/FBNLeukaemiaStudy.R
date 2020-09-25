@@ -405,6 +405,7 @@ leukeamia_study_with_differential_output <- function(schmidts_realanlysis_output
 
   
   # remove duplicate
+  ## the number of genes less than or equal to combined gene set
   convertedgenedagta <- lapply(convertedgenedagta, function(subdata)subdata[which(rownames(subdata) %in% finalSet), ])
   
     
@@ -433,120 +434,120 @@ leukeamia_study_with_differential_output <- function(schmidts_realanlysis_output
     #save(leukeamia_study_with_schmidts_output_res, file = "temp/leukeamia_study_with_schmidts_output_temp.Rdata")
     leukeamia_study_with_schmidts_output_res
 }
-
-#'@export
-leukeamia_study_with_schmidts_output_cluster <- function(schmidts_realanlysis_output, 
-                                                         method = c("average", "kmeans", "edgeDetector", "scanStatistic"), 
-                                                         maxK = 4, 
-                                                         temporal = 2, 
-                                                         minElementInCluster = 10, 
-                                                         maxElementInCluster = 20) {
-    sortedtimeseries_leukaemia <- schmidts_realanlysis_output$filtered_timeseries
-    convertedgenedagta <- convertTimeseriesProbsetNameToGeneName(sortedtimeseries_leukaemia)$convert_data
-    
-    finalSet <- unique(schmidts_realanlysis_output$CombinedGeneSet)
-    print(finalSet)
-    
-    # remove duplicate
-    convertedgenedagta <- lapply(convertedgenedagta, function(subdata) subdata[which(rownames(subdata) %in% finalSet), ])
-    
-    print(rownames(convertedgenedagta[[1]]))
-    
-    # timeseries_RMA_LogRatio_0.7<<-discreteTimeSeries(convertedgenedagta,method='average')
-    
-    if (method == "average") {
-        timeseries_RMA_LogRatio_0.7 <- discreteTimeSeries(convertedgenedagta, method = "average")
-    } else {
-        require(BoolNet)
-        timeseries_RMA_LogRatio_0.7 <- BoolNet::binarizeTimeSeries(convertedgenedagta, method = method)$binarizedMeasurements
-    }
-    
-    totalNetworks_RMA_LogRatio_0.7 <- generateFBMNetwork(timeseries_data = timeseries_RMA_LogRatio_0.7, 
-                                  maxK = 4, 
-                                  max_deep_temporal = 2, 
-                                  useParallel = TRUE,
-                                  maxGenesForSingleCube = 10,
-                                  parallel_on_group = TRUE)
-    
-    #getClusteredTimeseries_RMA_LogRatio_0.7 <- dividedDataIntoSubgroups(timeseries_RMA_LogRatio_0.7, maxElementInCluster)
-    # build all cubes for all clusters build all cubes for all clusters
-    #cubeLeukaemia_RMA_LogRatio_temp <- constructFBNCubeAndNetworkInClusters_combine(getClusteredTimeseries_RMA_LogRatio_0.7, maxK = maxK, temporal = temporal, useParallel = TRUE)
-    # merge all networks? seperate by clusters?
-    #networks_RMA_LogRatio_0.7 <- mergeClusterNetworks(cubeLeukaemia_RMA_LogRatio_temp)
-    #totalNetworks_RMA_LogRatio_0.7 <- filterNetworkConnections(networks_RMA_LogRatio_0.7)
-    
-    #save(cubeLeukaemia_RMA_LogRatio_temp, file = "temp/cubeLeukaemia_RMA_LogRatio_temp_cluster.Rdata")
-    leukeamia_study_with_schmidts_output_res <- list(schmidts_realanlysis_output = schmidts_realanlysis_output, network = totalNetworks_RMA_LogRatio_0.7, timeseries = timeseries_RMA_LogRatio_0.7)
-    #save(leukeamia_study_with_schmidts_output_res, file = "temp/leukeamia_study_with_schmidts_output_temp.Rdata")
-    leukeamia_study_with_schmidts_output_res
-}
-
-## files2<-'D:\\Dropbox\\Dropbox\\FBNNet\\ChildhoodLeukeamiaDataFile\\GSE2677_RAW'
-## files1<-c('D:\\Dropbox\\Dropbox\\FBNNet\\ChildhoodLeukeamiaDataFile\\GSE2677_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
-## Data\\GSE13670_RAW\\GSE13670_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
-## Data\\GSE20489_RAW\\GSE20489_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
-## Data\\GSE42088_RAW\\GSE42088_RAW'，'D:\\Dropbox\\Dropbox\\FBNNet\\Genome
-## Data\\GSE54992_RAW\\GSE54992_RAW'，'D:\\Dropbox\\Dropbox\\FBNNet\\Genome Data\\GSE57194_RAW\\GSE57194_RAW')
-#'@export
-leukeamia_study_cluster <- function(cellDirectory, 
-                                    cutOffInduction = 0.7, 
-                                    cutOffRepression = 0.7, 
-                                    majority = 0.5, 
-                                    sortedtimeseries = NULL, 
-                                    useGCRMA = FALSE, 
-    method = c("average", "kmeans", "edgeDetector", "scanStatistic")) {
-    # read affy files and normalized by RMA
-    if (is.null(sortedtimeseries)) {
-        sortedtimeseries <- convertAffyRawDataIntoNormalizedStructureData(cellDirectory, useGCRMA = useGCRMA)
-    }
-    
-    targetsamples <- c("B-ALL-13", "B-ALL-17", "B-ALL-24", "B-ALL-31", "B-ALL-32", "B-ALL-33", "B-ALL-37", "B-ALL-38", "B-ALL-40", "B-ALL-43", "T-ALL-2", "T-ALL-20", 
-        "T-ALL-25")
-    sortedtimeseries_leukaemia <- sortedtimeseries[targetsamples]
-    cond <- sapply(sortedtimeseries_leukaemia, function(entry) !is.null(entry))
-    sortedtimeseries_leukaemia <- sortedtimeseries_leukaemia[cond]
-    
-    # Generate cube 0.7 = 2.0 ^ 0.7
-    probesets <- rownames(sortedtimeseries_leukaemia[[1]])
-    probesetGeneNameMappings <- mapProbesetNames(probesets)
-    
-    diffgenes_RMA <- identifyDifferentiallyExpressedGenes(sortedtimeseries_leukaemia, cutOffInduction = cutOffInduction, cutOffRepression = cutOffRepression, 
-        majority = majority, probesetGeneNameMappings = probesetGeneNameMappings)
-    
-    commonGeneSet1i <- diffgenes_RMA$DifferentialExpression[[1]]$Induced_ProbeID
-    commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed_ProbeID
-    commonGeneSet2i <- diffgenes_RMA$DifferentialExpression[[2]]$Induced_ProbeID
-    commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed_ProbeID
-    commonGeneSet3i <- diffgenes_RMA$DifferentialExpression[[3]]$Induced_ProbeID
-    commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed_ProbeID
-    
-    finalSet <- unique(c(commonGeneSet1i, commonGeneSet1r, commonGeneSet2i, commonGeneSet2r, commonGeneSet3i, commonGeneSet3r))
-    print(finalSet)
-    
-    # remove duplicate
-    subsetgenedata <- lapply(sortedtimeseries, function(subdata) subdata[rownames(subdata) %in% finalSet, ])
-    convertedgenedagta <- convertTimeseriesProbsetNameToGeneName(subsetgenedata)$convert_data
-    print(rownames(convertedgenedagta[[1]]))
-    
-    if (method == "average") {
-        timeseries_RMA_LogRatio_0.7 <- discreteTimeSeries(convertedgenedagta, method = "average")
-    } else {
-        require(BoolNet)
-        timeseries_RMA_LogRatio_0.7 <- BoolNet::binarizeTimeSeries(convertedgenedagta, method = method)$binarizedMeasurements
-    }
-    
-    # membexp=3 more fussy
-    getClusteredTimeseries_RMA_LogRatio_0.7 <- clusterdDiscreteData(convertedgenedagta,timeseries_RMA_LogRatio_0.7, 30)
-    # build all cubes for all clusters
-    cubeLeukaemia_RMA_LogRatio_0.7 <- constructFBNCubeAndNetworkInClusters(getClusteredTimeseries_RMA_LogRatio_0.7, 4, 1, TRUE)
-    # merge all networks? seperate by clusters?
-    networks_RMA_LogRatio_0.7 <- mergeClusterNetworks(cubeLeukaemia_RMA_LogRatio_0.7)
-    totalNetworks_RMA_LogRatio_0.7 <- filterNetworkConnections(networks_RMA_LogRatio_0.7)
-    
-    diffgenes <- list(Induction_0_to_6_or_8 = commonGeneSet1i, Repression_0_to_6_or_8 = commonGeneSet1r, Induction_0_to_24 = commonGeneSet2i, Repression_0_to_24 = commonGeneSet2r, 
-        Induction_6_or_8_to_24 = commonGeneSet3i, Repression_6_or_8_to_24 = commonGeneSet3r)
-    list(diff_genes = diffgenes, cube = timeseries_RMA_LogRatio_0.7, network = totalNetworks_RMA_LogRatio_0.7, timeseries = timeseries_RMA_LogRatio_0.7)
-}
+#' 
+#' #'@export
+#' leukeamia_study_with_schmidts_output_cluster <- function(schmidts_realanlysis_output, 
+#'                                                          method = c("average", "kmeans", "edgeDetector", "scanStatistic"), 
+#'                                                          maxK = 4, 
+#'                                                          temporal = 2, 
+#'                                                          minElementInCluster = 10, 
+#'                                                          maxElementInCluster = 20) {
+#'     sortedtimeseries_leukaemia <- schmidts_realanlysis_output$filtered_timeseries
+#'     convertedgenedagta <- convertTimeseriesProbsetNameToGeneName(sortedtimeseries_leukaemia)$convert_data
+#'     
+#'     finalSet <- unique(schmidts_realanlysis_output$CombinedGeneSet)
+#'     print(finalSet)
+#'     
+#'     # remove duplicate
+#'     convertedgenedagta <- lapply(convertedgenedagta, function(subdata) subdata[which(rownames(subdata) %in% finalSet), ])
+#'     
+#'     print(rownames(convertedgenedagta[[1]]))
+#'     
+#'     # timeseries_RMA_LogRatio_0.7<<-discreteTimeSeries(convertedgenedagta,method='average')
+#'     
+#'     if (method == "average") {
+#'         timeseries_RMA_LogRatio_0.7 <- discreteTimeSeries(convertedgenedagta, method = "average")
+#'     } else {
+#'         require(BoolNet)
+#'         timeseries_RMA_LogRatio_0.7 <- BoolNet::binarizeTimeSeries(convertedgenedagta, method = method)$binarizedMeasurements
+#'     }
+#'     
+#'     totalNetworks_RMA_LogRatio_0.7 <- generateFBMNetwork(timeseries_data = timeseries_RMA_LogRatio_0.7, 
+#'                                   maxK = 4, 
+#'                                   max_deep_temporal = 2, 
+#'                                   useParallel = TRUE,
+#'                                   maxGenesForSingleCube = 10,
+#'                                   parallel_on_group = TRUE)
+#'     
+#'     #getClusteredTimeseries_RMA_LogRatio_0.7 <- dividedDataIntoSubgroups(timeseries_RMA_LogRatio_0.7, maxElementInCluster)
+#'     # build all cubes for all clusters build all cubes for all clusters
+#'     #cubeLeukaemia_RMA_LogRatio_temp <- constructFBNCubeAndNetworkInClusters_combine(getClusteredTimeseries_RMA_LogRatio_0.7, maxK = maxK, temporal = temporal, useParallel = TRUE)
+#'     # merge all networks? seperate by clusters?
+#'     #networks_RMA_LogRatio_0.7 <- mergeClusterNetworks(cubeLeukaemia_RMA_LogRatio_temp)
+#'     #totalNetworks_RMA_LogRatio_0.7 <- filterNetworkConnections(networks_RMA_LogRatio_0.7)
+#'     
+#'     #save(cubeLeukaemia_RMA_LogRatio_temp, file = "temp/cubeLeukaemia_RMA_LogRatio_temp_cluster.Rdata")
+#'     leukeamia_study_with_schmidts_output_res <- list(schmidts_realanlysis_output = schmidts_realanlysis_output, network = totalNetworks_RMA_LogRatio_0.7, timeseries = timeseries_RMA_LogRatio_0.7)
+#'     #save(leukeamia_study_with_schmidts_output_res, file = "temp/leukeamia_study_with_schmidts_output_temp.Rdata")
+#'     leukeamia_study_with_schmidts_output_res
+#' }
+#' 
+#' ## files2<-'D:\\Dropbox\\Dropbox\\FBNNet\\ChildhoodLeukeamiaDataFile\\GSE2677_RAW'
+#' ## files1<-c('D:\\Dropbox\\Dropbox\\FBNNet\\ChildhoodLeukeamiaDataFile\\GSE2677_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
+#' ## Data\\GSE13670_RAW\\GSE13670_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
+#' ## Data\\GSE20489_RAW\\GSE20489_RAW','D:\\Dropbox\\Dropbox\\FBNNet\\Genome
+#' ## Data\\GSE42088_RAW\\GSE42088_RAW'，'D:\\Dropbox\\Dropbox\\FBNNet\\Genome
+#' ## Data\\GSE54992_RAW\\GSE54992_RAW'，'D:\\Dropbox\\Dropbox\\FBNNet\\Genome Data\\GSE57194_RAW\\GSE57194_RAW')
+#' #'@export
+#' leukeamia_study_cluster <- function(cellDirectory, 
+#'                                     cutOffInduction = 0.7, 
+#'                                     cutOffRepression = 0.7, 
+#'                                     majority = 0.5, 
+#'                                     sortedtimeseries = NULL, 
+#'                                     useGCRMA = FALSE, 
+#'     method = c("average", "kmeans", "edgeDetector", "scanStatistic")) {
+#'     # read affy files and normalized by RMA
+#'     if (is.null(sortedtimeseries)) {
+#'         sortedtimeseries <- convertAffyRawDataIntoNormalizedStructureData(cellDirectory, useGCRMA = useGCRMA)
+#'     }
+#'     
+#'     targetsamples <- c("B-ALL-13", "B-ALL-17", "B-ALL-24", "B-ALL-31", "B-ALL-32", "B-ALL-33", "B-ALL-37", "B-ALL-38", "B-ALL-40", "B-ALL-43", "T-ALL-2", "T-ALL-20", 
+#'         "T-ALL-25")
+#'     sortedtimeseries_leukaemia <- sortedtimeseries[targetsamples]
+#'     cond <- sapply(sortedtimeseries_leukaemia, function(entry) !is.null(entry))
+#'     sortedtimeseries_leukaemia <- sortedtimeseries_leukaemia[cond]
+#'     
+#'     # Generate cube 0.7 = 2.0 ^ 0.7
+#'     probesets <- rownames(sortedtimeseries_leukaemia[[1]])
+#'     probesetGeneNameMappings <- mapProbesetNames(probesets)
+#'     
+#'     diffgenes_RMA <- identifyDifferentiallyExpressedGenes(sortedtimeseries_leukaemia, cutOffInduction = cutOffInduction, cutOffRepression = cutOffRepression, 
+#'         majority = majority, probesetGeneNameMappings = probesetGeneNameMappings)
+#'     
+#'     commonGeneSet1i <- diffgenes_RMA$DifferentialExpression[[1]]$Induced_ProbeID
+#'     commonGeneSet1r <- diffgenes_RMA$DifferentialExpression[[1]]$Repressed_ProbeID
+#'     commonGeneSet2i <- diffgenes_RMA$DifferentialExpression[[2]]$Induced_ProbeID
+#'     commonGeneSet2r <- diffgenes_RMA$DifferentialExpression[[2]]$Repressed_ProbeID
+#'     commonGeneSet3i <- diffgenes_RMA$DifferentialExpression[[3]]$Induced_ProbeID
+#'     commonGeneSet3r <- diffgenes_RMA$DifferentialExpression[[3]]$Repressed_ProbeID
+#'     
+#'     finalSet <- unique(c(commonGeneSet1i, commonGeneSet1r, commonGeneSet2i, commonGeneSet2r, commonGeneSet3i, commonGeneSet3r))
+#'     print(finalSet)
+#'     
+#'     # remove duplicate
+#'     subsetgenedata <- lapply(sortedtimeseries, function(subdata) subdata[rownames(subdata) %in% finalSet, ])
+#'     convertedgenedagta <- convertTimeseriesProbsetNameToGeneName(subsetgenedata)$convert_data
+#'     print(rownames(convertedgenedagta[[1]]))
+#'     
+#'     if (method == "average") {
+#'         timeseries_RMA_LogRatio_0.7 <- discreteTimeSeries(convertedgenedagta, method = "average")
+#'     } else {
+#'         require(BoolNet)
+#'         timeseries_RMA_LogRatio_0.7 <- BoolNet::binarizeTimeSeries(convertedgenedagta, method = method)$binarizedMeasurements
+#'     }
+#'     
+#'     # membexp=3 more fussy
+#'     getClusteredTimeseries_RMA_LogRatio_0.7 <- clusterdDiscreteData(convertedgenedagta,timeseries_RMA_LogRatio_0.7, 30)
+#'     # build all cubes for all clusters
+#'     cubeLeukaemia_RMA_LogRatio_0.7 <- constructFBNCubeAndNetworkInClusters(getClusteredTimeseries_RMA_LogRatio_0.7, 4, 1, TRUE)
+#'     # merge all networks? seperate by clusters?
+#'     networks_RMA_LogRatio_0.7 <- mergeClusterNetworks(cubeLeukaemia_RMA_LogRatio_0.7)
+#'     totalNetworks_RMA_LogRatio_0.7 <- filterNetworkConnections(networks_RMA_LogRatio_0.7)
+#'     
+#'     diffgenes <- list(Induction_0_to_6_or_8 = commonGeneSet1i, Repression_0_to_6_or_8 = commonGeneSet1r, Induction_0_to_24 = commonGeneSet2i, Repression_0_to_24 = commonGeneSet2r, 
+#'         Induction_6_or_8_to_24 = commonGeneSet3i, Repression_6_or_8_to_24 = commonGeneSet3r)
+#'     list(diff_genes = diffgenes, cube = timeseries_RMA_LogRatio_0.7, network = totalNetworks_RMA_LogRatio_0.7, timeseries = timeseries_RMA_LogRatio_0.7)
+#' }
 
 
 #' 
