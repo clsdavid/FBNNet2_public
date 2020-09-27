@@ -236,6 +236,10 @@ mapProbesetNames <- function(probesets,
     else 
       probesetMapping <- names_mapped
   
+    if(is.null(probesetMapping)) {
+      return(c())
+    }
+    
     names(DAVID_Gene_List)[[1]] = "Probeset"
     probesetGeneNameMappings <- lapply(probesets, function(name) {
       geneNames <- convert_probeset_to_gene(probesetMapping, name)$SYMBOL
@@ -585,7 +589,9 @@ mapToGeneNameWithhgu133plus2Db <- function(probesets) {
   getGeneNames <- getGeneNames[!is.na(getGeneNames$SYMBOL) & 
                                  !is.na(getGeneNames$ENTREZID) & 
                                  !is.na(getGeneNames$GENENAME), ] 
-
+  if(nrow(getGeneNames) == 0) {
+    return(NULL)
+  }
   ## remove duplicate records based on probeid 44109/59211, duplicates 15867
   mapped <- getGeneNames[!duplicated(getGeneNames[, "PROBEID"]), ]  #de-duplicated by PROBEID
   mapped <- mapped [order(mapped$ENTREZID),]
