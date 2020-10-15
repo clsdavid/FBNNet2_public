@@ -510,7 +510,7 @@ getSpecificExpressedGenes <- function(orderSampleTimeSeries, genelist = c()) {
 #' @export
 convertTimeseriesProbsetNameToGeneName <- function(orderSampleTimeSeries) {
   futile.logger::flog.info(sprintf("Enter convertTimeseriesProbsetNameToGeneName zone: orderSampleTimeSeries=%s",
-                                   head(orderSampleTimeSeries)))
+                                   names(orderSampleTimeSeries)))
   alldifferExpressednames <- c()
   for (i in seq_along(orderSampleTimeSeries)) {
     row_names <- rownames(orderSampleTimeSeries[[i]])
@@ -519,33 +519,25 @@ convertTimeseriesProbsetNameToGeneName <- function(orderSampleTimeSeries) {
   }
   probesetMapping <- mapToGeneNameWithhgu133plus2Db(alldifferExpressednames)
   mappingsheet <- probesetMapping$DeDuplicatedMapping
-  
-  mapto <- lapply(alldifferExpressednames, function(name) as.character(mappingsheet[which(mappingsheet$original == name), ][, 2]))
-  cond <- sapply(mapto, function(x) length(x) > 0)
-  mapto <- mapto[cond]
-  mapto <- unique(unlist(mapto))
-  
   convert_data <- lapply(orderSampleTimeSeries, function(subdata, mappingsheet, probesetMapping) {
-    
-    subdata <- subdata[which(rownames(subdata) %in% mappingsheet$original), ]
-    gene_names <- mappingsheet[mappingsheet$original %in% rownames(subdata), "mapTo"]
     gene_names <- mapProbesetNames(rownames(subdata), probesetMapping)
+    uni_gene_names <- unique(gene_names)
     col_names <- colnames(subdata)
     res <- cbind(subdata, gene_names)
     colnames(res)[length(col_names) + 1] <- "geneName"
     #remove duplicate by mean
-    res <- as.data.frame(res) 
+    res <- as.data.frame(res)
     res[,(length(col_names) + 1)] <- as.character(res[,(length(col_names) + 1)])
     for(i in seq_len(length(col_names))) {
       res[, i] <- as.numeric(res[, i])
     }
     res <- dplyr::group_by(res, geneName)
-    res <- dplyr::summarise_all(res, mean) 
+    res <- dplyr::summarise_all(res, mean)
     newrowNames <-dplyr::pull(res, geneName)
     res <- as.matrix(res[,-1])
     rownames(res) <- newrowNames
-    res
-    ##subdata[!duplicated(rownames(subdata)), ]
+    ## remove Null row names if gene names are not available
+    res[-which(rownames(res) == "character(0)"),]
   }, mappingsheet, probesetMapping)
 
   filteredData <- list()
