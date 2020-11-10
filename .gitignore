@@ -123,3 +123,5 @@ study_data
 .RDataTmp
 study/All_differential_CombinedGenes.txt
 study/Common_Genes_Leukaemia_new.txt
+experiment.R
+study_cutoff_1_or_2/

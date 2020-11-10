@@ -213,7 +213,7 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
         mergedgenes <- sort(unique(c(genes1, genes2)))
     
     res <- list()
-    ## loog for interactions in the first group
+    ## loop for interactions in the first group
     
     for (name1 in names(interactions1)) {
         unique_express_1 <- c()
@@ -248,11 +248,16 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
                   unique_express_0 <- c(unique_express_0, temp_exp)
                 }
                 
+                if (!all(inputgene1 %in% mergedgenes)) {
+                  next
+                }
+                
                 subindex <- length(res[[index]]) + 1
                 newinput <- which(mergedgenes %in% inputgene1)
                 if (length(newinput) == 0) {
-                  next
+                    next
                 }
+
                 res[[index]][[subindex]] <- list(input = newinput, expression = interactions1[[name1]][[j]]$expression, error = interactions1[[name1]][[j]]$error, 
                   type = interactions1[[name1]][[j]]$type, probability = interactions1[[name1]][[j]]$probability, support = interactions1[[name1]][[j]]$support, 
                   timestep = interactions1[[name1]][[j]]$timestep)
@@ -292,10 +297,18 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
                   unique_express_0 <- c(unique_express_0, temp_exp)
                 }
                 
-                
+                if (!all(inputgene2 %in% mergedgenes)) {
+                    next
+                }
                 subindex <- length(res[[name1]]) + 1
-                res[[name1]][[subindex]] <- list(input = which(mergedgenes %in% inputgene2), expression = interactions2[[name1]][[j]]$expression, error = interactions2[[name1]][[j]]$error, 
-                  type = interactions2[[name1]][[j]]$type, probability = interactions2[[name1]][[j]]$probability, support = interactions2[[name1]][[j]]$support, 
+
+                newinput <- which(mergedgenes %in% inputgene2)
+                if (length(newinput) == 0) {
+                    next
+                }
+                
+                res[[name1]][[subindex]] <- list(input = newinput, expression = interactions2[[name1]][[j]]$expression, error = interactions2[[name1]][[j]]$error,
+                  type = interactions2[[name1]][[j]]$type, probability = interactions2[[name1]][[j]]$probability, support = interactions2[[name1]][[j]]$support,
                   timestep = interactions2[[name1]][[j]]$timestep)
                 if (type == 1) {
                   names(res[[name1]])[[subindex]] <- paste(name1, "_", a_index, "_", "Activator", sep = "", collapse = "")
@@ -338,7 +351,9 @@ mergeInteraction <- function(interactions1, interactions2, genes1, genes2, merge
                   
                   unique_express_0 <- c(unique_express_0, temp_exp)
                 }
-                
+                if (!all(inputgene2 %in% mergedgenes)) {
+                    next
+                }
                 subindex <- length(res[[index]]) + 1
                 newinput <- which(mergedgenes %in% inputgene2)
                 if (length(newinput) == 0) {
@@ -518,6 +533,61 @@ filterNetworkConnectionsByGenes <- function(networks, genelist = c(), exclusive 
     }
     
     merges <- mergeInteraction(extranetworks, extranetworks, genes, genes, mixedgenes)
+    
+    if (length(res$fixed) < length(genes)) {
+        res$fixed <- rep(-1, length(genes))
+    }
+    
+    fixed1 <- res$fixed
+    names(fixed1) <- genes
+    
+    newfixed <- rep(-1, length(mixedgenes))
+    names(newfixed) <- mixedgenes
+    newfixed[which(mixedgenes %in% names(fixed1))] <- fixed1[which(names(fixed1) %in% mixedgenes)]
+    
+    
+    if (length(res$timedecay) < length(genes)) {
+        res$timedecay <- rep(-1, length(genes))
+    }
+    
+    timedecay1 <- res$timedecay
+    names(timedecay1) <- genes
+    
+    newtimedecay <- rep(-1, length(mixedgenes))
+    names(newtimedecay) <- mixedgenes
+    newtimedecay[which(mixedgenes %in% names(timedecay1))] <- timedecay1[which(names(timedecay1) %in% mixedgenes)]
+    
+    res <- list(interactions = merges, genes = mixedgenes, fixed = newfixed, timedecay = newtimedecay)
+    
+    class(res) <- "FundamentalBooleanNetwork"
+    filterNetworkConnections(res)
+}
+
+#' Find Backward Network By Genes
+#' 
+#' @param networks The Fundamental Boolean Network internally
+#' @param genelist A list of genes
+#' @param exclusive Optional
+#' @param expand Optional
+#' @export
+filterNetworkConnectionsByInputGenes <- function(networks, genelist = c()) {
+    if (length(genelist) == 0) {
+        stop("The genelist is empty")
+    }
+    
+    res <- networks
+    genes <- res$genes
+
+    filterednetworks <- res$interactions
+ 
+    regulategenes <- names(filterednetworks)
+    
+    filteredinputgenes <- findAllInputGenes(filterednetworks, genes)
+    mixedgenes <- genelist[genelist %in% filteredinputgenes]
+    if(length(mixedgenes) == 0)
+        stop("No input genes found")
+    ##ToDi should call filterInteraction
+    merges <- mergeInteraction(filterednetworks, filterednetworks, genes, genes, mixedgenes)
     
     if (length(res$fixed) < length(genes)) {
         res$fixed <- rep(-1, length(genes))
