@@ -848,7 +848,7 @@ DrawingAttractorInternal <- function(networkobject, dynamicNetworkGraphicObject,
         filterednodeFromTF <- cbind(filterednodeFromTF, level = rep(startlevel + 1, length(rownames(filterednodeFromTF))))
         
         
-        
+        ## need to think if there are cases where no To nodes?
         # to
         filterednodeTo <- networkobject$nodes[which(networkobject$nodes$id %in% tonewedges$to), ]
         filterednodeToGene <- filterednodeTo[which(filterednodeTo$type == "gene"), ]
@@ -1000,4 +1000,12 @@ FBNNetwork.Graph.DrawAttractor <- function(fbnNetwork, FBMAttractors, index = 1)
         dynamicnetworkobject <- convert_to_NGO(matrix, fbnNetwork, networkobject)
     }
     DrawingAttractorInternal(networkobject, dynamicnetworkobject, matrix)
+}
+
+#' @export
+FBNNetwork.Graph.DrawDynamicForOneMatrix <- function(fbnNetwork, matrix_data) {
+    genes <- rownames(matrix_data)
+    networkobject <- ConvertToNetworkGraphicObject(fbnNetwork, show_decay = FALSE)
+    dynamicnetworkobject <- convert_to_NGO(matrix_data, fbnNetwork, networkobject)
+    DrawingAttractorInternal(networkobject, dynamicnetworkobject, matrix_data)
 }

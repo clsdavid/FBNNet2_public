@@ -227,3 +227,24 @@ output_genes <- function(genes, path, filename) {
     cat("\n")
     sink()
 }
+
+#' A method to reorder a matrix by a vector
+#' 
+#' @param matrix A matrix
+#' @param genes The target genes in the row names of the matrix
+#' @export
+output_timesereis_based_on_genes <- function(matrix, genes) {
+    if(!is.matrix(matrix)) {
+        stop("The parameter matrix must be a matrix object")
+    }
+    if(!all(genes %in% rownames(matrix))) {
+        stop("All of the genes must be in the row names of the matrix")
+    }
+    
+    rows <- lapply(genes, function(gene, matrix) {
+        matrix[which(rownames(matrix) == gene), ]
+    }, matrix)
+    new_matrix <- do.call(rbind, rows)
+    rownames(new_matrix) <- genes
+    return(as.matrix(new_matrix))
+}
