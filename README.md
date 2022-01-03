@@ -33,21 +33,40 @@ devtools::install_github("clsdavid/FBNNet2_public")
 https://clsdavid.github.io/FBNNet2_public/
 
 ### SAMPLE CODE
-#### find forward related genes with FAA
-FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
-FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+#### TFBM
+##### find forward related genes with FAA
+TFBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
 
-#### find forward related genes with FAI
-FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
-FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+##### find forward related genes with FAI
+TFBM_FIA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
 
-#### find forward related genes with FAI with 2 levels
-FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 2, next_level_mix_type = TRUE)
-FBNNetwork.Graph(FAI_CDC42EP3_Networks_2)
+##### find forward related genes with FAI with 2 levels
+TFBM_FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 0, maxDeep = 2, next_level_mix_type = TRUE)
+FBNNetwork.Graph(TFBM_FAI_CDC42EP3_Networks_2)
 
-#### find backward related genes with BA
-FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
-FBNNetwork.Graph(FAA_CDC42EP3_Networks)
+##### find backward related genes with BA
+TFBM_FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = TFBM_Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
+
+#### FBM
+##### find forward related genes with FAA
+FBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
+
+##### find forward related genes with FAI
+FBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
+
+##### find forward related genes with FAI with 2 levels
+FBM_FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 2, next_level_mix_type = TRUE)
+FBNNetwork.Graph(FBM_FAI_CDC42EP3_Networks_2)
+
+##### find backward related genes with BA
+FBM_FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = FBM_Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
+FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
+
 
 ---
 __Citation__
