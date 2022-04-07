@@ -3,7 +3,7 @@
 Fundamental Boolean Model (FBM), published in Chen et al. (2018) <https://doi.org/10.3389/fphys.2018.01328>, provides an intuitive definition of activation and inhibition pathways and includes mechanisms to handle protein decay issues. To prove the concept of the novel model, we implemented an R package, called FBNNet. Our experimental results show that the proposed FBM could explicitly display the internal connections of the mammalian cell cycle between genes separated into the connection types of activation, inhibition and protein decay. Moreover, the method we proposed to infer the gene regulatory networks for the novel Boolean model can be run in parallel and; hence, the computation cost is affordable. Finally, the novel Boolean model and related Fundamental Boolean Networks (FBNs) could show significant trajectories in genes to reveal how genes regulated each other over a given period. This new feature could facilitate further research on drug interventions to detect the side effects of a newly-proposed drug.
 
 ### Introduction
-This package adopted the concepts of fundamental Boolean modelling and networks to provide mechanisms for extracting the fundamental Boolean networks from the microarray timeseires data. The methodologies implemented in this package are documented in Chen et al. (2018) <https://doi.org/10.3389/fphys.2018.01328>.
+This package adopted the concepts of fundamental Boolean modelling and networks to provide mechanisms for extracting the fundamental Boolean networks from the microarray timeseires data. The methodologies implemented in this package are documented in Chen et al. (2018) <https://doi.org/10.3389/fphys.2018.01328> and Chen et al. (2022) <https://doi.org/10.15302/J-QB-021-0280>.
 
 ### Main functions
 * `generateFBMNetwork`: is the main entry of the package FBNNet that can be used to mine the gene regulatory network.
@@ -20,10 +20,10 @@ This package adopted the concepts of fundamental Boolean modelling and networks 
 
 
 #### Experiment Data
-* `Common_Genes_Leukeamia`: Data contains the 286 common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
-* `Leukeamia_Timeseries`: Data contains the timeseries data for the common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
-* `Leukeamia_Networks`: The fundamental Boolean networks mined from the Leukeamia_Timeseries data via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways.
-* `DAVID_Gene_List`: Data extracted from DAVID tools for mapping probeset ids with gene names
+* `Common_Genes_Leukeamia`: Data contains the 286 common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways (Chen, L., etc., 2022).
+* `Leukeamia_Timeseries`: Data contains the timeseries data for the common genes generated via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways (Chen, L., etc., 2022).
+* `Leukeamia_Networks`: The fundamental Boolean networks mined from the Leukeamia_Timeseries data via this package for the study of Fundamental Boolean Network Modelling for Childhood Acute Lymphoblastic Leukaemia Pathways (Chen, L., etc., 2022).
+* `DAVID_Gene_List`: Data extracted from DAVID tools for mapping probeset ids with gene names (Chen, L., etc., 2022).
 
 ### Installation
 #### Install development version `FBNNet` from GitHub:
@@ -34,44 +34,47 @@ https://clsdavid.github.io/FBNNet2_public/
 
 ### SAMPLE CODE
 #### TFBM
-##### find forward related genes with FAA
+##### __Find forward related genes with FAA__
 TFBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
 
-##### find forward related genes with FAI
+##### __Find forward related genes with FAI__
 TFBM_FIA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
 
-##### find forward related genes with FAI with 2 levels
+##### __Find forward related genes with FAI with 2 levels__
 TFBM_FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = TFBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 0, maxDeep = 2, next_level_mix_type = TRUE)
 FBNNetwork.Graph(TFBM_FAI_CDC42EP3_Networks_2)
 
-##### find backward related genes with BA
+##### __Find backward related genes with BA__
 TFBM_FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = TFBM_Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(TFBM_FAA_CDC42EP3_Networks)
 
 #### FBM
-##### find forward related genes with FAA
+##### __Find forward related genes with FAA__
 FBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 1, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
 
-##### find forward related genes with FAI
+##### __Find forward related genes with FAI__
 FBM_FAA_CDC42EP3_Networks <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
 
-##### find forward related genes with FAI with 2 levels
+##### __Find forward related genes with FAI with 2 levels__
 FBM_FAI_CDC42EP3_Networks_2 <- findForwardRelatedNetworkByGenes(networks = FBM_Leukeamia_Networks, target_gene_list = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 2, next_level_mix_type = TRUE)
 FBNNetwork.Graph(FBM_FAI_CDC42EP3_Networks_2)
 
-##### find backward related genes with BA
+##### __Find backward related genes with BA__
 FBM_FAA_CDC42EP3_Networks <- findAllBackwardRelatedGenes(networks = FBM_Leukeamia_Networks, target_gene = "CDC42EP3", regulationType = 0, target_type = 1, maxDeep = 1)
 FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
 
 
 ---
 __Citation__
-Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
-Chen, L., D. Kulasiri and S. Samarasinghe (2022). Fundamental Boolean network modelling for childhood acute lymphoblastic leukaemia pathways. Quant Biol. DOI: 10.15302/J-QB-021-0280, Vol 10, Issue (1) : 94-121.
+
+##### Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
+
+##### Chen, L., D. Kulasiri and S. Samarasinghe (2022). Fundamental Boolean network modelling for childhood acute lymphoblastic leukaemia pathways. Quant Biol. DOI: 10.15302/J-QB-021-0280, Vol 10, Issue (1) : 94-121.
+
 __Copyright and Licensing__
 This package and related novel concepts were originally proposed and developed by Leshi Chen <https://doi.org/10.3389/fphys.2018.01328>, under the supervision of Don Kulasiri and Sandhya Samarasinghe during the PHD study at Lincoln University, New Zealand. Currently, the package is licensed under the MIT License for public.
 
