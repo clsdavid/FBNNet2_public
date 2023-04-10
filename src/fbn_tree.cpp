@@ -270,6 +270,7 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
        bool isPossitiveCorrelated_T = probabilityOfFourCombines_P["isPossitiveCorrelated"];
        int timestep_T = probabilityOfFourCombines_P["timestep"];
        double bestFitP = probabilityOfFourCombines_P["bestFitP"];
+       double p_value_P = probabilityOfFourCombines_P["p_value"];
 
        //#negative regulation
        double pickF_support = probabilityOfFourCombines_N["pickF_support"];
@@ -284,6 +285,7 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
        bool isPossitiveCorrelated_F = probabilityOfFourCombines_N["isPossitiveCorrelated"];
        int timestep_F = probabilityOfFourCombines_N["timestep"];
        double bestFitN = probabilityOfFourCombines_N["bestFitN"];
+       double p_value_N = probabilityOfFourCombines_N["p_value"];
 
        String pick_expT;
        String pick_expF;
@@ -324,13 +326,14 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
                                                            _["max_confidence"]=(String)pickT_max_confidence,
                                                            _["support"]=(String)pickT_support,
                                                            _["causality_test"]=(String)pickT_causality_test,
-                                                           _["Noise"]=(String)pickT_noise, _["Identity"]=identity_T,
-                                                           _["type"]=sign_P, _["timestep"]=(String)timestep_T,
+                                                           _["Noise"]=(String)pickT_noise,
+                                                           _["Identity"]=identity_T,
+                                                           _["type"]=sign_P,
+                                                           _["timestep"]=(String)timestep_T,
                                                            _["isNegativeCorrelated"]=(String)isNegativeCorrelated_T,
                                                            _["isPossitiveCorrelated"]=(String)isPossitiveCorrelated_T,
-                                                           _["bestFitP"]=(String)bestFitP);
-
-
+                                                           _["bestFitP"]=(String)bestFitP,
+                                                           _["p_value_of_P"]=(String)p_value_P);
        pattern = CharacterVector::create();
        if(sign_N=="FT")
        {
@@ -366,11 +369,14 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
                                                            _["max_confidence"]=(String)pickF_max_confidence,
                                                            _["support"]=(String)pickF_support,
                                                            _["causality_test"]=(String)pickF_causality_test,
-                                                           _["Noise"]=(String)pickF_noise,_["Identity"]=identity_F,
-                                                           _["type"]=sign_N, _["timestep"]=(String)timestep_F,
+                                                           _["Noise"]=(String)pickF_noise,
+                                                           _["Identity"]=identity_F,
+                                                           _["type"]=sign_N,
+                                                           _["timestep"]=(String)timestep_F,
                                                            _["isNegativeCorrelated"]=(String)isNegativeCorrelated_F,
                                                            _["isPossitiveCorrelated"]=(String)isPossitiveCorrelated_F,
-                                                           _["bestFitN"]=(String)bestFitN);
+                                                           _["bestFitN"]=(String)bestFitN,
+                                                           _["p_value_of_N"]=(String)p_value_N);
 
 
        List a_i_tor(2);
