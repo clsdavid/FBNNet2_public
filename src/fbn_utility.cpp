@@ -202,7 +202,7 @@ Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix& m,
    return(res);
 }
 
-int matchCount(Rcpp::NumericMatrix& m, Rcpp::NumericVector v){
+int matchCount(Rcpp::NumericMatrix& m, Rcpp::NumericVector& v){
    Rcpp::NumericMatrix mid=substractM(m,v);
    Rcpp::NumericVector col_sumed = Rcpp::colSums(mid);
    return(std::count(col_sumed.begin(),col_sumed.end(),0));
@@ -414,7 +414,7 @@ Rcpp::CharacterVector subCPP(Rcpp::CharacterVector& pattern, Rcpp::CharacterVect
 //' @param outputType The type of output.
 //' @param lowerCase Optional, if TRUE convert them to lower case.
 // [[Rcpp::export]]
-Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector expression,
+Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector& expression,
                                       int outputType,
                                       bool lowerCase) {
    std::string strExpression = (std::string)expression[0];

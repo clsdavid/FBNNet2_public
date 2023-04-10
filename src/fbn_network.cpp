@@ -46,11 +46,11 @@ Rcpp::List networkFiltering(Rcpp::List res) {
             std::string str_timestep_rule1 = (std::string)rule["timestep"];
             std::string str_timestep_rule2 = (std::string)rule2["timestep"];
 
-            std::string str_input_rule1 = (std::string)rule["input"];
-            std::string str_input_rule2 = (std::string)rule2["input"];
+            Rcpp::CharacterVector v_input_rule1 = Rcpp::CharacterVector::create(rule["input"]);
+            Rcpp::CharacterVector v_input_rule2 = Rcpp::CharacterVector::create(rule2["input"]);
 
-            Rcpp::CharacterVector input_rule1 = splitExpression(str_input_rule1, 2, false);
-            Rcpp::CharacterVector input_rule2 = splitExpression(str_input_rule2, 2, false);
+            Rcpp::CharacterVector input_rule1 = splitExpression(v_input_rule1, 2, false);
+            Rcpp::CharacterVector input_rule2 = splitExpression(v_input_rule2, 2, false);
             if (is_true(all(a_in_b(input_rule1,input_rule2))))
             {
                if(numOfInput_rule1< numOfInput_rule2 && str_type_rule1 == str_type_rule2 && str_timestep_rule1 == str_timestep_rule2) {

@@ -128,12 +128,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // splitExpression
-Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector expression, int outputType, bool lowerCase);
+Rcpp::CharacterVector splitExpression(Rcpp::CharacterVector& expression, int outputType, bool lowerCase);
 RcppExport SEXP _FBNNet_splitExpression(SEXP expressionSEXP, SEXP outputTypeSEXP, SEXP lowerCaseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type expression(expressionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector& >::type expression(expressionSEXP);
     Rcpp::traits::input_parameter< int >::type outputType(outputTypeSEXP);
     Rcpp::traits::input_parameter< bool >::type lowerCase(lowerCaseSEXP);
     rcpp_result_gen = Rcpp::wrap(splitExpression(expression, outputType, lowerCase));

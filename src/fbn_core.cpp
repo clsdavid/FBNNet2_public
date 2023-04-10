@@ -183,13 +183,17 @@ Rcpp::List getBasicMeasures(
   int lenTF = matchCount(m, cond_F_target_T_state);
   int lenFT = matchCount(m, cond_T_target_F_state);
   int lenFF = matchCount(m, cond_F_target_F_state);
+  Rcpp::NumericVector stateTT = NumericVector::create(1,1);
+  Rcpp::NumericVector stateTF = NumericVector::create(0,1);
+  Rcpp::NumericVector stateFT = NumericVector::create(1,0);
+  Rcpp::NumericVector stateFF = NumericVector::create(0,0);
   if(recount_target){
     if(stateTCond.length()>1){
       Rcpp::NumericMatrix m2 = m(Range(m.nrow()-2,m.nrow()-1),_);
-      int sresTT=matchCount(m2, NumericVector::create(1,1));
-      int sresTF=matchCount(m2, NumericVector::create(0,1));
-      int sresFT=matchCount(m2, NumericVector::create(1,0));
-      int sresFF=matchCount(m2, NumericVector::create(0,0));
+      int sresTT=matchCount(m2, stateTT);
+      int sresTF=matchCount(m2, stateTF);
+      int sresFT=matchCount(m2, stateFT);
+      int sresFF=matchCount(m2, stateFF);
 
       target_T_count = sresTT+sresTF;
       target_F_count = sresFT+sresFF;
