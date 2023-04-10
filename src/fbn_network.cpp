@@ -6,7 +6,7 @@ using namespace Rcpp;
 //' @name networkFiltering
 //' @param res A list of named network interactions
 // [[Rcpp::export]]
-Rcpp::List networkFiltering(Rcpp::List res) {
+Rcpp::List networkFiltering(Rcpp::List& res) {
 
    //finalFilteredlist <- list()
    Rcpp::CharacterVector targetgenes = res.attr("names");

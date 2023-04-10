@@ -21,10 +21,10 @@ using namespace Rcpp;
 //'
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_measurements(
-      Rcpp::CharacterVector targetGene,
-      Rcpp::Environment mainParameters,
-      Rcpp::CharacterVector genes,
-      Rcpp::Nullable<Rcpp::List> matchedgenes,
+      Rcpp::CharacterVector& targetGene,
+      Rcpp::Environment& mainParameters,
+      Rcpp::CharacterVector& genes,
+      Rcpp::Nullable<Rcpp::List>& matchedgenes,
       Rcpp::IntegerVector temporal=1,
       Nullable<Rcpp::List> targetCounts = R_NilValue)
 {
@@ -33,7 +33,7 @@ Rcpp::List getGenePrababilities_measurements(
    List res(len);
 
    for(int i = 0;i < len;i++){
-      std::string gene = as<std::string>(genes[i]);
+      Rcpp::CharacterVector gene = Rcpp::CharacterVector::create(genes[i]);
       List probabilityOfFourCombines = getGenePrababilities(mainParameters,
                                                             matchedgenes,
                                                             targetGene,
@@ -111,9 +111,9 @@ Rcpp::List getGenePrababilities_measurements(
 //' @param findNegativeRegulate Optional if TRUE find negative regulation only
 // [[Rcpp::export]]
 Rcpp::List buildProbabilityTreeOnTargetGene(
-    Rcpp::CharacterVector targetGene,
-    Rcpp::Environment mainParameters,
-    Rcpp::CharacterVector genes,
+    Rcpp::CharacterVector& targetGene,
+    Rcpp::Environment& mainParameters,
+    Rcpp::CharacterVector& genes,
     Rcpp::Nullable<Rcpp::List> matchedgenes,
     Rcpp::Nullable<Rcpp::CharacterVector> matchedexpression,
     Rcpp::IntegerVector maxK=4,
@@ -196,7 +196,7 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
        String expT=mpaste(expressionT);
        String expF=mpaste(expressionF);
 
-       Rcpp::CharacterVector inputgenes=newMatchedGenesT.names();
+       Rcpp::CharacterVector inputgenes = newMatchedGenesT.names();
        inputgenes = char_sort(inputgenes,true);
 
 
@@ -242,7 +242,8 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
 
           if(nextGenes_T.length()>0 && is_essential_gene_P && (bestFit_P>0 || bestFit_N>0))
           {
-             subresultT = buildProbabilityTreeOnTargetGene(targetGene,mainParameters,nextGenes_T,newMatchedGenesT,CharacterVector::create(expT),IntegerVector::create(pmaxK),temporal, new_targetCounts, findPositiveRegulate, findNegativeRegulate);
+             CharacterVector v_expT = CharacterVector::create(expT);
+             subresultT = buildProbabilityTreeOnTargetGene(targetGene, mainParameters, nextGenes_T, newMatchedGenesT, v_expT, IntegerVector::create(pmaxK), temporal, new_targetCounts, findPositiveRegulate, findNegativeRegulate);
           }
 
           exlcudedSubgenes = newMatchedGenesF.names();
@@ -250,7 +251,8 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
           nextGenes_F = unprocessedGenes[unprocessed_index2];
           if(nextGenes_F.length()>0 && is_essential_gene_N && (bestFit_P>0 || bestFit_N>0))
           {
-             subresultF = buildProbabilityTreeOnTargetGene(targetGene,mainParameters,nextGenes_F,newMatchedGenesF,CharacterVector::create(expF),IntegerVector::create(pmaxK),temporal, new_targetCounts, findPositiveRegulate, findNegativeRegulate);
+             CharacterVector v_expF = CharacterVector::create(expF);
+             subresultF = buildProbabilityTreeOnTargetGene(targetGene, mainParameters, nextGenes_F, newMatchedGenesF, v_expF, IntegerVector::create(pmaxK), temporal, new_targetCounts, findPositiveRegulate, findNegativeRegulate);
           }
        }
 
@@ -413,11 +415,11 @@ Rcpp::List buildProbabilityTreeOnTargetGene(
 //' @param mainParameters An environment variable holds all input data
 //'
 // [[Rcpp::export]]
-Rcpp::List process_cube_algorithm(Rcpp::CharacterVector target_gene,
-                                Rcpp::CharacterVector conditional_genes,
+Rcpp::List process_cube_algorithm(Rcpp::CharacterVector& target_gene,
+                                Rcpp::CharacterVector& conditional_genes,
                                 Rcpp::IntegerVector maxK,
                                 Rcpp::IntegerVector temporal,
-                                Rcpp::Environment mainParameters) {
+                                Rcpp::Environment& mainParameters) {
    List res(1);
    List sub_res(1);
    sub_res[0] = buildProbabilityTreeOnTargetGene(target_gene,
