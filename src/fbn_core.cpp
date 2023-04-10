@@ -14,7 +14,7 @@ using namespace Rcpp;
 //' @param temporal The temporal time step
 // [[Rcpp::export]]
 Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
-    Rcpp::List timeSeriesCube, 
+    Rcpp::List timeSeriesCube,
     Rcpp::IntegerVector temporal)
 {
   int numOfmats = timeSeriesCube.length();
@@ -31,13 +31,13 @@ Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
     NumericMatrix temp = timeSeriesCube[i];
     final_len += temp.ncol();
   }
-  
+
   Rcpp::NumericMatrix res(genes.length(),final_len+thisTemporal*numOfmats-thisTemporal);
   int offset=0;
   for(int i=0;i<numOfmats;i++){
     Rcpp::NumericMatrix cur_mat = timeSeriesCube[i];
     int cur_col_len = cur_mat.ncol();
-    
+
     for(int j=0;j<cur_col_len;j++){
       res(_,offset) = cur_mat(_,j);
       offset +=1;
@@ -51,7 +51,7 @@ Rcpp::NumericMatrix extractGeneStateFromTimeSeriesCube(
     }
 
   }
-  
+
   Rcpp::rownames(res) = genes;
   return (res);
 }
@@ -66,15 +66,15 @@ Rcpp::NumericMatrix extractGeneStates(Rcpp::NumericMatrix stateMatrix,
   Rcpp::NumericMatrix sub(targetgenes.length(),stateMatrix.ncol());
   for(int i=0; i<r_index.length(); i++)
      sub.row(i) = stateMatrix.row((int)r_index[i]);
-  
+
   rownames(sub) = names[r_index];
   return (sub);
 }
 
 
 Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
-                                      Rcpp::CharacterVector targetgene, 
-                                      Rcpp::CharacterVector conditional_genes, 
+                                      Rcpp::CharacterVector targetgene,
+                                      Rcpp::CharacterVector conditional_genes,
                                       Rcpp::IntegerVector temporal)
 {
     Rcpp::List getCurrentStates  =  mainParameters["currentStates"];
@@ -82,34 +82,34 @@ Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
     Rcpp::List getCurrentStates_c  =  mainParameters["currentStates_c"];
     Rcpp::List getpreviousStates_c  =  mainParameters["previousStates_c"];
     int thisTemporal = temporal[0];
-    
+
     if(thisTemporal<1)
         thisTemporal =1;
-     
+
     int cur_len = getCurrentStates.length();
     if(cur_len < thisTemporal || cur_len == 0)
     {
       throw std::runtime_error("getCurrentStates subscript out of bounds");
     }
 
-    int pre_len =  getpreviousStates.length(); 
+    int pre_len =  getpreviousStates.length();
     if(pre_len < thisTemporal || pre_len == 0)
     {
       throw std::runtime_error("getPreviousStates counter subscript out of bounds");
     }
 
-    int cur_len_c = getCurrentStates_c.length();    
+    int cur_len_c = getCurrentStates_c.length();
     if(cur_len_c < thisTemporal || cur_len_c == 0)
     {
       throw std::runtime_error("getCurrentStates_c subscript out of bounds");
     }
 
-    int pre_len_c =  getpreviousStates_c.length();      
+    int pre_len_c =  getpreviousStates_c.length();
     if(pre_len_c < thisTemporal || pre_len_c == 0)
     {
       throw std::runtime_error("getPreviousStates counter subscript out of bounds");
     }
-    
+
     std::vector<std::string> names;
     List result(thisTemporal);
     for(int i=0;i<thisTemporal;i++){
@@ -118,43 +118,43 @@ Rcpp::List generateTemporalGeneStates(Rcpp::Environment mainParameters,
       Rcpp::NumericMatrix getCurrentState_c  =  getCurrentStates_c[i];
       Rcpp::NumericMatrix getpreviousState_c  =  getpreviousStates_c[i];
       int n_state = getpreviousState.ncol();
-      
+
       if((n_state-thisTemporal)<2){
         throw std::runtime_error("No enough states for this temporal");
       }
       n_state = n_state-1;
       Rcpp::NumericMatrix t_getCurrentState = getCurrentState(_, Range(i+1,n_state)); //remove begin
       rownames(t_getCurrentState)= rownames(getCurrentState);
-      
+
       Rcpp::NumericMatrix t_getpreviousState = getpreviousState(_, Range(0, n_state-(i+1)));//remove last part
       rownames(t_getpreviousState)= rownames(getpreviousState);
-      
+
       Rcpp::NumericMatrix t_getCurrentState_c = getCurrentState_c(_, Range(i+1,n_state)); //remove begin
       rownames(t_getCurrentState_c)= rownames(getCurrentState_c);
-      
+
       Rcpp::NumericMatrix t_getpreviousState_c = getpreviousState_c(_, Range(0, n_state-(i+1)));//remove last part
       rownames(t_getpreviousState_c)= rownames(getpreviousState_c);
-      
-      
+
+
       Rcpp::NumericMatrix extracedCondition = extractGeneStates(t_getpreviousState, conditional_genes);
       Rcpp::NumericMatrix extracedTargetGeneState = extractGeneStates(t_getCurrentState,targetgene);
-        
+
       Rcpp::NumericMatrix extracedCondition_c = extractGeneStates(t_getpreviousState_c, targetgene);
       Rcpp::NumericMatrix extracedTargetGeneState_c = extractGeneStates(t_getCurrentState_c, conditional_genes);
-        
+
       Rcpp::NumericMatrix concatenatedMatrix = mrbind(extracedCondition,extracedTargetGeneState);
       Rcpp::NumericMatrix concatenatedMatrix_c = mrbind(extracedCondition_c,extracedTargetGeneState_c);
-        
+
       std::vector<std::string> subnames(3);
       Rcpp::List subresult(3);
-      subresult[0] = concatenatedMatrix; 
+      subresult[0] = concatenatedMatrix;
       subnames[0] = "computation_Matrix";
-      subresult[1]= concatenatedMatrix_c; 
+      subresult[1]= concatenatedMatrix_c;
       subnames[1] = "computation_Matrix_c";
-      subresult[2]= i+1; 
+      subresult[2]= i+1;
       subnames[2] = "timeStep";
-      subresult.attr("names") = Rcpp::wrap(subnames); 
-        
+      subresult.attr("names") = Rcpp::wrap(subnames);
+
       result[i]=subresult;
     }
    return(result);
@@ -190,7 +190,7 @@ Rcpp::List getBasicMeasures(
       int sresTF=matchCount(m2, NumericVector::create(0,1));
       int sresFT=matchCount(m2, NumericVector::create(1,0));
       int sresFF=matchCount(m2, NumericVector::create(0,0));
-      
+
       target_T_count = sresTT+sresTF;
       target_F_count = sresFT+sresFF;
     }else{
@@ -236,22 +236,22 @@ Rcpp::List getBasicMeasures(
 //' @param targetCounts The count of the target count.
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
-                                      Rcpp::Nullable<Rcpp::List> fixedgenestate, 
-                                      Rcpp::CharacterVector target_gene, 
+                                      Rcpp::Nullable<Rcpp::List> fixedgenestate,
+                                      Rcpp::CharacterVector target_gene,
                                       Rcpp::CharacterVector new_conditional_gene,
                                       Rcpp::IntegerVector temporal,
                                       Rcpp::Nullable<Rcpp::List> targetCounts)
 {
-  
+
   //P(B|A)=P(A & B)/P(A)=(frq(A&B)/n)/(frq(A)/n)=frq(A&B)/frq(A)=P(A&D)/(P(A&D)+P(!A & D)) Bayers rule
   //order of target_genes is very important
   int total_samples = main_parameters_in_ref["total_samples"];//ToDo, should pass from up stream as it is static
   CharacterVector all_gene_names = main_parameters_in_ref["all_gene_names"];
   int n_timepoints = main_parameters_in_ref["total_timepoints"];;
   CharacterVector conditional_genes;
-  
+  CharacterVector conditional_genes2;
   List cur_fixed_state;
-  
+
   if(fixedgenestate.isNull())
   {
       conditional_genes = new_conditional_gene;
@@ -261,21 +261,21 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
       cur_fixed_state = temp_state;
       //sub level
       conditional_genes = cur_fixed_state.names();
-    
-    
+      conditional_genes2 = cur_fixed_state.names();
+
       if(!is_true(all(a_in_b(conditional_genes,all_gene_names))))
       {
           throw std::runtime_error("All or some part of the conditional genes are not founded in the timeseries cube");
       }
-    
+
       if(is_true(any(a_in_b(new_conditional_gene,conditional_genes))))
       {
           IntegerVector indexs = a_in_b_index(new_conditional_gene, conditional_genes);
           for(int i=0;i<indexs.length();i++){
               conditional_genes.erase(i);
           }
-        
-          IntegerVector indexs2 = a_in_b_index(new_conditional_gene, cur_fixed_state.names());
+
+          IntegerVector indexs2 = a_in_b_index(new_conditional_gene, conditional_genes2);
           for(int i=0;i<indexs2.length();i++){
               cur_fixed_state.erase(i);
           }
@@ -283,45 +283,45 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
       {
           conditional_genes = concatenator(conditional_genes, new_conditional_gene);
       }
-    
+
   }
-  
+
   List cond_gene_T_states = cur_fixed_state;
   List cond_gene_F_states = cur_fixed_state;
-  
+
   int s_len = cond_gene_T_states.length();
   cond_gene_T_states = resizel(cond_gene_T_states,s_len+1);
   cond_gene_F_states = resizel(cond_gene_F_states,s_len+1);
-  
+
   //#Add the new conditional gene to the current fixedgenestate
   cond_gene_T_states[s_len]=1;
   cond_gene_F_states[s_len]=0;
   cond_gene_T_states.attr("names") = Rcpp::wrap(conditional_genes);
   cond_gene_F_states.attr("names") = Rcpp::wrap(conditional_genes);
-  
+
   //#get states in order, the order is very important
   IntegerVector indexs3 = a_in_b_index(conditional_genes,all_gene_names).sort();
   CharacterVector uniqued_conditional_genes = all_gene_names[indexs3];
-  
+
   int num_of_conditional_genes = uniqued_conditional_genes.length();
-  
+
   cond_gene_T_states = orderByname(cond_gene_T_states, uniqued_conditional_genes);
   cond_gene_F_states = orderByname(cond_gene_F_states, uniqued_conditional_genes);
-  
+
 
   NumericVector stateTCond;
   NumericVector stateFCond;
   for(int i=0;i < cond_gene_T_states.length(); i++){
       stateTCond.push_back(cond_gene_T_states[i], (std::string)uniqued_conditional_genes[i]);
   }
-  
+
   for(int i=0;i < cond_gene_F_states.length(); i++){
       stateFCond.push_back(cond_gene_F_states[i], (std::string)uniqued_conditional_genes[i]);
   }
-  
+
   NumericVector mTRUE = NumericVector::create(1);
   NumericVector mFALSE = NumericVector::create(0);
-  
+
   //#prepare, the last bit is the target, the variable name TT, the front is target, the other is conditional
   NumericVector cond_T_target_T_state = concatenatorN(stateTCond, mTRUE);
   NumericVector cond_F_target_T_state = concatenatorN(stateFCond, mTRUE);
@@ -332,8 +332,8 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   NumericVector cond_F_target_T_state_c = concatenatorN(mFALSE, stateTCond);
   NumericVector cond_T_target_F_state_c = concatenatorN(mTRUE, stateFCond);
   NumericVector cond_F_target_F_state_c = concatenatorN(mFALSE, stateFCond);
-  
-  
+
+
   //#get all combination of temporal timeserise
   //#for example if temporal =1, the index is 1, then the data will be column 0 and column 1
   //# if temporal =2, the index is 2, then data will be 1) column 0 abd column 2,;2) column 1 and colun 2
@@ -341,7 +341,7 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
                                                                target_gene,
                                                                conditional_genes,
                                                                temporal);
-  
+
   List resultGroup(getAllTemporalStates.length());
   bool recount_target = false;
   Rcpp::List new_targetCounts(getAllTemporalStates.length());
@@ -350,7 +350,7 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
   }else{
     new_targetCounts = targetCounts.as();
   }
-  
+
   for(int i=0; i < getAllTemporalStates.length(); i++){
     List temporalState = getAllTemporalStates[i];
     int time_step = temporalState["timeStep"];
@@ -370,7 +370,7 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
                                 cond_F_target_F_state_c,
                                 recount_target
     );
-    
+
     if(recount_target){
       IntegerVector targets = IntegerVector::create(_["target_T_count"]=0, _["target_F_count"]=0);
       targets["target_T_count"] = result["target_T_count"];
@@ -381,20 +381,20 @@ Rcpp::List getGenePrababilities_basic(Rcpp::Environment main_parameters_in_ref,
       result["target_T_count"] = targets["target_T_count"];
       result["target_F_count"] = targets["target_F_count"];
     }
-    
+
     int len = result.length();
     CharacterVector res_names = result.names();
-    
+
     result = resizel(result,len+3);
     result[len] = total_calculated_timepoints;
     res_names.push_back("total_calculated_timepoints");
-    
+
     result[len + 1] = num_of_conditional_genes;
     res_names.push_back("num_of_conditional_genes");
-    
+
     result[len + 2] = time_step;
     res_names.push_back("timestep");
-    
+
     result.attr("names") = Rcpp::wrap(res_names);
     resultGroup[i] = result;
   }
@@ -411,26 +411,26 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     double target_F_count = basic_measures["target_F_count"];
     double cond_T_count_c  = basic_measures["cond_T_count_c"];
     double cond_F_count_c  = basic_measures["cond_F_count_c"];
-  
+
     int time_step = basic_measures["timestep"];
     //#condition#####################################################################################333333
     double lenTT = basic_measures["lenTT"];
     double lenTF = basic_measures["lenTF"];
     double lenFT = basic_measures["lenFT"];
     double lenFF = basic_measures["lenFF"];
-     
+
     double total_calculated_timepoints = basic_measures["total_calculated_timepoints"];
     //#condition counter################################################################################
     double lenTT_c = basic_measures["lenTT_c"];
     double lenTF_c = basic_measures["lenTF_c"];
     double lenFT_c = basic_measures["lenFT_c"];
     double lenFF_c = basic_measures["lenFF_c"];
-   
+
     double condition_T_support = dround(cond_T_count/total_calculated_timepoints,5);
     double condition_F_support = dround(cond_F_count/total_calculated_timepoints,5);
     double target_T_support = dround(target_T_count/total_calculated_timepoints,5);
     double target_F_support = dround(target_F_count/total_calculated_timepoints,5);
-  
+
     //#final p(B if A)=p(B and A)/p(A), A=conditions, B is the target
     double confidence_TT = 0;
     double confidence_FT = 0;
@@ -438,15 +438,15 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
       confidence_TT = dround(lenTT/cond_T_count,5);
       confidence_FT = dround(lenFT/cond_T_count,5);
     }
-  
+
     double confidence_TF = 0;
     double confidence_FF = 0;
     if(cond_F_count > 0){
       confidence_TF = dround(lenTF/cond_F_count,5);
       confidence_FF = dround(lenFF/cond_F_count,5);
     }
-  
-  
+
+
     //#final p(A if B)=p(B and A)/p(B), A=conditions, B is the target
     double counter_confidence_TT = 0;
     double counter_confidence_FT = 0;
@@ -456,25 +456,26 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
       counter_confidence_TT = dround(lenTT_c/cond_T_count_c,5);
       counter_confidence_FT = dround(lenFT_c/cond_T_count_c,5);
     }
-  
+
     if(cond_F_count_c > 0){
       counter_confidence_TF = dround(lenTF_c/cond_F_count_c,5);
       counter_confidence_FF = dround(lenFF_c/cond_F_count_c,5);
     }
-  
+
      //###############################end counter####################################################################
-  
-    Rcpp::NumericVector vectors = NumericVector::create(lenTT + 1,lenFT + 1,lenTF + 1,lenFF + 1);
+
+    Rcpp::NumericVector vectors = NumericVector::create(lenTT,lenFT,lenTF,lenFF);
     vectors.attr("dim") = Dimension(2, 2);
     Rcpp::NumericMatrix pTable = as<NumericMatrix>(vectors);
     //df = (r-1)(c-1) where r is the number of rows and c is the number of columns.
     //chiSQ = chisq.test(pTable,correct = FALSE,simulate.p.value = TRUE)
-    //NumericVector chiSQ = Rcpp::qchisq(v,1);
+    NumericVector chiSQ = Rcpp::qchisq(vectors,2);
     Rcpp::List pTest =fisher_test_cpp(pTable);
+
     //#from the book Data mining concepts and techniques
     //#isNegativeCorrelated means the inhibited of the conditional genes regulate the target gene
     //#isPossitiveCorrelated means the activated of the conditional genes regulate the target gene
-  
+
     bool isNegativeCorrelated=false;
     bool isPossitiveCorrelated = false;
     double test1 = (lenTF/total_calculated_timepoints)*(lenFT/total_calculated_timepoints);
@@ -482,24 +483,24 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     if(total_calculated_timepoints > 0 && test1 > test2){
       isNegativeCorrelated = true;
     }
-  
+
     if(total_calculated_timepoints > 0  && test1 < test2){
       isPossitiveCorrelated = true;
     }
-  
+
     // //#Shannon entropy (Shannon & Weaver, 1963) and REVEAL (Liang,1998)
     // //#X is conditional, Y is target
     // double p_x1 = cond_T_count/total_calculated_timepoints;
     // double p_x2 = cond_F_count/total_calculated_timepoints;
     // double HX = -1 * (p_x1*log(p_x1) + p_x2*log(p_x2));
-    // 
+    //
     // double p_y1 = target_T_count/total_calculated_timepoints;
     // double p_y2 = target_F_count/total_calculated_timepoints;
     // double HY = -1 * (p_y1*log(p_y1) + p_y2*log(p_y2));
-    // 
+    //
     // if(isReallyNA(HX))HX=0;
     // if(isReallyNA(HY))HY=0;
-    // 
+    //
     // //#H(X|Y)
     // //#HX_Y = -sum(confidence_TT*log2(confidence_TT)+confidence_FT*log2(confidence_FT)+confidence_TF*log2(confidence_TF)+confidence_FF*log2(confidence_FF))
     // //#HY_X = -sum(targetTT*log2(targetTT)+targetFT*log2(targetFT)+targetTF*log2(targetTF)+targetFF*log2(targetFF))
@@ -508,24 +509,24 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     // double HXF_YT =  -1.0 * confidence_TF*log(confidence_TF);
     // double HXT_YF =  -1.0 * confidence_FT*log(confidence_FT);
     // double HXF_YF =  -1.0 * confidence_FF*log(confidence_FF);
-    // 
+    //
     // if(isReallyNA(HXT_YT))HXT_YT = 0;
     // if(isReallyNA(HXF_YT))HXF_YT = 0;
     // if(isReallyNA(HXT_YF))HXT_YF = 0;
     // if(isReallyNA(HXF_YF))HXF_YF = 0;
-    // 
+    //
     // //#Mutual Information
     // double MXT_YT  =  HX - HXT_YT;
     // double MXF_YT  =  HX - HXF_YT;
     // double MXT_YF  =  HX - HXT_YF;
     // double MXF_YF  =  HX - HXF_YF;
-    // 
+    //
     // //#conditional entropy of XT_YT i.e., conditional T to target T
     // double conditional_entropy_TT = dround(std::abs(MXT_YT/HX),5);
     // double conditional_entropy_TF = dround(std::abs(MXF_YT/HX),5);
     // double conditional_entropy_FT = dround(std::abs(MXT_YF/HX),5);
-    // double conditional_entropy_FF = dround(std::abs(MXF_YF/HX),5);  
-    // 
+    // double conditional_entropy_FF = dround(std::abs(MXF_YF/HX),5);
+    //
     // double pickT_mutualInfo = 0;
     // double pickF_mutualInfo = 0;
     // //#at moment use total_calculated_timepoints receive the best result with 0.00013
@@ -545,7 +546,7 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     if(total_calculated_timepoints > 0){
       supportFF = dround(lenFF/total_calculated_timepoints,5);
     }
-  
+
   //#calculate all confidence and max confidence
     double max_confidence_TT = dround(fmax(confidence_TT,counter_confidence_TT),5);
     double all_confidence_TT = dround(fmin(confidence_TT,counter_confidence_TT),5);
@@ -555,29 +556,29 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
     double all_confidence_FT = dround(fmin(confidence_FT,counter_confidence_FT),5);
     double max_confidence_FF = dround(fmax(confidence_FF,counter_confidence_FF),5);
     double all_confidence_FF = dround(fmin(confidence_FF,counter_confidence_FF),5);
-  
+
   //#conditional causality test: very important and effective measures, >=1 means the cause relationship is from the condition to target
-  
+
     double causality_test_TT = 99999;
     if(counter_confidence_TT != 0){
       causality_test_TT = dround(confidence_TT/counter_confidence_TT,2);
     }
-  
+
     double causality_test_TF =  99999;
     if(counter_confidence_TF!=0){
       causality_test_TF = dround(confidence_TF/counter_confidence_TF,2);
     }
-  
+
     double causality_test_FT = 99999;
     if(counter_confidence_FT!=0){
       causality_test_FT = dround(confidence_FT/counter_confidence_FT,2);
     }
-  
+
     double causality_test_FF =  99999;
     if(counter_confidence_FF!=0){
       causality_test_FF = dround(confidence_FF/counter_confidence_FF,2);
     }
-  
+
     double signal_activator = 0;
     double signal_inhibitor = 0;
     double error_activator = 0;
@@ -647,16 +648,16 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
         bool is_Essential = true;
         if (signal_activator == 1 && confidence_TT == confidence_TF)
           is_Essential = false;
-  
+
         if (signal_inhibitor == 1 && confidence_FT == confidence_FF)
           is_Essential = false;
-  
+
         if (!isNegativeCorrelated && !isPossitiveCorrelated)
           is_Essential = false;
-  
+
         double p_value = (double)pTest["p.value"];
         if (p_value > 0.05)
-          is_Essential = false;
+           is_Essential = false;
 
         int essential = 0;
         if(is_Essential)essential=1;
@@ -672,16 +673,16 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
         // double bestFitN = sqrt(pow((pickF_max_confidence - signal_inhibitor),2) + pow((pickF_all_confidence - pickF_confidenceCounter),2) + pow((signal_inhibitor - 1),2) + pow((causality_test_F - 1),2) + pow((pickF_mutualInfo - 1),2) + pow((essential - 1),2));
         double bestFitP = sqrt(pow((pickT_max_confidence - signal_activator),2) + pow((pickT_all_confidence - pickT_confidenceCounter),2) + pow((signal_activator - 1),2) + pow((causality_test_T - 1),2) + pow((essential - 1),2));
         double bestFitN = sqrt(pow((pickF_max_confidence - signal_inhibitor),2) + pow((pickF_all_confidence - pickF_confidenceCounter),2) + pow((signal_inhibitor - 1),2) + pow((causality_test_F - 1),2) + pow((essential - 1),2));
-        
+
         if(std::isinf(bestFitP) || isReallyNA(bestFitP))
           bestFitP = 99999;
 
         if(std::isinf(bestFitN) || isReallyNA(bestFitN))
           bestFitN = 99999;
-        
+
         std::vector<std::string> names;
-        
-        List result(42);//42
+
+        List result(41);//42
         result[0]=confidence_TT;
         names.push_back("TT");
         result[1]=confidence_TF;
@@ -729,15 +730,15 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
         result[22]=bestFitN;
         names.push_back("bestFitN");
         result[23]=is_Essential;
-        names.push_back("is_essential_gene");  
+        names.push_back("is_essential_gene");
         result[24]=error_activator;
-        names.push_back("Noise_P");   
+        names.push_back("Noise_P");
         result[25]=error_inhibitor;
-        names.push_back("Noise_N");  
+        names.push_back("Noise_N");
         result[26]=signal_activator;
-        names.push_back("Signal_P");    
+        names.push_back("Signal_P");
         result[27]=signal_inhibitor;
-        names.push_back("Signal_N");  
+        names.push_back("Signal_N");
         result[28]=pickT_support;
         names.push_back("pickT_support");
         result[29]=pickF_support;
@@ -762,7 +763,8 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
         names.push_back("basic_measures");
         result[39]=p_value;
         names.push_back("p_value");
-        
+        result[40]=chiSQ;
+        names.push_back("chiSQ_value");
         result.attr("names") = Rcpp::wrap(names);
        return(result);
 }
@@ -773,7 +775,7 @@ Rcpp::List getAdvancedMeasures(const Rcpp::List basic_measures){
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_basic)
 {
-  
+
   //P(B|A)=P(A & B)/P(A)=(frq(A&B)/n)/(frq(A)/n)=frq(A&B)/frq(A)=P(A&D)/(P(A&D)+P(!A & D)) Bayers rule
   //order of target_genes is very important
   int len = getGenePrababilities_basic.length();
@@ -798,33 +800,33 @@ Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_b
       double this_bestFitN = (double)bestFitN["bestFitN"];
       double this_temp_bestFitP = (double)temp["bestFitP"];
       double this_temp_bestFitN = (double)temp["bestFitN"];
-      
+
       if(this_bestFitP > this_temp_bestFitP){
         bestFitP = temp;
       }
-      
+
       if(this_bestFitN > this_temp_bestFitN){
         bestFitN = temp;
       }
-      
+
       if(this_bestFitP == this_temp_bestFitP){
         if((int)bestFitP["timestep"]>timestep){
           bestFitP = temp;
         }
       }
-      
+
       if(this_bestFitN == this_temp_bestFitN){
         if((int)bestFitN["timestep"]>timestep){
           bestFitN = temp;
         }
       }
     }
-    
+
     targetCounts[j] = targets;
   }
 
   //Named("result_group") = resultGroup,
-  return (List::create( _["getBestFitP"] = bestFitP, 
+  return (List::create( _["getBestFitP"] = bestFitP,
                         _["getBestFitN"] = bestFitN,
                         _["targetCounts"] =targetCounts));
 }
@@ -839,24 +841,24 @@ Rcpp::List getGenePrababilities_advanced(const Rcpp::List getGenePrababilities_b
 //' @param targetCounts A list of pre-calculated targe genes.
 // [[Rcpp::export]]
 Rcpp::List getGenePrababilities(Rcpp::Environment main_parameters_in_ref,
-                                Rcpp::Nullable<Rcpp::List> fixedgenestate, 
-                                Rcpp::CharacterVector target_gene, 
+                                Rcpp::Nullable<Rcpp::List> fixedgenestate,
+                                Rcpp::CharacterVector target_gene,
                                 Rcpp::CharacterVector new_conditional_gene,
-                                Rcpp::IntegerVector temporal, 
+                                Rcpp::IntegerVector temporal,
                                 Rcpp::Nullable<Rcpp::List> targetCounts)
 {
-  
+
     Rcpp::List basic_measures = getGenePrababilities_basic(main_parameters_in_ref,
                                                            fixedgenestate,target_gene,
-                                                           new_conditional_gene,temporal, 
+                                                           new_conditional_gene,temporal,
                                                            targetCounts);
     Rcpp::List probability = getGenePrababilities_advanced(basic_measures);
 
     if(Rf_isNull(probability))
       return (R_NilValue);
-    
+
     Rcpp::List new_targetCounts =  probability["targetCounts"];
-    return (List::create(_["getBestFitP"] = probability["getBestFitP"], 
-                         _["getBestFitN"] = probability["getBestFitN"], 
+    return (List::create(_["getBestFitP"] = probability["getBestFitP"],
+                         _["getBestFitN"] = probability["getBestFitN"],
                          _["targetCounts"] = new_targetCounts));
 }

@@ -1,0 +1,360 @@
+[Chip]
+Rows=1002
+Cols=1002
+CellMargin=2
+CellMarginDefault=2
+
+XOrigin=-6211
+YOrigin=9029
+Width=12422
+Height=12422
+FocusXOrigin=-7200
+FocusYOrigin=8040
+FocusWidth=14400
+FocusHeight=14400
+
+PixelSize=300
+Wavelengths=570
+NScans=2
+
+
+[HP]
+XOrigin=-6211
+YOrigin=9029
+Width=12422
+Height=12422
+FocusXOrigin=-7200
+FocusYOrigin=8040
+FocusWidth=14400
+FocusHeight=14400
+
+PixelSize=300
+Wavelengths=570
+NScans=2
+SaturatedIntensity=46000
+
+
+[M18]
+XOrigin=-5833
+YOrigin=2367
+Width=11666
+Height=11666
+FocusXOrigin=-7200
+FocusYOrigin=1000
+FocusWidth=14400
+FocusHeight=14400
+
+PixelSize=250
+Wavelengths=570
+NScans=1
+SaturatedIntensity=65000
+
+
+[M10]
+XOrigin=-5833
+YOrigin=2367
+Width=11666
+Height=11666
+FocusXOrigin=-7200
+FocusYOrigin=1000
+FocusWidth=14400
+FocusHeight=14400
+
+PixelSize=156
+Wavelengths=570
+NScans=1
+SaturatedIntensity=65000
+
+AtlasARCType=1
+AtlasPixelTime=5.0
+
+
+[CellAverage]
+;Version Tracking
+CellFileVersion=3
+CellFileVersionDefault=3
+
+;Summary Statistic
+Percentile=75
+PercentileDefault=75
+
+;Rejection Area
+RejectFactor=6
+RejectFactorDefault=6
+
+;Outlier Thresholds
+OutlierLow=1.004
+OutlierHigh=1.5
+
+CellMarginMin=0
+CellMarginDefault=2
+CellMarginMax=10
+
+; Feature Extraction parameter
+FeatureExtraction=TRUE
+IgnoreShiftRowOutliers=FALSE
+FixedCellSize=TRUE
+UseSubgrids=FALSE
+RandomizePixels=FALSE
+ErrorBasis=STDV
+PercentileSpread=15
+StdMult=1
+ExtendPoolWidth=2
+ExtendPoolHeight=2
+
+
+[GridAlignment]
+FeatureWidth=11
+FeatureHeight=11
+CornerPattern=Checkerboard
+ExpectGhostGrids=FALSE
+
+
+[TileTypes]
+Type1=Expression
+
+
+[Chip Servers]
+BaseCallProgID=GeneChip.CallGEBaseCall.1
+CellAvgProgID=GeneChip.PercentileCellAvg.1
+ViewProgID1=GeneChip.GESeqView.1
+
+
+[ExpressionParams]
+;Misc. Parameters
+MinStatDifference=0
+StatDifference=4.0
+DefStatDifference=4.0
+MaxStatDifference=1000
+DefQMultiplier=2.8
+DefIntensityLowValue=-9999999
+NormMethod=2
+SFMethod=1
+MinSTP=1
+STP=3
+DefSTP=3
+MaxSTP=1000
+MinStatRatio=0
+StatRatio=1.5
+DefStatRatio=1.5
+MaxStatRatio=10
+
+;Background
+;Background: Zones
+MinHorizontalZones=1
+MinVerticalZones=1
+HorizontalZones=4
+VerticalZones=4
+DefHorizontalZones=4
+DefVerticalZones=4
+MaxHorizontalZones=100
+MaxVerticalZones=100
+
+;Background: Proportion
+MinNumBGCells=1
+NumBGCells=2
+DefNumBGCells=2
+MaxNumBGCells=100
+
+;P/A Call Parameters
+;P/A: Decision
+MinAbsDecision1=0	0
+MinAbsDecision2=0	0
+MinAbsDecision3=0	0
+AbsDecision1=3.3	4
+AbsDecision2=0.49	0.59
+AbsDecision3=0.9	1.3
+DefAbsDecision1=3.3	4
+DefAbsDecision2=0.49	0.59
+DefAbsDecision3=0.9	1.3
+MaxAbsDecision1=20	20
+MaxAbsDecision2=1	1
+MaxAbsDecision3=10	10
+
+;Change Call Parameters
+;Change: Decision
+MinDiffDecision1=0	0
+MinDiffDecision2=0	0
+MinDiffDecision3=0	0
+MinDiffDecision4=0	0
+DiffDecision1=3.3	4
+DiffDecision2=0.49	0.59
+DiffDecision3=0.2	0.3
+DiffDecision4=0.9	1.3
+DefDiffDecision1=3.3	4
+DefDiffDecision2=0.49	0.59
+DefDiffDecision3=0.2	0.3
+DefDiffDecision4=0.9	1.3
+MaxDiffDecision1=20	20
+MaxDiffDecision2=1	1
+MaxDiffDecision3=1	1
+MaxDiffDecision4=10	10
+
+;Change: Thresholds
+MinAvgDiffNCThreshold=0
+AvgDiffNCThreshold=200
+DefAvgDiffNCThreshold=200
+MaxAvgDiffNCThreshold=10000
+MinChangeThreshold=0
+ChangeThreshold=-1
+DefChangeThreshold=-1
+MaxChangeThreshold=1000
+MinPercentChangeThreshold=0
+PercentChangeThreshold=80
+DefPercentChangeThreshold=80
+MaxPercentChangeThreshold=1000
+
+;Change: FoldChange
+MinFoldChangeMin=0
+MinFoldChangeMax=1
+FoldChangeMin=1
+FoldChangeMax=1
+DefFoldChangeMin=1
+DefFoldChangeMax=1
+MaxFoldChangeMin=1
+MaxFoldChangeMax=3
+
+;Change: Limits
+MinRatioLimit=0
+RatioLimit=10
+DefRatioLimit=10
+MaxRatioLimit=10000
+
+;Scaling
+;Scaling: Trim Range
+DefIntensityLowPercent=2
+DefIntensityHighPercent=2
+
+;Scaling: Factors
+MinNormFactor=0
+DefNormFactor=1
+MaxNormFactor=200
+MinTGT=1
+DefTGT=2500
+MaxTGT=50000
+MinScaleFactor=0
+DefScaleFactor=1
+MaxScaleFactor=1000
+
+
+[RankedExpressionParams]
+;External File Slots
+Probe Mask File=
+Baseline File=
+Norm Mask File=
+Scale Mask File=
+
+;Misc. Parameters
+NormMethod=2
+SFMethod=1
+DefSTP=3
+
+;Background
+DefSmoothFactorBG=100
+
+;Background: Zones
+MinHorizontalZones=1
+MinVerticalZones=1
+HorizontalZones=4
+VerticalZones=4
+DefHorizontalZones=4
+DefVerticalZones=4
+MaxHorizontalZones=100
+MaxVerticalZones=100
+
+;Background: Proportion
+MinNumBGCells=1
+NumBGCells=2
+DefNumBGCells=2
+MaxNumBGCells=100
+
+;Signal Parameters
+DefNoiseFrac=0.5
+DefEpsilon=0.5
+
+;Signal: SB/IM Calculation
+DefTuningConstantCSB=5
+DefEpsilonSB=0.0001
+DefContrastTau=0.03
+DefScaleTau=10
+DefDelta=9.536743E-07
+
+;Signal: Signal Calculation
+DefTuningConstantCAvgLogInten=5
+DefEpsilonAvgLogInten=0.0001
+DefBiasCorrect=0
+
+;Signal: Log-Ratio Calculation
+DefTuningConstantCAvgLogRatio=5
+DefEpsilonAvgLogRatio=0.0001
+DefRelConfInterval=0.975
+
+;P/A Call Parameters
+;P/A: Thresholds
+MinAlpha1=0
+MinAlpha2=0
+Alpha1=0.05
+Alpha2=0.065
+DefAlpha1=0.05
+DefAlpha2=0.065
+MaxAlpha1=0.5
+MaxAlpha2=0.5
+
+;P/A: Tau Parameter
+MinTau=0
+Tau=0.015
+DefTau=0.015
+MaxTau=1
+
+;Change Call Parameters
+;Change Thresholds
+MinGamma1H=0
+MinGamma1L=0
+MinGamma2H=0
+MinGamma2L=0
+Gamma1H=0.002
+Gamma1L=0.002
+Gamma2H=0.002667
+Gamma2L=0.002667
+DefGamma1H=0.002
+DefGamma1L=0.002
+DefGamma2H=0.002667
+DefGamma2L=0.002667
+MaxGamma1H=0.5
+MaxGamma1L=0.5
+MaxGamma2H=0.5
+MaxGamma2L=0.5
+
+;Change: Background
+DefTuningConstantCGammas=5
+DefEpsilonGammas=0.0001
+
+;Change: Adjustments
+DefCMultiplier=0.2
+DefBHCoef=7
+DefBLCoef=0.8
+
+;Change: Balancing
+MinPerturbation=1
+Perturbation=1.1
+DefPerturbation=1.1
+MaxPerturbation=1.5
+
+;Scaling
+;Scaling: Trim Range
+DefIntensityLowPercent=2
+DefIntensityHighPercent=2
+
+;Scaling: Factors
+MinNormFactor=0
+NormFactor=1
+DefNormFactor=1
+MaxNormFactor=50
+MinTGT=1
+TGT=500
+DefTGT=500
+MaxTGT=50000
+MinScaleFactor=0
+ScaleFactor=1
+DefScaleFactor=1
+MaxScaleFactor=50

@@ -55,7 +55,7 @@ networkFiltering <- function(res) {
 #' @param matchedgenes processed genes
 #' @param temporal The temporal time steps
 #' @param targetCounts  Counts the number of target gene in the data
-#' 
+#'
 getGenePrababilities_measurements <- function(targetGene, mainParameters, genes, matchedgenes, temporal = 1L, targetCounts = NULL) {
     .Call(`_FBNNet_getGenePrababilities_measurements`, targetGene, mainParameters, genes, matchedgenes, temporal, targetCounts)
 }
@@ -66,7 +66,7 @@ getGenePrababilities_measurements <- function(targetGene, mainParameters, genes,
 #' @param mainParameters An environment variable holds all input data
 #' @param genes All conditional genes
 #' @param matchedgenes processed genes
-#' @param matchedexpression matched the expression of an interaction 
+#' @param matchedexpression matched the expression of an interaction
 #' @param maxK The maximum level that can be drilled in.
 #' @param temporal The temporal time steps
 #' @param targetCounts  Counts the number of target gene in the data
@@ -83,7 +83,7 @@ buildProbabilityTreeOnTargetGene <- function(targetGene, mainParameters, genes, 
 #' @param maxK The maximum under ground levels
 #' @param temporal The temporal time steps
 #' @param mainParameters An environment variable holds all input data
-#' 
+#'
 process_cube_algorithm <- function(target_gene, conditional_genes, maxK, temporal, mainParameters) {
     .Call(`_FBNNet_process_cube_algorithm`, target_gene, conditional_genes, maxK, temporal, mainParameters)
 }
