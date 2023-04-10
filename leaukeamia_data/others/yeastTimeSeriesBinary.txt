@@ -1,5 +1,0 @@
-"Gene" "binarizedMeasurements.1" "binarizedMeasurements.2" "binarizedMeasurements.3" "binarizedMeasurements.4" "binarizedMeasurements.5" "binarizedMeasurements.6" "binarizedMeasurements.7" "binarizedMeasurements.8" "binarizedMeasurements.9" "binarizedMeasurements.10" "binarizedMeasurements.11" "binarizedMeasurements.12" "binarizedMeasurements.13" "binarizedMeasurements.14" "thresholds"
-"Fkh2" 0 0 0 0 0 1 1 1 1 1 1 1 1 1 -0.117444444444444
-"Swi5" 0 0 1 0 0 0 1 1 1 1 1 1 1 1 -0.205888888888889
-"Sic1" 1 0 0 0 0 0 0 0 0 0 1 1 1 1 0.145444444444444
-"Clb1" 0 0 0 0 0 1 1 1 1 1 1 1 1 1 -0.333222222222222

@@ -1,1 +1,0 @@
-cellcycledata_stanford,http://genome-www.stanford.edu/cellcycle/data/rawdata/combined.txt
