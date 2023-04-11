@@ -6,45 +6,45 @@
 
 
 #' Functions related to Bioinformatics
-#' 
-#' A collection of functions that used to handle 
-#' bioinformatics related tasks 
-#' 
-#' @param files The file folder path or directory that 
+#'
+#' A collection of functions that used to handle
+#' bioinformatics related tasks
+#'
+#' @param files The file folder path or directory that
 #' contains the affy files (*.cel)
 #' @param useGCRMA optional, if true it use GCRMA method to normalize
 #'  the affy data, otherwise, use the default RMA method.
 #'   GCRMA, A bias-corrected RMA; FALSE, use RMA, which is based on
 #'    Robust Multi-Chip' average
-#' @param cdfname The name of CDF that is associated with the affy data. 
+#' @param cdfname The name of CDF that is associated with the affy data.
 #' @param cellDirectory A directory that contains affy raw data
 #' @param outPutEvalue optional to write the result into disk
-#' @param rawData the raw data that is the output from the method 
+#' @param rawData the raw data that is the output from the method
 #' getRelatedAffyRawData
 #' @param ges_assess_no the GSE identity id, such as GSE35635
 #' @author Leshi Chen, leshi, chen@lincolnuni.ac.nz, chenleshi@hotmail.com
 #' @keywords Fundamental Boolean Network, Boolean Network, Genetic Regulatory Network
 #'
-#' @references Chen et al.(2018), Front. Physiol., 25 September 2018, 
+#' @references Chen et al.(2018), Front. Physiol., 25 September 2018,
 #' (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 #' @references Bioconductor (2019), https://www.bioconductor.org/
-#' @examples 
-#' exprs <- downloadGenomeDataExprs(GSE35635)
-#' exprs
+#' @examples
+#' # exprs <- downloadGenomeDataExprs(GSE35635)
+#' # exprs
 #' @name FBNBioinformatics
-NULL 
+NULL
 
 #' This method is used to construct time series data such as
 #'  Leukeamia data from GSE2677 Experimental method
 #' @rdname "FBNBioinformatics"
 #' @export
-convertAffyRawDataIntoNormalizedStructureData <- function(files, 
-                                                          useGCRMA = FALSE, 
+convertAffyRawDataIntoNormalizedStructureData <- function(files,
+                                                          useGCRMA = FALSE,
                                                           cdfname = "HG-U133_Plus_2",
                                                           isNew = TRUE) {
-  futile.logger::flog.info(sprintf("Enter convertAffyRawDataIntoNormalizedStructureData zone: 
-                                   files=%s, 
-                                   useGCRMA=%s, 
+  futile.logger::flog.info(sprintf("Enter convertAffyRawDataIntoNormalizedStructureData zone:
+                                   files=%s,
+                                   useGCRMA=%s,
                                    cdfname=%s",
                                    files,
                                    useGCRMA,
@@ -53,32 +53,32 @@ convertAffyRawDataIntoNormalizedStructureData <- function(files,
   if (useGCRMA) {
     typeOfRMA = "GCRMA"
   }
-  
+
   dir.create(file.path(getwd(), "output"), showWarnings = FALSE)
-  
+
   combinedTimeseries <- list()
   for (filename in files) {
     futile.logger::flog.info(paste0("Processing file: "), filename)
     output_normalized_file <- paste("output\\NormalizedEValue", "_", typeOfRMA, ".csv")
     if (!file.exists(output_normalized_file) || isNew) {
       rawdata <- getRelatedAffyRawData(filename, cdfname)
-      ## normalize data either using GCRMA or RMA 
+      ## normalize data either using GCRMA or RMA
       nrawdata <- normalizeTimesereisRawData(rawdata, typeOfRMA)$NormalizedExpData
       write.csv(nrawdata, file = output_normalized_file)
     } else {
-      nrawdata <- read.csv(file = output_normalized_file, 
-                           header = TRUE, 
-                           sep = ",", 
+      nrawdata <- read.csv(file = output_normalized_file,
+                           header = TRUE,
+                           sep = ",",
                            check.names = FALSE)
       nrawdata2 <- nrawdata[, -1]
       rownames(nrawdata2) <- nrawdata[, 1]
       nrawdata <- as.matrix(nrawdata2)
     }
-    
+
     # convert into sample->time points i.e., group by samples and order by time points
     stimeseries <- convertIntoSampleTimeSeries(nrawdata)
     sortedtimeseries <- reorderSampleTimeSeries(stimeseries)
-    
+
     # combine all time series from different source/files
     combinedTimeseries[[length(combinedTimeseries) + 1]] <- sortedtimeseries
   }
@@ -94,8 +94,8 @@ convertAffyRawDataIntoNormalizedStructureData <- function(files,
 #'A function to read Affy row data
 #' @rdname "FBNBioinformatics"
 #'@export
-getRelatedAffyRawData <- function(cellDirectory, 
-                                  cdfname = "HG-U133_Plus_2", 
+getRelatedAffyRawData <- function(cellDirectory,
+                                  cdfname = "HG-U133_Plus_2",
                                   outPutEvalue = FALSE) {
   futile.logger::flog.info(sprintf("Enter getRelatedAffyRawData zone: cellDirectory=%s, cdfname=%s, outPutEvalue=%s",
                                    cellDirectory,
@@ -106,34 +106,34 @@ getRelatedAffyRawData <- function(cellDirectory,
   # download and install the cdf environment you need from http://www.bioconductor.org/packages/release/data/annotation/ manually. If there is no cdf
   # environment currently built for your particular chip and you have access to the CDF file then you may use the makecdfenv package to create one yourself.
   # To make the cdf packaes, Microsoft Windows users will need to use the tools described here: http://cran.r-project.org/bin/windows/rw-FAQ.html
-  
+
   # FIRST solution mycdf <- read.cdffile(cdfFileName) source('http://www.bioconductor.org/biocLite.R') biocLite('affy') biocLite(cdfname) require('affy')
   # library(affy) biocLite('HG-U133_Plus_2cdf')
   listCellFiles <- dir(path = cellDirectory, pattern = "*\\.CEL", full.names = TRUE)
   affydata <- affy::ReadAffy(filenames = listCellFiles)
   # indicate you want to use the custom cdf If you don't specify the cdfname, BioConductor will use the default Affymetrix cdf.
   affydata@cdfName = cdfname
-  
+
   # raw expression data
   expdata <- affy::exprs(affydata)
   if (outPutEvalue) {
     write.csv(expdata, file = paste("output/EValue", ".csv"))
   }
-  
-  
+
+
   samp <- affy::sampleNames(affydata)
   probes <- affy::featureNames(affydata)
-  
+
   res <- list()
   res[[1]] <- affydata
   names(res)[[1]] <- "AffyBatchObject"
-  
+
   res[[2]] <- expdata
   names(res)[[2]] <- "ExpressionData"
-  
+
   res[[3]] <- samp
   names(res)[[3]] <- "SampleName"
-  
+
   res[[4]] <- probes
   names(res)[[4]] <- "Probes"
   futile.logger::flog.info("Leave getRelatedAffyRawData zone.")
@@ -144,7 +144,7 @@ getRelatedAffyRawData <- function(cellDirectory,
 #' Step 2, normalizing data
 #' @rdname "FBNBioinformatics"
 #' @export
-normalizeTimesereisRawData <- function(rawData, 
+normalizeTimesereisRawData <- function(rawData,
                                        method = c("RMA", "GCRMA", "MAS5")) {
   futile.logger::flog.info(sprintf("Enter normalizeTimesereisRawData zone: length of rawData=%s, method=%s",
                                    length(rawData),
@@ -163,34 +163,34 @@ normalizeTimesereisRawData <- function(rawData,
   } else if (method == "MAS5") {
     nvals <- affy::mas5(rawData$AffyBatchObject)
     ned <- log2(Biobase::exprs(nvals))  #scale to log2 based
-    
+
   } else {
     nvals <- affy::rma(rawData$AffyBatchObject)  #, normalize = TRUE, background = TRUE, bgversion = 2, destructive = TRUE)
     ned <- Biobase::exprs(nvals)
   }
-  
+
   # normalised expression data
-  
+
   nsamp <- rawData$SampleName
   nprobes <- rownames(ned)
-  
+
   # check the feature name
   if (!identical(rawData$Probes, nprobes)) {
     write.csv(rawData$Probes, file = paste("output/rawData_probes", ".csv"))
     write.csv(nprobes, file = paste("output/normalized_probes", ".csv"))
     stop("The features of the data is not identical to the features of normalized data")
   }
-  
+
   res <- list()
   res[[1]] <- nvals
   names(res)[[1]] <- "NormalizedObject"
-  
+
   res[[2]] <- ned
   names(res)[[2]] <- "NormalizedExpData"
-  
+
   res[[3]] <- nsamp
   names(res)[[3]] <- "SampleName"
-  
+
   res[[4]] <- nprobes
   names(res)[[4]] <- "FeatureNames"
   futile.logger::flog.info("Leave normalizeTimesereisRawData zone.")
@@ -199,7 +199,7 @@ normalizeTimesereisRawData <- function(rawData,
 
 
 #' Download GenomeData Exprs
-#' 
+#'
 #' @rdname "FBNBioinformatics"
 #' @export
 downloadGenomeDataExprs <- function(ges_assess_no) {
@@ -222,24 +222,24 @@ downloadGenomeDataExprs <- function(ges_assess_no) {
 #'@param probesets A vector of probeset names
 #'@param names_mapped the names that have been mapped/processed
 #' @export
-mapProbesetNames <- function(probesets, 
+mapProbesetNames <- function(probesets,
                              names_mapped = NULL) {
     data("DAVID_Gene_List")
-    if (is.null(probesets)) 
+    if (is.null(probesets))
       return(c())
-    
-    if (length(probesets) == 0) 
+
+    if (length(probesets) == 0)
       return(c())
-    
-    if (is.null(names_mapped)) 
-      probesetMapping <- mapToGeneNameWithhgu133plus2Db(probesets) 
-    else 
+
+    if (is.null(names_mapped))
+      probesetMapping <- mapToGeneNameWithhgu133plus2Db(probesets)
+    else
       probesetMapping <- names_mapped
-  
+
     if(is.null(probesetMapping)) {
       return(c())
     }
-    
+
     names(DAVID_Gene_List)[[1]] = "Probeset"
     probesetGeneNameMappings <- lapply(probesets, function(name) {
       geneNames <- convert_probeset_to_gene(probesetMapping, name)$SYMBOL
@@ -266,12 +266,12 @@ mapProbesetNames <- function(probesets,
 #'@param needLog2scale If it is true, then all gene values will be processed using log2
 #'@param probesetGeneNameMappings gene mapping file
 #' @export
-identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries, 
-                                                 cutOffInduction = 1, 
-                                                 cutOffRepression = 1, 
-                                                 majority = 7, 
-                                                 needLog2scale = FALSE, 
-                                                 probesetGeneNameMappings = NULL, 
+identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
+                                                 cutOffInduction = 1,
+                                                 cutOffRepression = 1,
+                                                 majority = 7,
+                                                 needLog2scale = FALSE,
+                                                 probesetGeneNameMappings = NULL,
                                                  nameTab = "RMA") {
   futile.logger::flog.info(sprintf("Enter identifyDifferentiallyExpressedGenes zone:cutOffInduction=%s, cutOffRepression=%s, majority=%s, needLog2scale=%s, nameTab=%s",
                                    cutOffInduction,
@@ -279,12 +279,12 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
                                    majority,
                                    needLog2scale,
                                    nameTab))
-  
+
   originalData <- orderSampleTimeSeries
   cutOffInduction <- cutOffInduction
   cutOffRepression <- cutOffRepression
   print(paste("cutOffInduction=", cutOffInduction, "; cutOffRepression=", cutOffRepression, "; majority=", majority, sep = ""))
-  
+
   # The expression values from RMA are log2 transformed, so to calculate the log ratio you simply subtract one from the other. log2(x) - log2(y) = log2(x/y)
   # Note here the the log ratio gives you the fold change directly. A log ratio of 1 = 2-fold up regulated and a log ratio of -1 = 2-fold down regulated (when
   # comparing x vs y).
@@ -293,7 +293,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
     if (length(cols) < 2) {
       stop("The input must have columns more than one")
     }
-    
+
     # get initial data
     if (needLog2scale) {
       res <- round(log2(input[, 2]/input[, 1]), 5)
@@ -301,41 +301,41 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       # already in log 2 scare when normalized
       res <- (input[, 2] - input[, 1])
     }
-    
+
     namesOfDiff <- paste("2", "To", "1", sep = "", collapse = "")
-    
+
     # loop through other combinations
     for (i in seq_along(cols)) {
       if (i > 2) {
         k <- 1
         while (k <= (i - 1)) {
-          
+
           if (needLog2scale) {
             res <- cbind(res, round(log2(input[, i]/input[, k]), 5))
           } else {
             # already in log 2 scare when normalized
             res <- cbind(res, (input[, i] - input[, k]))
           }
-          
+
           namesOfDiff <- c(namesOfDiff, paste(i, "To", k, sep = "", collapse = ""))
           k <- k + 1
         }
       }
     }
-    
+
     if (is.vector(res)) {
       res <- matrix(res, length(res), byrow = TRUE)
     }
     colnames(res) <- namesOfDiff
     res
   })
-  
+
   diffExpressed <- list()
   # anovation
   first_mat <- folddata[[1]]
   colnamelist <- colnames(first_mat)
   rownamelist <- rownames(first_mat)
-  
+
   # map probeID with gene name
   if (is.null(probesetGeneNameMappings)) {
     probesetGeneNameMappings <- mapProbesetNames(rownamelist)
@@ -362,7 +362,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       rownames(res) <- filteredNames
       # write.csv(res, file = paste("output/differential/Induction_", colNames, colnamelist[i], ".csv"))
     }, cutOffInduction)
-    
+
     lapply(1:ncol(tempMat), function(colIndex, logRatio) {
       colvalues <- tempMat[, colIndex]
       names(colvalues) <- rownames(tempMat)
@@ -375,7 +375,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       rownames(res) <- filteredNames
       # write.csv(res, file = paste("output/differential/Repression_", colNames, colnamelist[i], ".csv"))
     }, cutOffRepression)
-    
+
     # names(difflist)<-colnames(tempMat) Induced
     newRownames <- c()
     newMatInduced <- do.call(rbind, lapply(1:nrow(tempMat), function(rowindex, logRatio, totalSamples, majority) {
@@ -383,18 +383,18 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       rowvector <- round(as.numeric(tempMat[rowindex, ]), 6)
       probesetName <- rownames(tempMat)[rowindex]
       rowvector2 <- rowvector[which(rowvector >= logRatio)]
-      
+
       numOfMatchCriteria <- length(rowvector2)
-      
+
       if (numOfMatchCriteria >= majority) {
         return(c(probesetName, tempMat[rowindex, ], majority = majority))
       }else{
         return(NULL)
       }
     }, cutOffInduction, totalSamples, majority))
-    
+
     # rownames(newMatInduced)<-newRownames
-    
+
     # repressed
     newRownames <- c()
     newMatRepressed <- do.call(rbind, lapply(1:nrow(tempMat), function(rowindex, logRatio, totalSamples, majority) {
@@ -403,7 +403,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       probesetName <- rownames(tempMat)[rowindex]
       rowvector2 <- rowvector[which(rowvector <= (-1 * logRatio))]
       numOfMatchCriteria <- length(rowvector2)
-      
+
       if (numOfMatchCriteria >= majority) {
         return(c(probesetName, tempMat[rowindex, ], majority = majority))
       } else {
@@ -411,7 +411,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
       }
     }, cutOffRepression, totalSamples, majority))
     # rownames(newMatRepressed)<-newRownames
-    
+
     diffindex <- length(diffExpressed) + 1
     diffExpressed[[diffindex]] <- list()
     diffExpressed[[diffindex]][[1]] <- newMatInduced[, -1]
@@ -420,20 +420,20 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
     diffExpressed[[diffindex]][[4]] <- as.vector(newMatRepressed[, 1])
     diffExpressed[[diffindex]][[5]] <- probesetGeneNameMappings[newMatInduced[, 1]]
     diffExpressed[[diffindex]][[6]] <- probesetGeneNameMappings[newMatRepressed[, 1]]
-    
+
     names(diffExpressed[[diffindex]])[[1]] <- "Induced_M_Value"
     names(diffExpressed[[diffindex]])[[2]] <- "Repressed_M_Value"
     names(diffExpressed[[diffindex]])[[3]] <- "Induced_ProbeID"
     names(diffExpressed[[diffindex]])[[4]] <- "Repressed_ProbeID"
     names(diffExpressed[[diffindex]])[[5]] <- "Induced_Genes"
     names(diffExpressed[[diffindex]])[[6]] <- "Repressed_Genes"
-    
+
     names(diffExpressed)[[diffindex]] <- colnamelist[i]
   }
-  
+
   # find all common genes in the result, the result should be
   commonNames <- unique(unlist(lapply(diffExpressed, function(subdata) c(unlist(subdata[["Induced_ProbeID"]]), unlist(subdata[["Repressed_ProbeID"]])))))
-  
+
   filteredData <- list()
   filteredData[[1]] <- diffExpressed
   filteredData[[2]] <- probesetGeneNameMappings[commonNames]
@@ -445,7 +445,7 @@ identifyDifferentiallyExpressedGenes <- function(orderSampleTimeSeries,
 
 
 #' getSpecificExpressedGenes
-#' 
+#'
 #' @param orderSampleTimeSeries the original timeseries data that contain continual values
 #' @param genelist the target genes
 #' @export
@@ -464,7 +464,7 @@ getSpecificExpressedGenes <- function(orderSampleTimeSeries, genelist = c()) {
     rownames(mtx) <- geneNames
     return(mtx)
   })
-  
+
   if (length(genelist) > 0) {
     mappedtargetGenes <- probesetMapping$MappedProbeset[which(probesetMapping$MappedProbeset$PROBEID %in% genelist), ]$SYMBOL
     unmappedtargetGenes <- probesetMapping$UnMappedProbeset[which(probesetMapping$UnMappedProbeset$PROBEID %in% genelist), ]$PROBEID
@@ -487,7 +487,7 @@ getSpecificExpressedGenes <- function(orderSampleTimeSeries, genelist = c()) {
     filteredDataKnown <- lapply(filteredDataKnown, function(subdata) subdata[rownames(subdata) %in% genelist, ])
     filteredDataUnKnown <- lapply(filteredDataUnKnown, function(subdata) subdata[rownames(subdata) %in% genelist, ])
   }
-  
+
   sampleNames <- names(filteredDataKnown)
   allDiffData <- lapply(sampleNames, function(sampleName) rbind(filteredDataKnown[[sampleName]], filteredDataUnKnown[[sampleName]]))
   names(allDiffData) <- sampleNames
@@ -545,7 +545,7 @@ convertTimeseriesProbsetNameToGeneName <- function(orderSampleTimeSeries) {
   filteredData[[2]] <- probesetMapping
   filteredData[[3]] <- mappingsheet
   filteredData[[4]] <- alldifferExpressednames
-  
+
   names(filteredData)[[1]] <- "convert_data"
   names(filteredData)[[2]] <- "ProbesetMapping"
   names(filteredData)[[3]] <- "mappingsheet"
@@ -555,32 +555,32 @@ convertTimeseriesProbsetNameToGeneName <- function(orderSampleTimeSeries) {
 }
 
 #' Annotation method
-#' 
+#'
 #' The method maps the probesets with gene names
-#' 
+#'
 #' @param probesets the target probeset names
-#' 
+#'
 #' @export
 mapToGeneNameWithhgu133plus2Db <- function(probesets) {
   futile.logger::flog.info(sprintf("Enter mapToGeneNameWithhgu133plus2Db zone: probesets=%s",
                                    head(probesets)))
-  
+
   # if the following package hasen't been installed, install them source('http://bioconductor.org/biocLite.R') biocLite('annotate') biocLite('hgu133plus2.db')
   # require("AnnotationDbi")
   # require("hgu133plus2.db")
   # find all types keyTypes <- keytypes(hgu133plus2.db)
   res <- list()
   ## 70542
-  getGeneNames <- AnnotationDbi::select(hgu133plus2.db::hgu133plus2.db, 
-                                        keys = probesets, 
-                                        columns = c("UNIGENE", "SYMBOL", "ENTREZID", "GENENAME"), 
+  getGeneNames <- AnnotationDbi::select(hgu133plus2.db::hgu133plus2.db,
+                                        keys = probesets,
+                                        columns = c("UNIGENE", "SYMBOL", "ENTREZID", "GENENAME"),
                                         keytype = "PROBEID")
   ## remove RNA type of non genes' probeset
   ## could be none
-  ## 59211 after removed NA 
-  getGeneNames <- getGeneNames[!is.na(getGeneNames$SYMBOL) & 
-                                 !is.na(getGeneNames$ENTREZID) & 
-                                 !is.na(getGeneNames$GENENAME), ] 
+  ## 59211 after removed NA
+  getGeneNames <- getGeneNames[!is.na(getGeneNames$SYMBOL) &
+                                 !is.na(getGeneNames$ENTREZID) &
+                                 !is.na(getGeneNames$GENENAME), ]
   if(nrow(getGeneNames) == 0) {
     return(NULL)
   }
@@ -589,7 +589,7 @@ mapToGeneNameWithhgu133plus2Db <- function(probesets) {
   mapped <- mapped [order(mapped$ENTREZID),]
   ## remove duplicated records based on entrezid, 20764
   deduplicatedmapped <- mapped[!duplicated(mapped[, "ENTREZID"]), ]  #de-duplicated by ENTREZID
-  
+
   mappingCol1 <- c()
   mappingCol2 <- c()
   num_rows <- nrow(deduplicatedmapped)
@@ -601,7 +601,7 @@ mapToGeneNameWithhgu133plus2Db <- function(probesets) {
   }, mapped, deduplicatedmapped)
   mappingsheet <- do.call(rbind, mappings)
   colnames(mappingsheet) <- c("original", "mapTo")
-  
+
   res[["MappedProbeset"]] <- mapped
   res[["DeDuplicatedMappedProbeset"]] <- deduplicatedmapped
   res[["DeDuplicatedMapping"]] <- as.data.frame(mappingsheet)
@@ -613,7 +613,7 @@ mapToGeneNameWithhgu133plus2Db <- function(probesets) {
 #' Innternal method
 #' @noRd
 convert_probeset_to_gene <- function(annotationMappedObject, probeset) {
-  if (!inherits(annotationMappedObject, "AnnotationMappedObject")) 
+  if (!inherits(annotationMappedObject, "AnnotationMappedObject"))
     stop("the value of the parameter: annotationMappedObject must be inherited from the class of AnnotationMappedObject")
   mapping <- as.data.frame(annotationMappedObject$DeDuplicatedMapping)
   get_map_to <- mapping[which(mapping$orginal %in% c(probeset)), ]$mapto
@@ -718,8 +718,8 @@ plot.PolyRegression <- function(fits) {
   while (dg <- maxdg) {
     prompt <- paste("RETURN for XV fit for degree", dg, " or type degree", "or q for quit")
     rl <- readline(prompt)
-    dg <- if (rl == "") 
-      dg else if (rl != "q") 
+    dg <- if (rl == "")
+      dg else if (rl != "q")
         as.integer(rl) else break
     lines(fits$x, fits[[dg]]$fitted.values, col = cols[curvecount%%3 + 1])
     dg <- dg + 1

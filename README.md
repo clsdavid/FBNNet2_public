@@ -71,9 +71,11 @@ FBNNetwork.Graph(FBM_FAA_CDC42EP3_Networks)
 ---
 __Citation__
 
-##### Chen, L., D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
+##### L. Chen, D. Kulasiri and S. Samarasinghe (2018). A Novel Data-Driven Boolean Model for Genetic Regulatory Networks. Front Physiol 9: 1328.
 
-##### Chen, L., D. Kulasiri and S. Samarasinghe (2022). Fundamental Boolean network modelling for childhood acute lymphoblastic leukaemia pathways. Quant Biol. DOI: 10.15302/J-QB-021-0280, Vol 10, Issue (1) : 94-121.
+##### L. Chen, D. Kulasiri and S. Samarasinghe (2022). Fundamental Boolean network modelling for childhood acute lymphoblastic leukaemia pathways. Quant Biol. DOI: 10.15302/J-QB-021-0280, Vol 10, Issue (1) : 94-121.
+
+##### W. Huber, V.J. Carey, R. Gentleman, ..., M. Morgan Nature Methods (2015). Orchestrating high-throughput genomic analysis with Bioconductor. 2015:12, 115.
 
 __Copyright and Licensing__
 This package and related novel concepts were originally proposed and developed by Leshi Chen <https://doi.org/10.3389/fphys.2018.01328>, under the supervision of Don Kulasiri and Sandhya Samarasinghe during the PHD study at Lincoln University, New Zealand. Currently, the package is licensed under the MIT License for public.

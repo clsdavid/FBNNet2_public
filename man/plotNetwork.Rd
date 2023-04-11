@@ -7,9 +7,9 @@
 plotNetwork(
   FBNNetwork,
   target_genes = c(),
-  type = c("static", "staticSlice", "dynamic", "forward_1a", "forward_2a",
-    "forward_3a", "forward_4a", "backward_1a", "backward_2a", "forward_1b", "forward_2b",
-    "forward_3b", "forward_4b", "backward_1b", "backward_2b"),
+  type = c("static", "staticSlice", "dynamic", "forward_1a", "forward_2a", "forward_3a",
+    "forward_4a", "backward_1a", "backward_2a", "forward_1b", "forward_2b", "forward_3b",
+    "forward_4b", "backward_1b", "backward_2b"),
   expand_level = 2,
   output_network = FALSE,
   timeseries_matrix = NULL,

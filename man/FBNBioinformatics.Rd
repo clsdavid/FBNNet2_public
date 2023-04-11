@@ -4,7 +4,7 @@
 \alias{FBNBioinformatics}
 \title{Functions related to Bioinformatics}
 \arguments{
-\item{files}{The file folder path or directory that 
+\item{files}{The file folder path or directory that
 contains the affy files (*.cel)}
 
 \item{useGCRMA}{optional, if true it use GCRMA method to normalize
@@ -18,21 +18,21 @@ the affy data, otherwise, use the default RMA method.
 
 \item{outPutEvalue}{optional to write the result into disk}
 
-\item{rawData}{the raw data that is the output from the method 
+\item{rawData}{the raw data that is the output from the method
 getRelatedAffyRawData}
 
 \item{ges_assess_no}{the GSE identity id, such as GSE35635}
 }
 \description{
-A collection of functions that used to handle 
+A collection of functions that used to handle
 bioinformatics related tasks
 }
 \examples{
-exprs <- downloadGenomeDataExprs(GSE35635)
-exprs
+# exprs <- downloadGenomeDataExprs(GSE35635)
+# exprs
 }
 \references{
-Chen et al.(2018), Front. Physiol., 25 September 2018, 
+Chen et al.(2018), Front. Physiol., 25 September 2018,
 (\href{https://doi.org/10.3389/fphys.2018.01328}{Front. Physiol.})
 
 Bioconductor (2019), https://www.bioconductor.org/

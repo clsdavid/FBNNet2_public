@@ -484,55 +484,55 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
     bool isPossitiveCorrelated = false;
     double test1 = (lenTF/total_calculated_timepoints)*(lenFT/total_calculated_timepoints);
     double test2 = (lenTT/total_calculated_timepoints)*(lenFF/total_calculated_timepoints);
-    if(total_calculated_timepoints > 0 && test1 > test2){
+    if(test1 > test2){
        isNegativeCorrelated = true;
     }
 
-    if(total_calculated_timepoints > 0  && test1 < test2){
+    if(test1 < test2){
        isPossitiveCorrelated = true;
     }
 
-    // //#Shannon entropy (Shannon & Weaver, 1963) and REVEAL (Liang,1998)
-    // //#X is conditional, Y is target
-    // double p_x1 = cond_T_count/total_calculated_timepoints;
-    // double p_x2 = cond_F_count/total_calculated_timepoints;
-    // double HX = -1 * (p_x1*log(p_x1) + p_x2*log(p_x2));
-    //
-    // double p_y1 = target_T_count/total_calculated_timepoints;
-    // double p_y2 = target_F_count/total_calculated_timepoints;
-    // double HY = -1 * (p_y1*log(p_y1) + p_y2*log(p_y2));
-    //
-    // if(isReallyNA(HX))HX=0;
-    // if(isReallyNA(HY))HY=0;
-    //
-    // //#H(X|Y)
-    // //#HX_Y = -sum(confidence_TT*log2(confidence_TT)+confidence_FT*log2(confidence_FT)+confidence_TF*log2(confidence_TF)+confidence_FF*log2(confidence_FF))
-    // //#HY_X = -sum(targetTT*log2(targetTT)+targetFT*log2(targetFT)+targetTF*log2(targetTF)+targetFF*log2(targetFF))
-    // //#X is conditional inputs and Y is the target gene
-    // double HXT_YT =  -1.0 * confidence_TT*log(confidence_TT);
-    // double HXF_YT =  -1.0 * confidence_TF*log(confidence_TF);
-    // double HXT_YF =  -1.0 * confidence_FT*log(confidence_FT);
-    // double HXF_YF =  -1.0 * confidence_FF*log(confidence_FF);
-    //
-    // if(isReallyNA(HXT_YT))HXT_YT = 0;
-    // if(isReallyNA(HXF_YT))HXF_YT = 0;
-    // if(isReallyNA(HXT_YF))HXT_YF = 0;
-    // if(isReallyNA(HXF_YF))HXF_YF = 0;
-    //
-    // //#Mutual Information
-    // double MXT_YT  =  HX - HXT_YT;
-    // double MXF_YT  =  HX - HXF_YT;
-    // double MXT_YF  =  HX - HXT_YF;
-    // double MXF_YF  =  HX - HXF_YF;
-    //
-    // //#conditional entropy of XT_YT i.e., conditional T to target T
-    // double conditional_entropy_TT = dround(std::abs(MXT_YT/HX),5);
-    // double conditional_entropy_TF = dround(std::abs(MXF_YT/HX),5);
-    // double conditional_entropy_FT = dround(std::abs(MXT_YF/HX),5);
-    // double conditional_entropy_FF = dround(std::abs(MXF_YF/HX),5);
-    //
-    // double pickT_mutualInfo = 0;
-    // double pickF_mutualInfo = 0;
+    //#Shannon entropy (Shannon & Weaver, 1963) and REVEAL (Liang,1998)
+    //#X is conditional, Y is target
+    double p_x1 = cond_T_count/total_calculated_timepoints;
+    double p_x2 = cond_F_count/total_calculated_timepoints;
+    double HX = -1 * (p_x1*log(p_x1) + p_x2*log(p_x2));
+
+    double p_y1 = target_T_count/total_calculated_timepoints;
+    double p_y2 = target_F_count/total_calculated_timepoints;
+    double HY = -1 * (p_y1*log(p_y1) + p_y2*log(p_y2));
+
+    if(isReallyNA(HX))HX=0;
+    if(isReallyNA(HY))HY=0;
+
+    //#H(X|Y)
+    //#HX_Y = -sum(confidence_TT*log2(confidence_TT)+confidence_FT*log2(confidence_FT)+confidence_TF*log2(confidence_TF)+confidence_FF*log2(confidence_FF))
+    //#HY_X = -sum(targetTT*log2(targetTT)+targetFT*log2(targetFT)+targetTF*log2(targetTF)+targetFF*log2(targetFF))
+    //#X is conditional inputs and Y is the target gene
+    double HXT_YT =  -1.0 * confidence_TT*log(confidence_TT);
+    double HXF_YT =  -1.0 * confidence_TF*log(confidence_TF);
+    double HXT_YF =  -1.0 * confidence_FT*log(confidence_FT);
+    double HXF_YF =  -1.0 * confidence_FF*log(confidence_FF);
+
+    if(isReallyNA(HXT_YT))HXT_YT = 0;
+    if(isReallyNA(HXF_YT))HXF_YT = 0;
+    if(isReallyNA(HXT_YF))HXT_YF = 0;
+    if(isReallyNA(HXF_YF))HXF_YF = 0;
+
+    //#Mutual Information
+    double MXT_YT  =  HX - HXT_YT;
+    double MXF_YT  =  HX - HXF_YT;
+    double MXT_YF  =  HX - HXT_YF;
+    double MXF_YF  =  HX - HXF_YF;
+
+    //#conditional entropy of XT_YT i.e., conditional T to target T
+    double conditional_entropy_TT = dround(std::abs(MXT_YT/HX),5);
+    double conditional_entropy_TF = dround(std::abs(MXF_YT/HX),5);
+    double conditional_entropy_FT = dround(std::abs(MXT_YF/HX),5);
+    double conditional_entropy_FF = dround(std::abs(MXF_YF/HX),5);
+
+    double pickT_mutualInfo = 0;
+    double pickF_mutualInfo = 0;
     // //#at moment use total_calculated_timepoints receive the best result with 0.00013
     double supportTT = 0;
     if(total_calculated_timepoints > 0){
@@ -610,7 +610,7 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
        pickT_all_confidence = all_confidence_TT;
        pickT_max_confidence = max_confidence_TT;
        signal_sign_T = "TT";
-       // pickT_mutualInfo = conditional_entropy_TT;
+       pickT_mutualInfo = conditional_entropy_TT;
 
     }else
     {
@@ -622,7 +622,7 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
        pickT_all_confidence = all_confidence_TF;
        pickT_max_confidence = max_confidence_TF;
        signal_sign_T = "TF";
-       // pickT_mutualInfo = conditional_entropy_TF;
+       pickT_mutualInfo = conditional_entropy_TF;
     }
 
     if(confidence_FT >= confidence_FF)
@@ -635,7 +635,7 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
        pickF_all_confidence = all_confidence_FT;
        pickF_max_confidence = max_confidence_FT;
        signal_sign_F = "FT";
-       // pickF_mutualInfo = conditional_entropy_FT;
+       pickF_mutualInfo = conditional_entropy_FT;
     }else
     {
        signal_inhibitor = confidence_FF;
@@ -646,7 +646,7 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
        pickF_all_confidence = all_confidence_FF;
        pickF_max_confidence = max_confidence_FF;
        signal_sign_F = "FF";
-       // pickF_mutualInfo = conditional_entropy_FF;
+       pickF_mutualInfo = conditional_entropy_FF;
     }
 
     bool is_Essential = true;
@@ -686,7 +686,7 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
 
     std::vector<std::string> names;
 
-    List result(41);//42
+    List result(43);//42
     result[0]=confidence_TT;
     names.push_back("TT");
     result[1]=confidence_TF;
@@ -769,6 +769,14 @@ Rcpp::List getAdvancedMeasures(Rcpp::List& basic_measures){
     names.push_back("p_value");
     result[40]=chiSQ;
     names.push_back("chiSQ_value");
+
+    //add entropy for test
+    result[41]=pickT_mutualInfo;
+    names.push_back("pickT_mutualInfo");
+    result[42]=pickF_mutualInfo;
+    names.push_back("pickF_mutualInfo");
+
+
     result.attr("names") = Rcpp::wrap(names);
    return(result);
 }

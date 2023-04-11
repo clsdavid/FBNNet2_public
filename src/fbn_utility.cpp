@@ -160,8 +160,7 @@ Rcpp::NumericMatrix mrbind(Rcpp::NumericMatrix& a,
 }
 
 bool isReallyNA(double val) {
-  NumericVector val2 = NumericVector::create(val);
-  return Rcpp::all(Rcpp::is_na(val2));
+  return Rcpp::all(Rcpp::is_na(NumericVector::create(val)));
 }
 
 
@@ -203,8 +202,7 @@ Rcpp::NumericMatrix substractM(Rcpp::NumericMatrix& m,
 }
 
 int matchCount(Rcpp::NumericMatrix& m, Rcpp::NumericVector& v){
-   Rcpp::NumericMatrix mid=substractM(m,v);
-   Rcpp::NumericVector col_sumed = Rcpp::colSums(mid);
+   Rcpp::NumericVector col_sumed = Rcpp::colSums(substractM(m,v));
    return(std::count(col_sumed.begin(),col_sumed.end(),0));
 }
 
@@ -218,8 +216,6 @@ Rcpp::LogicalVector a_in_b(Rcpp::CharacterVector& names1, Rcpp::CharacterVector&
    if(names2.length() == 0) {
       return(Rcpp::LogicalVector(0));
    }
-
-
    if(names1.length() == 0) {
       return(res);
    }
@@ -235,12 +231,10 @@ Rcpp::IntegerVector a_in_b_index(Rcpp::CharacterVector& names1, Rcpp::CharacterV
    if(names2.length() == 0) {
       return(Rcpp::IntegerVector(0));
    }
-
    Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
    if(names1.length() == 0) {
       return(v);
    }
-
    Rcpp::IntegerVector v_matched = match(names2,names1);
    return(v[!Rcpp::is_na(v_matched)]);
 }
@@ -250,8 +244,6 @@ Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector& names1, Rcpp::CharacterVec
    if(names2.length() == 0) {
       return(Rcpp::LogicalVector(0));
    }
-
-
    if(names1.length() == 0) {
       return(res);
    }
@@ -266,12 +258,10 @@ Rcpp::IntegerVector a_not_in_b_index(Rcpp::CharacterVector& names1, Rcpp::Charac
    if(names1.length() == 0) {
       return(Rcpp::IntegerVector(0));
    }
-
    Rcpp::IntegerVector v = Rcpp::seq(0, names1.size()-1);
    if(names2.length() == 0) {
       return(v);
    }
-
    Rcpp::IntegerVector v_matched = match(names1, names2);
    return(v[Rcpp::is_na(v_matched)]);
 }
