@@ -42,9 +42,10 @@ Rcpp::CharacterVector concatenator(Rcpp::CharacterVector& a,
                                    Rcpp::CharacterVector& b) {
    int alen = a.length();
    int blen = b.length();
-   Rcpp::CharacterVector out(alen+blen);
+   int new_total = alen + blen;
+   Rcpp::CharacterVector out(new_total);
 
-   for (int j = 0; j < alen+blen; j++) {
+   for (int j = 0; j < new_total; j++) {
       if (j < alen) {
           out(j) = a(j);
       } else {
@@ -59,9 +60,10 @@ Rcpp::IntegerVector concatenatorI(Rcpp::IntegerVector& a,
                                   Rcpp::IntegerVector& b) {
    int alen = a.length();
    int blen = b.length();
-   Rcpp::IntegerVector out(alen+blen);
+   int new_total = alen + blen;
+   Rcpp::IntegerVector out(new_total);
 
-   for (int j = 0; j < alen+blen; j++) {
+   for (int j = 0; j < new_total; j++) {
       if (j < alen) {
           out(j) = a(j);
       } else {
@@ -76,9 +78,10 @@ Rcpp::NumericVector concatenatorN(Rcpp::NumericVector& a,
                                   Rcpp::NumericVector& b) {
    int alen = a.length();
    int blen = b.length();
-   Rcpp::NumericVector out(alen+blen);
+   int new_total = alen + blen;
+   Rcpp::NumericVector out(new_total);
 
-   for (int j = 0; j < alen+blen; j++) {
+   for (int j = 0; j < new_total; j++) {
      if (j < alen) {
         out(j) = a(j);
      } else {
@@ -206,6 +209,7 @@ int matchCount(Rcpp::NumericMatrix& m, Rcpp::NumericVector& v){
    return(std::count(col_sumed.begin(),col_sumed.end(),0));
 }
 
+//round a double value with number of decimal places
 double dround(double val, int decimal){
   double dec = pow(10.0,decimal);
   return(round( val * dec) / dec);
@@ -219,9 +223,9 @@ Rcpp::LogicalVector a_in_b(Rcpp::CharacterVector& names1, Rcpp::CharacterVector&
    if(names1.length() == 0) {
       return(res);
    }
-   Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
-   Rcpp::IntegerVector v_matched = match(names1,names2);
-   res[!Rcpp::is_na(v_matched)] = true;
+   //Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
+   //Rcpp::IntegerVector v_matched = match(names1,names2);
+   res[!Rcpp::is_na(match(names1,names2))] = true;
    return(res);
 }
 
@@ -235,8 +239,8 @@ Rcpp::IntegerVector a_in_b_index(Rcpp::CharacterVector& names1, Rcpp::CharacterV
    if(names1.length() == 0) {
       return(v);
    }
-   Rcpp::IntegerVector v_matched = match(names2,names1);
-   return(v[!Rcpp::is_na(v_matched)]);
+   //Rcpp::IntegerVector v_matched = match(names2,names1);
+   return(v[!Rcpp::is_na(match(names2,names1))]);
 }
 
 Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector& names1, Rcpp::CharacterVector& names2){
@@ -247,9 +251,9 @@ Rcpp::LogicalVector a_not_in_b(Rcpp::CharacterVector& names1, Rcpp::CharacterVec
    if(names1.length() == 0) {
       return(res);
    }
-   Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
-   Rcpp::IntegerVector v_matched = match(names1,names2);
-   res[Rcpp::is_na(v_matched)] = true;
+   //Rcpp::IntegerVector v = Rcpp::seq(0, names2.size()-1);
+   //Rcpp::IntegerVector v_matched = match(names1,names2);
+   res[Rcpp::is_na(match(names1,names2))] = true;
    return(res);
 }
 
@@ -262,8 +266,8 @@ Rcpp::IntegerVector a_not_in_b_index(Rcpp::CharacterVector& names1, Rcpp::Charac
    if(names2.length() == 0) {
       return(v);
    }
-   Rcpp::IntegerVector v_matched = match(names1, names2);
-   return(v[Rcpp::is_na(v_matched)]);
+   //Rcpp::IntegerVector v_matched = match(names1, names2);
+   return(v[Rcpp::is_na(match(names1, names2))]);
 }
 
 Rcpp::List resizel( const Rcpp::List& x, int n ){
@@ -278,8 +282,8 @@ Rcpp::List orderByname( const Rcpp::List& x, Rcpp::CharacterVector& names){
    int len = names.length() ;
    List y(len) ;
    for( int i=0; i<len; i++) {
-      std::string name = (std::string)names[i];
-      y[i] = x[name] ;
+      //std::string name = (std::string)names[i];
+      y[i] = x[(std::string)names[i]] ;
    }
    y.attr("names") = Rcpp::wrap(names);
    return y ;
