@@ -1,5 +1,7 @@
 # FBNNet
 ### Background
+> **Note:** A Python version of this package is also available at [clsdavid/fbnnet_core](https://github.com/clsdavid/fbnnet_core). It is a Python package that can run on tensors (e.g. via GPU/TensorFlow-style backends), yielding much faster performance than this R implementation.
+
 Fundamental Boolean Model (FBM), published in Chen et al. (2018) <https://doi.org/10.3389/fphys.2018.01328>, provides an intuitive definition of activation and inhibition pathways and includes mechanisms to handle protein decay issues. To prove the concept of the novel model, we implemented an R package, called FBNNet. Our experimental results show that the proposed FBM could explicitly display the internal connections of the mammalian cell cycle between genes separated into the connection types of activation, inhibition and protein decay. Moreover, the method we proposed to infer the gene regulatory networks for the novel Boolean model can be run in parallel and; hence, the computation cost is affordable. Finally, the novel Boolean model and related Fundamental Boolean Networks (FBNs) could show significant trajectories in genes to reveal how genes regulated each other over a given period. This new feature could facilitate further research on drug interventions to detect the side effects of a newly-proposed drug.
 
 ### Introduction
